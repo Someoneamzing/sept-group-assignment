@@ -1,0 +1,55 @@
+SEP-6 AS a public user I want to see my previous orders so I can review them. ORDER MANAGEMENT
+
+SEP-7 AS a public user, I want to add books to my order, so I can purchase them. ORDER MANAGEMENT
+
+SEP-3 AS a public user, I want to be able to list used books so I can sell them BOOK MANAGEMENT
+
+SEP-8 AS a public user, I want to be able to search for books by title, author, ISBN, and category BOOK MANAGEMENT
+
+SEP-9 AS an admin user, I want to be able to download user transactions report in a CSV format USER MANAGEMENT
+
+SEP-10 AS a public user, I want to be able to see a preview of a book (Needs PO Clarification) BOOK MANAGEMENT
+
+SEP-11 AS a public user, I want to be able to add reviews on books I've bought BOOK MANAGEMENT
+
+SEP-12 AS an admin user, I want to be able to remove book listings, so I can moderate the platform. BOOK MANAGEMENT
+
+SEP-13 AS an admin user, I want to be able to edit book listings, so I can maintain the platform BOOK MANAGEMENT
+
+SEP-14 AS an admin user, I want to be able to download a csv report about the books, so I can analyse the system. BOOK MANAGEMENT
+
+SEP-15 AS an unregistered user, I want immediate account registration so I can become a public customer of bookeroo straight away USER MANAGEMENT
+
+SEP-16 AS a business I want to register my business on bookeroo pending approval so I can sell and share books on bookeroo USER MANAGEMENT
+
+SEP-17 AS an admin user, I want to approve/block new users and pending business user registrations so I can do admin things (Needs PO Clarification) USER MANAGEMENT
+
+SEP-18 AS an admin user, I want to add/edit users so I can moderate users on bookeroo USER MANAGEMENT
+
+SEP-19 AS any type of user, I want my password to be stored securely in bookeroo's database so I can not have my password leaked USER MANAGEMENT
+
+SEP-20 AS a business, I want to be able to list new books for sale, so I can sell them. BOOK MANAGEMENT
+
+SEP-21 AS a business, I want to be able to list used books, so I can sell them. BOOK MANAGEMENT
+
+SEP-22 AS a public customer I want to login to bookeroo so I can see my public customer dashboard USER MANAGEMENT
+
+SEP-23 AS a generic user I want to be able to pay for my order with PayPal, so I can keep my payment secure. ORDER MANAGEMENT
+
+SEP-24 AS a business user, I want to login to bookeroo so I can see my business user dashboard USER MANAGEMENT
+
+SEP-25 AS a business user, I want to be able to track new orders so I can fulfill them (Needs PO clarification) ORDER MANAGEMENT
+
+SEP-26 AS any type of user, I want to view Bookeroo's Home Page and Contact Us page so I can register an account or login using an existing account USER MANAGEMENT
+
+SEP-27 AS an admin user, I want to login to bookeroo so I can see my admin user dashboard USER MANAGEMENT
+
+SEP-28 AS an admin user, I want a summary of past and current transactions so I can do admin things (Needs PO Clarification) ORDER MANAGEMENT
+
+SEP-29 AS a public user, I want a 2 hour wait period after ordering a book so I can cancel my order and get a refund ORDER MANAGEMENT
+
+SEP-30 AS a business user I want to see my previous orders so I can review them ORDER MANAGEMENT
+
+SEP-31 AS a generic user I want to be able to sign up with my paypal so I can accept payments for my books I am selling ORDER MANAGEMENT
+
+SEP-32 AS an admin user, I want to be able to create a filter when making book reports so I can analyze a subset of books BOOK MANAGEMENT
