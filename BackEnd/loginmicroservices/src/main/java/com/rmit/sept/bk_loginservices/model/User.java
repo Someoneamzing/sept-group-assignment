@@ -29,6 +29,10 @@ public class User implements UserDetails {
     private String confirmPassword;
     private Date create_At;
     private Date update_At;
+    @Enumerated(EnumType.STRING)
+    private UserType userType;
+    @Embedded
+    private BusinessInfo businessInfo;
 
     //OneToMany with Project
 
