@@ -78,7 +78,7 @@ function Header(props) {
         {menuItems.map(menuItem => {
           const { menuTitle, pageURL } = menuItem;
           return (
-            <ListItem button onClick={() => handleMenuClick(pageURL)}>
+            <ListItem button onClick={() => {handleMenuClick(pageURL); handleDrawerToggle()}}>
               <ListItemText primary={menuTitle} key={menuTitle} />
             </ListItem>
           );
