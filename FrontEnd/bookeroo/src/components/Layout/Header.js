@@ -58,6 +58,10 @@ function Header(props) {
             menuTitle: 'Contact',
             pageURL: '/contact',
         },
+        {
+            menuTitle: 'Register',
+            pageURL: '/register',
+        },
     ];
     const classes = useStyles();
     const theme = useTheme();

@@ -12,11 +12,7 @@ function App() {
             <div>
                 <Switch>
                     <Route exact path="/register" component={Register} />
-                    <Route
-                        exact
-                        path="/contact"
-                        render={(props) => <Contact {...props} />}
-                    />
+                    <Route exact path="/contact" component={Contact} />
                 </Switch>
             </div>
         </div>
