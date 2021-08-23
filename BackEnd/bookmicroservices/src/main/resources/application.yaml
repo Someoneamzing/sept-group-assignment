@@ -9,6 +9,11 @@ spring:
       path: /h2-console
       enabled: true
   jpa:
-    show-sql: false
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+  data:
+    rest:
+      base-path: api/
 server:
   port: 8081
