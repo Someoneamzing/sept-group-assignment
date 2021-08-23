@@ -43,5 +43,12 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "prettier": {
+    "tabWidth": 4,
+    "bracketSpacing": false,
+    "singleQuote": true,
+    "proseWrap": "always",
+    "arrowParens": "always"
   }
 }
