@@ -1,15 +1,24 @@
-// import logo from './logo.svg';
+import React from 'react';
+import Header from './components/Layout/Header';
+import Contact from './components/Layout/Contact';
+import {Route, Switch} from 'react-router-dom';
 import './App.css';
-// import { Router } from 'react-router-dom';
-import {BrowserRouter as Router, Route} from 'react-router-dom';
 import Register from './components/UserManagement/Register';
 
 function App() {
     return (
         <div className="App">
-            <Router>
-                <Route exact path="/register" component={Register} />
-            </Router>
+            <Header />
+            <div>
+                <Switch>
+                    <Route exact path="/register" component={Register} />
+                    <Route
+                        exact
+                        path="/contact"
+                        render={(props) => <Contact {...props} />}
+                    />
+                </Switch>
+            </div>
         </div>
     );
 }
