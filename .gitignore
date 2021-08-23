@@ -5,6 +5,7 @@
 *.iml
 *.ipr
 
+*/package-lock.json
 
 #macos
 .DS_Store
