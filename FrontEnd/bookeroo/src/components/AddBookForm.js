@@ -113,7 +113,14 @@ export default function AddBookForm() {
             />
             {/* </Grid> */}
             {/* <Grid item> */}
-            <FilePicker></FilePicker>
+            <FilePicker
+                onChange={(files) =>
+                    formik.setFieldValue(
+                        'coverArtURL',
+                        files.length ? files[0] : ''
+                    )
+                }
+            />
             {/* </Grid> */}
             {/* </Grid> */}
             <Button type="submit">Submit</Button>
