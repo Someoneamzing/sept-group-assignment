@@ -2,6 +2,8 @@ import {Paper} from '@material-ui/core';
 import {AddPhotoAlternate, Description} from '@material-ui/icons';
 import React, {useRef, useState} from 'react';
 
+import './FilePicker.css';
+
 /**
  *
  * @param {File} file
@@ -30,7 +32,7 @@ function getDataURIMimeType(uri) {
 
 const VALID_IMAGE_TYPES = ['image/png', 'image/jpg', 'image/jpeg', 'image/gif'];
 
-export default function FilePicker({onChange, ...props}) {
+export default function FilePicker({onChange, className, ...props}) {
     const fileInput = useRef();
     const [value, setValue] = useState([]);
     async function onChangeHandler(e) {
@@ -42,23 +44,26 @@ export default function FilePicker({onChange, ...props}) {
         onChange?.(dataURLS);
     }
     return (
-        <Paper onClick={() => fileInput.current?.click()}>
+        <div
+            onClick={() => fileInput.current?.click()}
+            className={`FilePicker-main ${className}`}
+        >
             {value.length ? (
-                <div>
+                <div className="FilePicker-preview">
                     {value.map((file) =>
                         VALID_IMAGE_TYPES.includes(getDataURIMimeType(file)) ? (
                             <img src={file} key={file} alt="An uploaded file" />
                         ) : (
                             <Description
-                                style={{fontSize: '10rem'}}
+                                style={{fontSize: '5rem'}}
                                 key={file}
                             />
                         )
                     )}
                 </div>
             ) : null}
-            <AddPhotoAlternate style={{fontSize: '7em'}} color="disabled" />
             <span>Select some Cover Art</span>
+            <AddPhotoAlternate style={{fontSize: '3em'}} color="disabled" />
             <input
                 {...props}
                 type="file"
@@ -66,6 +71,6 @@ export default function FilePicker({onChange, ...props}) {
                 hidden
                 onChange={onChangeHandler}
             />
-        </Paper>
+        </div>
     );
 }

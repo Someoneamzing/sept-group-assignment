@@ -1,9 +1,9 @@
 import React from 'react';
 import {useFormik} from 'formik';
 import axios from 'axios';
-import {TextField, Grid, Button} from '@material-ui/core';
+import {TextField, Button} from '@material-ui/core';
 import FilePicker from './FilePicker';
-import styles from './AddBookForm.css';
+import './AddBookForm.css';
 
 /**
  *
@@ -66,53 +66,46 @@ export default function AddBookForm() {
         },
     });
     return (
-        <form onSubmit={formik.handleSubmit} className={`${styles.form}`}>
-            {/* <Grid container spacing={2}> */}
-            {/* <Grid item xs={12}> */}
+        <form onSubmit={formik.handleSubmit} className="AddBookForm-form">
+            <h3 className="AddBookForm-title">Add a Book</h3>
             <TextField
                 fullWidth
                 {...inputProps(formik, 'Book Title', 'bookTitle')}
                 variant="outlined"
+                className="AddBookForm-bookTitle"
             />
-            {/* </Grid> */}
-            {/* <Grid item> */}
             <TextField
                 fullWidth
                 {...inputProps(formik, 'Author', 'author')}
                 variant="outlined"
+                className="AddBookForm-author"
             />
-            {/* </Grid> */}
-            {/* <Grid item> */}
             <TextField
                 fullWidth
                 {...inputProps(formik, 'Publisher', 'publisher')}
                 variant="outlined"
+                className="AddBookForm-publisher"
             />
-            {/* </Grid> */}
-            {/* <Grid item> */}
             <TextField
                 fullWidth
                 {...inputProps(formik, 'Publish Date', 'publishDate')}
                 variant="outlined"
                 type="date"
+                className="AddBookForm-publishDate"
             />
-            {/* </Grid> */}
-            {/* <Grid item> */}
             <TextField
                 fullWidth
                 {...inputProps(formik, 'ISBN', 'isbn')}
                 variant="outlined"
+                className="AddBookForm-isbn"
             />
-            {/* </Grid> */}
-            {/* <Grid item> */}
             <TextField
                 fullWidth
                 {...inputProps(formik, 'Table of Contents', 'tableOfContents')}
                 variant="outlined"
                 multiline
+                className="AddBookForm-tableOfContents"
             />
-            {/* </Grid> */}
-            {/* <Grid item> */}
             <FilePicker
                 onChange={(files) =>
                     formik.setFieldValue(
@@ -120,10 +113,13 @@ export default function AddBookForm() {
                         files.length ? files[0] : ''
                     )
                 }
+                className="AddBookForm-coverArt"
             />
-            {/* </Grid> */}
-            {/* </Grid> */}
-            <Button type="submit">Submit</Button>
+            <div className="AddBookForm-actions">
+                <Button type="submit" variant="contained" color="primary">
+                    Submit
+                </Button>
+            </div>
         </form>
     );
 }

@@ -1,5 +1,47 @@
-.form {
+.AddBookForm-form {
     display: grid;
-    grid-template-columns: repeat(6, 1fr);
-    grid-template-rows: repeat(auto-fill, 4rem);
+    grid-template-columns: 1fr 1fr 1fr 1fr 1.5fr;
+    grid-template-rows: auto auto auto 1fr auto;
+    grid-template-areas:
+        'title title title title coverArt'
+        'bookTitle bookTitle bookTitle bookTitle coverArt'
+        'author publisher publishDate isbn coverArt'
+        'tableOfContents tableOfContents tableOfContents tableOfContents  coverArt'
+        'actions actions actions actions actions';
+    gap: 1em;
+    padding: 1em;
+}
+
+.AddBookForm-title {
+    grid-area: title;
+}
+.AddBookForm-bookTitle {
+    grid-area: bookTitle;
+}
+.AddBookForm-author {
+    grid-area: author;
+}
+.AddBookForm-coverArt {
+    grid-area: coverArt;
+    max-height: 100%;
+    max-width: 100%;
+    aspect-ratio: 2/3;
+}
+.AddBookForm-publisher {
+    grid-area: publisher;
+}
+.AddBookForm-publishDate {
+    grid-area: publishDate;
+}
+.AddBookForm-isbn {
+    grid-area: isbn;
+}
+.AddBookForm-tableOfContents {
+    grid-area: tableOfContents;
+}
+.AddBookForm-actions {
+    grid-area: actions;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
 }
