@@ -1,9 +1,9 @@
 import React from 'react';
 import {useFormik} from 'formik';
-import axios from 'axios';
 import {TextField, Button} from '@material-ui/core';
 import FilePicker from './FilePicker';
 import './AddBookForm.css';
+import {createBook} from '../api';
 
 /**
  *
@@ -42,24 +42,7 @@ export default function AddBookForm() {
         },
         async onSubmit(values) {
             try {
-                const url = new URL(`/api/books`, document.location);
-                url.port = 8081;
-                const response = await axios.post(url, values);
-                console.log(response.data);
-                // const response = await fetch(url, {
-                //     method: 'POST',
-                //     body: JSON.stringify(values),
-                //     headers: {
-                //         'Content-Type': 'application/json',
-                //     },
-                // });
-                // if (!response.ok())
-                //     throw new Error(
-                //         `[${response.status}]: ${response.statusText}`
-                //     );
-                // console.log(
-                //     `Recieved response from API: ${await response.text()}`
-                // );
+                await createBook(values);
             } catch (err) {
                 console.error(err.toJSON());
             }
