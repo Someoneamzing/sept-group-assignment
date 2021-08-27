@@ -4,105 +4,119 @@ import {TextField, Button} from '@material-ui/core';
 import FilePicker from './FilePicker';
 import './AddBookForm.css';
 import {createBook} from '../api';
+import {inputProps} from '../utils';
 
-/**
- *
- * @param {import('formik').FormikProps<{}>} formik
- * @param {string} label
- * @param {string} name
- * @returns
- */
-function inputProps(formik, label, name) {
-    return {
-        label,
-        name,
-        onChange: formik.handleChange,
-        value: formik.values[name],
-        onBlur: formik.handleBlur,
-        error: formik.errors[name],
-        helperText: formik.errors[name],
-        disabled: formik.isSubmitting,
-    };
-}
+const BOOK_DEFAULT = {
+    bookTitle: '',
+    author: '',
+    publisher: '',
+    publishDate: '',
+    isbn: '',
+    coverArtURL: '',
+    tableOfContents: '',
+};
 
 /**
  * The form that handles adding Book entities to the system.
  * @note This form is not for the sale pages, just the definition of a book, with title author etc.
  */
-export default function AddBookForm() {
+export default function AddBookForm({
+    onSubmit: onSubmitExt,
+    onCancel,
+    ContentComponent,
+    ActionComponent,
+    defaultValue = {},
+}) {
     const formik = useFormik({
-        initialValues: {
-            bookTitle: '',
-            author: '',
-            publisher: '',
-            publishDate: '',
-            isbn: '',
-            coverArtURL: '',
-            tableOfContents: '',
-        },
+        initialValues: {...BOOK_DEFAULT, ...defaultValue},
         async onSubmit(values) {
+            console.log('Submitting new book...');
             try {
-                await createBook(values);
+                const response = await createBook(values);
+                onSubmitExt(response);
             } catch (err) {
                 console.error(err.toJSON());
             }
         },
     });
     return (
-        <form onSubmit={formik.handleSubmit} className="AddBookForm-form">
-            <h3 className="AddBookForm-title">Add a Book</h3>
-            <TextField
-                fullWidth
-                {...inputProps(formik, 'Book Title', 'bookTitle')}
-                variant="outlined"
-                className="AddBookForm-bookTitle"
-            />
-            <TextField
-                fullWidth
-                {...inputProps(formik, 'Author', 'author')}
-                variant="outlined"
-                className="AddBookForm-author"
-            />
-            <TextField
-                fullWidth
-                {...inputProps(formik, 'Publisher', 'publisher')}
-                variant="outlined"
-                className="AddBookForm-publisher"
-            />
-            <TextField
-                fullWidth
-                {...inputProps(formik, 'Publish Date', 'publishDate')}
-                variant="outlined"
-                type="date"
-                className="AddBookForm-publishDate"
-            />
-            <TextField
-                fullWidth
-                {...inputProps(formik, 'ISBN', 'isbn')}
-                variant="outlined"
-                className="AddBookForm-isbn"
-            />
-            <TextField
-                fullWidth
-                {...inputProps(formik, 'Table of Contents', 'tableOfContents')}
-                variant="outlined"
-                multiline
-                className="AddBookForm-tableOfContents"
-            />
-            <FilePicker
-                onChange={(files) =>
-                    formik.setFieldValue(
-                        'coverArtURL',
-                        files.length ? files[0] : ''
-                    )
-                }
-                className="AddBookForm-coverArt"
-            />
-            <div className="AddBookForm-actions">
-                <Button type="submit" variant="contained" color="primary">
+        <>
+            <ContentComponent>
+                <form
+                    onSubmit={formik.handleSubmit}
+                    className="AddBookForm-form"
+                >
+                    <TextField
+                        {...inputProps(formik, 'Book Title', 'bookTitle')}
+                        fullWidth
+                        variant="outlined"
+                        className="AddBookForm-bookTitle"
+                    />
+                    <TextField
+                        {...inputProps(formik, 'Author', 'author')}
+                        fullWidth
+                        variant="outlined"
+                        className="AddBookForm-author"
+                    />
+                    <TextField
+                        {...inputProps(formik, 'Publisher', 'publisher')}
+                        fullWidth
+                        variant="outlined"
+                        className="AddBookForm-publisher"
+                    />
+                    <TextField
+                        {...inputProps(formik, 'Publish Date', 'publishDate')}
+                        fullWidth
+                        variant="outlined"
+                        type="date"
+                        className="AddBookForm-publishDate"
+                        inputProps={{placeholder: ''}}
+                    />
+                    <TextField
+                        {...inputProps(formik, 'ISBN', 'isbn')}
+                        fullWidth
+                        variant="outlined"
+                        className="AddBookForm-isbn"
+                    />
+                    <TextField
+                        {...inputProps(
+                            formik,
+                            'Table of Contents',
+                            'tableOfContents'
+                        )}
+                        fullWidth
+                        variant="outlined"
+                        multiline
+                        className="AddBookForm-tableOfContents"
+                    />
+                    <FilePicker
+                        onChange={(files) =>
+                            formik.setFieldValue(
+                                'coverArtURL',
+                                files.length ? files[0] : ''
+                            )
+                        }
+                        className="AddBookForm-coverArt"
+                    />
+                </form>
+            </ContentComponent>
+            <ActionComponent className="AddBookForm-actions">
+                <Button
+                    type="button"
+                    variant="contained"
+                    color="default"
+                    onClick={onCancel}
+                >
+                    Cancel
+                </Button>
+                <Button
+                    onClick={formik.handleSubmit}
+                    variant="contained"
+                    color="primary"
+                >
                     Submit
                 </Button>
-            </div>
-        </form>
+            </ActionComponent>
+        </>
     );
 }

@@ -1,13 +1,11 @@
 .AddBookForm-form {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr 1.5fr;
-    grid-template-rows: auto auto auto 1fr auto;
+    grid-template-columns: repeat(4, minmax(10rem, 1fr)) 1.5fr;
+    grid-template-rows: auto auto 1fr;
     grid-template-areas:
-        'title title title title coverArt'
         'bookTitle bookTitle bookTitle bookTitle coverArt'
         'author publisher publishDate isbn coverArt'
-        'tableOfContents tableOfContents tableOfContents tableOfContents  coverArt'
-        'actions actions actions actions actions';
+        'tableOfContents tableOfContents tableOfContents tableOfContents  coverArt';
     gap: 1em;
     padding: 1em;
 }
