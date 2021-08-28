@@ -1,4 +1,3 @@
-import {Paper} from '@material-ui/core';
 import {AddPhotoAlternate, Description} from '@material-ui/icons';
 import React, {useRef, useState} from 'react';
 
