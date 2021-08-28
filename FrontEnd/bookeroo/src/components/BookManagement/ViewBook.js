@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Suspense} from 'react';
 import {
     Button,
     Container,
@@ -12,23 +12,28 @@ import StarIcon from '@material-ui/icons/Star';
 import StarBorderIcon from '@material-ui/icons/StarBorder';
 import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart';
 import Reviews from './Reviews';
+import {useRecoilValue} from 'recoil';
+import {bookAtomFamily} from '../../state/books';
 
-function BookInfo({bookId}) {
+function BookImage({cover_img}) {
+    return <img src={cover_img} style={{marginBottom: '1rem'}} />;
+}
+
+function BookInfo({title, author, publisher, isbn, date_published, rating}) {
     return (
         <Box textAlign="left" padding="1rem">
-            <h2>The Curious Incident of the Dog in the Night-Time</h2>
-            <i>(author)</i>
+            <h2>{title}</h2>
+            <i>{author}</i>
             <Box padding="0.5rem" />
             <Divider />
-            <h3>Publisher: sdfsdfsd</h3>
-            <h3>ISBN: 73569495</h3>
-            <h3>Publish Date: 05/07/2021</h3>
+            <h3>Publisher: {publisher}</h3>
+            <h3>ISBN: {isbn}</h3>
+            <h3>
+                Publish Date: {new Date(date_published * 1000).toDateString()}
+            </h3>
             <div>
-                <StarIcon />
-                <StarIcon />
-                <StarIcon />
-                <StarIcon />
-                <StarBorderIcon />
+                {Array(Math.round(rating * 5)).fill(<StarIcon />)}
+                {Array(Math.floor((1 - rating) * 5)).fill(<StarBorderIcon />)}
             </div>
             <Box display="flex" flexDirection="row" padding="0.5rem">
                 <Button variant="contained" color="secondary">
@@ -39,7 +44,7 @@ function BookInfo({bookId}) {
     );
 }
 
-function Purchase({bookId}) {
+function Purchase({price}) {
     return (
         <Paper elevation={2} variant="outlined">
             <Box
@@ -49,7 +54,7 @@ function Purchase({bookId}) {
                 margin="2rem"
                 height="85%"
             >
-                <h1>$10.99</h1>
+                <h1>${price}</h1>
                 <div>
                     <TextField
                         id="standard-basic"
@@ -88,16 +93,27 @@ export function ViewBookLayout(props) {
                         flexDirection="row"
                         justifyContent="space-around"
                     >
-                        <img
-                            src="/bookbook.png"
-                            style={{marginBottom: '1rem'}}
-                        />
-                        <BookInfo bookId={bookId} />
+                        <BookImage {...props} />
+                        <BookInfo {...props} />
                     </Box>
-                    <Purchase />
+                    <Purchase {...props} />
                 </Box>
-                <Reviews bookId={bookId} />
+                <Reviews {...props} />
             </Container>
         </div>
+    );
+}
+
+function ViewBookContainer({bookId}) {
+    const bookData = useRecoilValue(bookAtomFamily(bookId));
+    return <ViewBookLayout {...bookData} />;
+}
+
+export default function ViewBookPage() {
+    const {bookId} = useParams();
+    return (
+        <Suspense fallback="loading book (hard coded 2 second load time)">
+            <ViewBookContainer bookId={bookId} />
+        </Suspense>
     );
 }
