@@ -5,6 +5,8 @@ import ViewBook from './components/BookManagement/ViewBook';
 import {Route, Switch, useLocation} from 'react-router-dom';
 import './App.css';
 import Register from './components/UserManagement/Register';
+import {Container} from '@material-ui/core';
+import AddBookForSaleForm from './components/AddBookForSaleForm';
 
 function NoMatch() {
     let location = useLocation();
@@ -27,7 +29,17 @@ function App() {
                 <Switch>
                     <Route exact path="/register" component={Register} />
                     <Route exact path="/contact" component={Contact} />
+                    <Route
+                        exact
+                        path="/books/new"
+                        component={AddBookForSaleForm}
+                    />
                     <Route path="/books/:bookId" component={ViewBook} />
+                    <Route
+                        exact
+                        path="/"
+                        children={<Container>HomePage</Container>}
+                    />
                     <Route path="*">
                         <NoMatch />
                     </Route>

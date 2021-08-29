@@ -1,11 +1,5 @@
-import React, {Suspense} from 'react';
-import {
-    Button,
-    Container,
-    Divider,
-    Paper,
-    TextField
-} from '@material-ui/core';
+import React, {Suspense, useCallback} from 'react';
+import {Button, Container, Divider, Paper, TextField} from '@material-ui/core';
 import Box from '@material-ui/core/Box';
 import {useParams} from 'react-router-dom';
 import StarIcon from '@material-ui/icons/Star';
@@ -14,9 +8,12 @@ import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart';
 import Reviews from './Reviews';
 import {useRecoilValue} from 'recoil';
 import {bookAtomFamily} from '../../state/books';
+import axios from 'axios';
 
 function BookImage({cover_img}) {
-    return <img src={cover_img} style={{marginBottom: '1rem'}} />;
+    return (
+        <img src={cover_img} alt="book cover" style={{marginBottom: '1rem'}} />
+    );
 }
 
 function BookInfo({title, author, publisher, isbn, date_published, rating}) {
@@ -78,17 +75,15 @@ export function ViewBookLayout(props) {
         <div>
             <Container maxWidth="lg">
                 <Box
-                    style={{display: 'flex'}}
                     maxWidth="sm"
-                    flex
+                    display="flex"
                     flexWrap="wrap"
                     flexDirection="row"
                     justifyContent="space-between"
                 >
                     <Box
-                        style={{display: 'flex'}}
                         maxWidth="sm"
-                        flex
+                        display="flex"
                         flexWrap="wrap"
                         flexDirection="row"
                         justifyContent="space-around"
@@ -111,8 +106,36 @@ function ViewBookContainer({bookId}) {
 
 export default function ViewBookPage() {
     const {bookId} = useParams();
+    const createBook = async () => {
+        const a = await fetch('/bookcover.txt');
+        const b = await a.blob();
+        const text = await b.text();
+
+        var data = JSON.stringify({
+            bookTitle: 'One Night The Moon',
+            // author: 'James Humphry',
+            publisher: 'Penguin',
+            publishDate: '2002-08-12',
+            isbn: 'i38756245879',
+            coverArtURL: text,
+            tableOfContents: 'Chapter1\nChapter2\nChapter3\n',
+        });
+        const config = {
+            method: 'post',
+            url: 'http://localhost:8081/api/books',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            data,
+        };
+        const res = await axios(config);
+        console.log(res.data);
+    };
     return (
         <Suspense fallback="loading book (hard coded 2 second load time)">
+            <Button variant="contained" color="secondary" onClick={createBook}>
+                create book
+            </Button>
             <ViewBookContainer bookId={bookId} />
         </Suspense>
     );
