@@ -1,7 +1,10 @@
 import React from 'react';
-import {Paper} from '@material-ui/core';
+import {Container, Paper} from '@material-ui/core';
 import Box from '@material-ui/core/Box';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import {Suspense} from 'react-is';
+import StarIcon from '@material-ui/icons/Star';
+import StarBorderIcon from '@material-ui/icons/StarBorder';
 
 function Review() {
     return (
@@ -34,15 +37,45 @@ function Review() {
         </Box>
     );
 }
-export default function Reviews() {
+
+function Rating({bookId}) {
+    const rating = 1 / 5;
     return (
-        <Box style={{marginTop: '1rem'}}>
-            <Paper elevation={2} variant="outlined">
-                <Box>
-                    <h4>Reviews</h4>
-                    <Review />
-                </Box>
-            </Paper>
-        </Box>
+        <div>
+            {Array(Math.round(rating * 5))
+                .fill('i')
+                .map((n, i) => (
+                    <StarIcon key={n + i} />
+                ))}
+            {Array(Math.floor((1 - rating) * 5))
+                .fill('b')
+                .map((n, i) => (
+                    <StarBorderIcon key={n + i} />
+                ))}
+        </div>
+    );
+}
+
+export function RatingContainer({bookId}) {
+    return (
+        <Suspense fallback="loading rating">
+            <Rating bookId={bookId} />
+        </Suspense>
+    );
+}
+export default function Reviews({bookId}) {
+    return (
+        <Suspense fallback="loading reviews">
+            <Box style={{marginTop: '1rem'}}>
+                <Container maxWidth="lg">
+                    <Paper elevation={2} variant="outlined">
+                        <Box>
+                            <h4>(wireframe) Reviews</h4>
+                            <Review />
+                        </Box>
+                    </Paper>
+                </Container>
+            </Box>
+        </Suspense>
     );
 }

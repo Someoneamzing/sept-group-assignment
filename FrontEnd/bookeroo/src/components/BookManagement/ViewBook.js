@@ -1,72 +1,90 @@
-import React, {Suspense, useCallback} from 'react';
-import {Button, Container, Divider, Paper, TextField} from '@material-ui/core';
+import React, {Suspense} from 'react';
+import {Button, Container, Divider, Paper} from '@material-ui/core';
 import Box from '@material-ui/core/Box';
 import {useParams} from 'react-router-dom';
-import StarIcon from '@material-ui/icons/Star';
-import StarBorderIcon from '@material-ui/icons/StarBorder';
-import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart';
-import Reviews from './Reviews';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+import Reviews, {RatingContainer} from './Reviews';
 import {useRecoilValue} from 'recoil';
 import {bookAtomFamily} from '../../state/books';
-import axios from 'axios';
+import CreateBook from './_DEBUG_components/CreateBook';
+import NoMatch from '../Layout/NoMatch';
+import {useTheme} from '@material-ui/core/styles';
 
-function BookImage({cover_img}) {
+function BookImage({coverArtURL}) {
     return (
-        <img src={cover_img} alt="book cover" style={{marginBottom: '1rem'}} />
+        <img
+            src={coverArtURL}
+            width="234px"
+            alt="book cover"
+            style={{marginBottom: '1rem'}}
+        />
     );
 }
 
-function BookInfo({title, author, publisher, isbn, date_published, rating}) {
+function BookPreview({tableOfContents, bookTitle, author}) {
+    const [open, setOpen] = React.useState(false);
+    const theme = useTheme();
+    const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
+    const close = () => setOpen(false);
+    return (
+        <>
+            <Button
+                variant="contained"
+                color="secondary"
+                onClick={() => setOpen(true)}
+            >
+                Preview Book
+            </Button>
+            <Dialog
+                fullScreen={fullScreen}
+                open={open}
+                onClose={close}
+                scroll="paper"
+                aria-labelledby="responsive-dialog-title"
+            >
+                <DialogTitle id="responsive-dialog-title">
+                    {bookTitle}
+                </DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        <i>Table of Contents:</i>
+                        <Box margin="0.4rem" />
+                        {tableOfContents.split('\n').map((n) => (
+                            <Box margin="0.2rem">{n}</Box>
+                        ))}
+                    </DialogContentText>
+                    <DialogActions>
+                        <Button onClick={close} color="primary">
+                            Done
+                        </Button>
+                    </DialogActions>
+                </DialogContent>
+            </Dialog>
+        </>
+    );
+}
+
+function BookInfo(props) {
+    const {bookTitle, author, publisher, isbn, publishDate, bookId} = props;
     return (
         <Box textAlign="left" padding="1rem">
-            <h2>{title}</h2>
+            <h2>{bookTitle}</h2>
             <i>{author}</i>
             <Box padding="0.5rem" />
             <Divider />
             <h3>Publisher: {publisher}</h3>
             <h3>ISBN: {isbn}</h3>
-            <h3>
-                Publish Date: {new Date(date_published * 1000).toDateString()}
-            </h3>
-            <div>
-                {Array(Math.round(rating * 5)).fill(<StarIcon />)}
-                {Array(Math.floor((1 - rating) * 5)).fill(<StarBorderIcon />)}
-            </div>
+            <h3>Publish Date: {new Date(publishDate).toDateString()}</h3>
+            <RatingContainer bookId={bookId} />
             <Box display="flex" flexDirection="row" padding="0.5rem">
-                <Button variant="contained" color="secondary">
-                    Preview Book
-                </Button>
+                <BookPreview {...props} />
             </Box>
         </Box>
-    );
-}
-
-function Purchase({price}) {
-    return (
-        <Paper elevation={2} variant="outlined">
-            <Box
-                display="flex"
-                flexDirection="column"
-                justifyContent="space-around"
-                margin="2rem"
-                height="85%"
-            >
-                <h1>${price}</h1>
-                <div>
-                    <TextField
-                        id="standard-basic"
-                        label="Quantity"
-                        type="number"
-                    />
-                </div>
-                <div>
-                    <Button variant="contained" color="primary" size="large">
-                        Add to Order <pre> </pre>
-                        <AddShoppingCartIcon />
-                    </Button>
-                </div>
-            </Box>
-        </Paper>
     );
 }
 
@@ -91,9 +109,18 @@ export function ViewBookLayout(props) {
                         <BookImage {...props} />
                         <BookInfo {...props} />
                     </Box>
-                    <Purchase {...props} />
+                    <Paper variant="outlined">
+                        <Box
+                            display="flex"
+                            flexDirection="column"
+                            justifyContent="space-around"
+                            margin="2rem"
+                            height="85%"
+                        >
+                            {props.RightBox}
+                        </Box>
+                    </Paper>
                 </Box>
-                <Reviews {...props} />
             </Container>
         </div>
     );
@@ -101,42 +128,29 @@ export function ViewBookLayout(props) {
 
 function ViewBookContainer({bookId}) {
     const bookData = useRecoilValue(bookAtomFamily(bookId));
-    return <ViewBookLayout {...bookData} />;
+
+    if (bookData == null) {
+        return <NoMatch />;
+    }
+
+    return (
+        <ViewBookLayout
+            {...{...bookData, bookId}}
+            RightBox={<>Pretend there is a list of sellers here</>}
+        />
+    );
 }
 
 export default function ViewBookPage() {
     const {bookId} = useParams();
-    const createBook = async () => {
-        const a = await fetch('/bookcover.txt');
-        const b = await a.blob();
-        const text = await b.text();
 
-        var data = JSON.stringify({
-            bookTitle: 'One Night The Moon',
-            // author: 'James Humphry',
-            publisher: 'Penguin',
-            publishDate: '2002-08-12',
-            isbn: 'i38756245879',
-            coverArtURL: text,
-            tableOfContents: 'Chapter1\nChapter2\nChapter3\n',
-        });
-        const config = {
-            method: 'post',
-            url: 'http://localhost:8081/api/books',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            data,
-        };
-        const res = await axios(config);
-        console.log(res.data);
-    };
     return (
-        <Suspense fallback="loading book (hard coded 2 second load time)">
-            <Button variant="contained" color="secondary" onClick={createBook}>
-                create book
-            </Button>
-            <ViewBookContainer bookId={bookId} />
-        </Suspense>
+        <>
+            <Suspense fallback="loading book (hard coded 2 second load time)">
+                <CreateBook />
+                <ViewBookContainer bookId={bookId} />
+            </Suspense>
+            <Reviews bookId={bookId} />
+        </>
     );
 }
