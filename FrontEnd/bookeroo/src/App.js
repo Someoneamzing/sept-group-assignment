@@ -9,6 +9,7 @@ import {Container} from '@material-ui/core';
 import AddBookForSaleForm from './components/AddBookForSaleForm';
 import NoMatch from './components/Layout/NoMatch';
 import ViewBookForSalePage from './components/BookManagement/ViewBookForSale';
+import ViewAllBooksPage from './components/BookManagement/ViewAllBooks';
 
 function App() {
     return (
@@ -28,6 +29,7 @@ function App() {
                         path="/book/new"
                         component={AddBookForSaleForm}
                     />
+                    <Route exact path="/books" component={ViewAllBooksPage} />
                     <Route path="/book/:bookId" component={ViewBook} />
                     <Route
                         path="/s/:sellerId/book/:bookId"
