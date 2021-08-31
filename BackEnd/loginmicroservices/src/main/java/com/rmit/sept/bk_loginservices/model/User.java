@@ -39,6 +39,14 @@ public class User implements UserDetails {
     public User() {
     }
 
+    public UserType getUserType() {
+        return userType;
+    }
+
+    public void setUserType(UserType userType) {
+        this.userType = userType;
+    }
+
     public Long getId() {
         return id;
     }
