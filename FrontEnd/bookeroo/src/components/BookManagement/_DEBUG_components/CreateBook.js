@@ -45,7 +45,7 @@ export default function CreateBook() {
     };
     return (
         <Button variant="contained" color="secondary" onClick={createBook}>
-            (DEBUG) create dummy book
+            (DEV ONLY) create another book
         </Button>
     );
 }

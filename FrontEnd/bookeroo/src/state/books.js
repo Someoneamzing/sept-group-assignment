@@ -1,5 +1,12 @@
 import axios from 'axios';
-import {atomFamily, selectorFamily} from 'recoil';
+import {useCallback, useEffect} from 'react';
+import {
+    atom,
+    atomFamily,
+    selectorFamily,
+    useRecoilCallback,
+    useRecoilValue,
+} from 'recoil';
 
 function later(delay) {
     return new Promise(function (resolve) {
@@ -9,14 +16,14 @@ function later(delay) {
 
 const PLACEHOLDER_BOOK = {
     id: '234',
-    title: 'The Curious Incident of the Dog in the Night-Time',
+    bookTitle: 'The Curious Incident of the Dog in the Night-Time',
     author: 'Bob Bobson',
     publisher: 'sdfsdfsdf',
     isbn: 25298452,
-    date_published: Date.now() / 1000,
-    rating: 0.75,
-    price: 10.99,
-    cover_img: '/bookbook.png',
+    publishDate: Date.now() / 1000,
+    priceInCents: 1099,
+    coverArtURL: '/bookbook.png',
+    tableOfContents: 'chapter 1\nchapter 2\nchapter 3',
 };
 
 const fetchBook = async (bookId) => {
@@ -46,3 +53,44 @@ export const bookAtomFamily = atomFamily({
         },
     }),
 });
+
+const fetchAllBooks = async () => {
+    const config = {
+        config: 'GET',
+        url: 'http://localhost:8081/api/books/',
+        headers: {
+            'Content-Type': 'application-json',
+        },
+    };
+    try {
+        const res = await axios(config);
+        return res.data._embedded.books;
+    } catch (e) {
+        console.log(e);
+        return null;
+    }
+};
+
+const allBookIdsAtom = atom({
+    key: 'allBooksIdsAtom_v1',
+    default: [],
+});
+
+export function useAllBooksQuery() {
+    const allBooks = useRecoilValue(allBookIdsAtom);
+    const loadBooks = useRecoilCallback(({set}) => async () => {
+        const allBooks = await fetchAllBooks();
+        const allBookIds = [];
+        console.log(allBooks);
+        for (const book of allBooks) {
+            const bookId = book._links.self.href.split('/').pop();
+            allBookIds.push(bookId);
+            set(bookAtomFamily(bookId), book);
+        }
+        set(allBookIdsAtom, allBookIds);
+    });
+    useEffect(() => {
+        loadBooks();
+    }, []);
+    return {allBooks, loadBooks};
+}
