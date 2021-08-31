@@ -28,7 +28,7 @@ function ViewAllBooksLayout() {
             <h1>(debug) view all books</h1>
             <Box display="flex" flexDirection="column" width="100%">
                 {allBooks.map((n) => (
-                    <Suspense fallback="loading book">
+                    <Suspense fallback="loading book" key={n}>
                         <BookListItem bookId={n} />
                     </Suspense>
                 ))}

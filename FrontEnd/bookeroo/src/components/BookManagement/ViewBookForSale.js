@@ -75,7 +75,7 @@ export default function ViewBookForSalePage() {
 
     return (
         <>
-            <Suspense fallback="loading book (hard coded 2 second load time)">
+            <Suspense fallback="loading book">
                 <CreateBook />
                 <ViewBookForSaleContainer bookId={bookId} />
             </Suspense>

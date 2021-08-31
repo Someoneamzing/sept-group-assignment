@@ -50,5 +50,8 @@
     "singleQuote": true,
     "proseWrap": "always",
     "arrowParens": "always"
+  },
+  "devDependencies": {
+    "msw": "^0.35.0"
   }
 }

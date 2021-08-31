@@ -38,7 +38,6 @@ const fetchBook = async (bookId) => {
         const res = await axios(config);
         return res.data;
     } catch (e) {
-        console.log(e);
         return null;
     }
 };
@@ -81,7 +80,6 @@ export function useAllBooksQuery() {
     const loadBooks = useRecoilCallback(({set}) => async () => {
         const allBooks = await fetchAllBooks();
         const allBookIds = [];
-        console.log(allBooks);
         for (const book of allBooks) {
             const bookId = book._links.self.href.split('/').pop();
             allBookIds.push(bookId);

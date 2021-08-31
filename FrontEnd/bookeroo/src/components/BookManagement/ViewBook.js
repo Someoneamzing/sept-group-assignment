@@ -26,7 +26,7 @@ function BookImage({coverArtURL}) {
     );
 }
 
-function BookPreview({tableOfContents, bookTitle, author}) {
+function BookPreview({tableOfContents, bookTitle}) {
     const [open, setOpen] = React.useState(false);
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
@@ -36,9 +36,9 @@ function BookPreview({tableOfContents, bookTitle, author}) {
             <Button
                 variant="contained"
                 color="secondary"
-                onClick={() => setOpen(true)}
+                onClick={() => setOpen((x) => !x)}
             >
-                Preview Book
+                {open ? 'Hide Preview' : 'Preview Book'}
             </Button>
             <Dialog
                 fullScreen={fullScreen}
@@ -51,13 +51,12 @@ function BookPreview({tableOfContents, bookTitle, author}) {
                     {bookTitle}
                 </DialogTitle>
                 <DialogContent>
-                    <DialogContentText>
-                        <i>Table of Contents:</i>
-                        <Box margin="0.4rem" />
-                        {tableOfContents.split('\n').map((n) => (
-                            <Box margin="0.2rem">{n}</Box>
-                        ))}
-                    </DialogContentText>
+                    <i>Table of Contents:</i>
+                    {tableOfContents.split('\n').map((n, i) => (
+                        <Box margin="0.2rem" key={n + i}>
+                            <DialogContentText>{n}</DialogContentText>
+                        </Box>
+                    ))}
                     <DialogActions>
                         <Button onClick={close} color="primary">
                             Done
@@ -132,12 +131,24 @@ function ViewBookContainer({bookId}) {
     if (bookData == null) {
         return <NoMatch />;
     }
-
     return (
+        <>
         <ViewBookLayout
             {...{...bookData, bookId}}
             RightBox={<>Pretend there is a list of sellers here</>}
         />
+                    <Reviews bookId={bookId} />
+
+        </>
+    );
+}
+
+export function ViewBookSuspense({bookId}) {
+    return (
+        <Suspense fallback="loading book">
+            <CreateBook />
+            <ViewBookContainer bookId={bookId} />
+        </Suspense>
     );
 }
 
@@ -146,11 +157,7 @@ export default function ViewBookPage() {
 
     return (
         <>
-            <Suspense fallback="loading book (hard coded 2 second load time)">
-                <CreateBook />
-                <ViewBookContainer bookId={bookId} />
-            </Suspense>
-            <Reviews bookId={bookId} />
+            <ViewBookSuspense bookId={bookId} />
         </>
     );
 }
