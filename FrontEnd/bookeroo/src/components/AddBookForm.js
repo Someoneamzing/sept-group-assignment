@@ -1,7 +1,7 @@
 import React from 'react';
 import {useFormik} from 'formik';
 import {TextField, Button} from '@material-ui/core';
-import FilePicker from './FilePicker';
+import FilePicker, {VALID_IMAGE_TYPES} from './FilePicker';
 import './AddBookForm.css';
 import {createBook} from '../api';
 import {inputProps} from '../utils';
@@ -100,6 +100,7 @@ export default function AddBookForm({
                             )
                         }
                         className="AddBookForm-coverArt"
+                        accept={VALID_IMAGE_TYPES.join(',')}
                     />
                 </form>
             </ContentComponent>
