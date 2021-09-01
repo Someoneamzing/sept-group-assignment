@@ -1,0 +1,14 @@
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+
+#macos
+.DS_Store
+FrontEnd/bookeroo/package-lock.json
+FrontEnd/myfirstapp/package-lock.json
+FrontEnd/bookeroo/package-lock.json
+FrontEnd/bookeroo/package-lock.json~feature-sep-15
