@@ -6,6 +6,9 @@ import './AddBookForm.css';
 import {createBook} from '../api';
 import {inputProps} from '../utils';
 
+/**
+ * The default values used when opening a book form
+ */
 const BOOK_DEFAULT = {
     bookTitle: '',
     author: '',

@@ -12,6 +12,11 @@ import {
 import BookThumbnail from './BookThumbnail';
 import {getBooks} from '../api';
 
+/**
+ * A filed for selecting a book. Displays a list of already available books and can configurably allow creation of new books.
+ * @param {Object} props
+ * @returns A BookField Component
+ */
 export default function BookField({allowCreate, ...props}) {
     const [dialogOpen, setDialogOpen] = useState(false);
     const [dialogValue, setDialogValue] = useState(null);

@@ -4,6 +4,11 @@ import {Formik} from 'formik';
 import React from 'react';
 import {inputProps} from '../utils';
 
+/**
+ * A form for adding a BookForSale.
+ * @param {Object} props
+ * @returns An AddBookForSaleForm component.
+ */
 export default function AddBookForSaleForm({onSubmit, ...props}) {
     const formikProps = {
         initialValues: {

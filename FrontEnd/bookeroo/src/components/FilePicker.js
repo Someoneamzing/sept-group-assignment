@@ -4,7 +4,7 @@ import React, {useRef, useState} from 'react';
 import './FilePicker.css';
 
 /**
- *
+ * Promise adapter for the conversion of a HTML File to base64 encoded string
  * @param {File} file
  * @returns {string} Data URL representing the contents of the file.
  */
@@ -17,10 +17,13 @@ function getFileDataURL(file) {
     });
 }
 
+/**
+ * A Regex to retrieve the MIME type of the Data URL
+ */
 const URI_TYPE_REGEX = /^data:([^;,]+)?[;,]/i;
 
 /**
- *
+ * Gets the MIME type of a Data URL
  * @param {string} uri
  * @returns {string}
  */
@@ -29,8 +32,21 @@ function getDataURIMimeType(uri) {
     return match[1];
 }
 
-const VALID_IMAGE_TYPES = ['image/png', 'image/jpg', 'image/jpeg', 'image/gif'];
+/**
+ * The list of accepted image types.
+ */
+export const VALID_IMAGE_TYPES = [
+    'image/png',
+    'image/jpg',
+    'image/jpeg',
+    'image/gif',
+];
 
+/**
+ * A file picker that allows for previews of selected files. value of the field is the data URIs of the files.
+ * @param {Object} props The components props
+ * @returns A FilePicker component
+ */
 export default function FilePicker({onChange, className, ...props}) {
     const fileInput = useRef();
     const [value, setValue] = useState([]);
