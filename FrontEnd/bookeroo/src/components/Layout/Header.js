@@ -75,25 +75,21 @@ function Header(props) {
     function handleDrawerToggle() {
         setMobileOpen(!mobileOpen);
     }
-
-  function handleDrawerToggle() {
-    setMobileOpen(!mobileOpen);
-  }
   
-  const drawer = (
-    <div>
-      <List>
-        {menuItems.map(menuItem => {
-          const { menuTitle, pageURL } = menuItem;
-          return (
-            <ListItem button onClick={() => {handleMenuClick(pageURL); handleDrawerToggle()}}>
-              <ListItemText primary={menuTitle} key={menuTitle} />
-            </ListItem>
-          );
-        })}
-      </List>
-    </div>
-  );
+    const drawer = (
+        <div>
+        <List>
+            {menuItems.map(menuItem => {
+            const { menuTitle, pageURL } = menuItem;
+            return (
+                <ListItem button onClick={() => {handleMenuClick(pageURL); handleDrawerToggle()}}>
+                <ListItemText primary={menuTitle} key={menuTitle} />
+                </ListItem>
+            );
+            })}
+        </List>
+        </div>
+    );
 
     return (
         <div className={classes.root}>

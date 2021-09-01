@@ -1,6 +1,6 @@
 import React from 'react';
 import Header from './components/Layout/Header';
-import Contact from './components/Layout/Contact';
+import Contact from './components/Contact';
 import {Route, Switch} from 'react-router-dom';
 import './App.css';
 import Register from './components/UserManagement/Register';
