@@ -5,21 +5,17 @@ import com.rmit.sept.bk_loginservices.model.User;
 import com.rmit.sept.bk_loginservices.model.UserType;
 import com.rmit.sept.bk_loginservices.web.UserController;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BeanPropertyBindingResult;
-import org.springframework.validation.Errors;
-import org.springframework.web.client.RestTemplate;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
-class msloginTests {
+public class IntegrationTest {
 
     @Autowired
     private UserRepository userRepository;
@@ -27,16 +23,9 @@ class msloginTests {
     @Autowired
     private UserController userController;
 
-    @Mock
-    private RestTemplate restTemplate;
-
     private User user;
 
     private BeanPropertyBindingResult errors;
-
-    @Test
-    void contextLoads() {
-    }
 
     @BeforeEach
     void beforeEach(){
@@ -50,39 +39,10 @@ class msloginTests {
         errors = new BeanPropertyBindingResult(user, "user");
     }
 
-//    @Test
-//    void inValidUserName(){
-//        user.setUsername("etet2351");
-//
-//        ResponseEntity<?> response = userController.registerUser(user, errors);
-//        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-//    }
-
     @Test
-    void passwordLessThanSixCharacters(){
-        user.setPassword("12345");
-        user.setConfirmPassword("12345");
+    void createUser(){
         ResponseEntity<?> response = userController.registerUser(user, errors);
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertEquals(HttpStatus.CREATED, response.getStatusCode());
     }
-
-    @Test
-    void passwordsDoNotMatch(){
-        user.setPassword("123456");
-        user.setConfirmPassword("654321");
-        ResponseEntity<?> response = userController.registerUser(user, errors);
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-
-    }
-
-    @Test
-    void userName(){
-        user.setFullName("");
-        ResponseEntity<?> response = userController.registerUser(user, errors);
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-    }
-
-
-
 
 }

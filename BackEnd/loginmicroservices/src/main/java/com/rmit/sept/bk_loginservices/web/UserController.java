@@ -41,7 +41,7 @@ public class UserController {
     private UserValidator userValidator;
 
     @GetMapping("/all")
-    public Object allUsers(){
+    public Iterable<User> allUsers(){
         return this.userRepository.findAll();
     }
 

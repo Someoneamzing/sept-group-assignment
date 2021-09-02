@@ -13,7 +13,7 @@ const Register = () => {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [userType, setUserType] = useState('PUBLIC');
-
+    // const userType = 'PUBLIC';
     const [inValidUsername, setInValidUsername] = useState(false);
     const [inValidFullName, setInValidFullName] = useState(false);
     const [inValidPassword, setInValidPassword] = useState(false);
