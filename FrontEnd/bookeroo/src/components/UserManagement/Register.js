@@ -12,7 +12,8 @@ const Register = () => {
     const [fullName, setFullName] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-
+    const [userType, setUserType] = useState('PUBLIC');
+    // const userType = 'PUBLIC';
     const [inValidUsername, setInValidUsername] = useState(false);
     const [inValidFullName, setInValidFullName] = useState(false);
     const [inValidPassword, setInValidPassword] = useState(false);
@@ -22,9 +23,9 @@ const Register = () => {
 
     const onSubmit = (e) => {
         e.preventDefault();
-        const newUser = { username, fullName, password, confirmPassword };
+        const newUser = { username, fullName, password, confirmPassword, userType };
 
-        // console.log(newUser)
+        console.log(newUser)
 
         // post request to spring boot
         fetch('http://localhost:8080/api/users/register', {
