@@ -80,12 +80,12 @@ function Header(props) {
         <div>
         <List>
             {menuItems.map(menuItem => {
-            const { menuTitle, pageURL } = menuItem;
-            return (
-                <ListItem button onClick={() => {handleMenuClick(pageURL); handleDrawerToggle()}}>
-                <ListItemText primary={menuTitle} key={menuTitle} />
-                </ListItem>
-            );
+                const { menuTitle, pageURL } = menuItem;
+                return (    
+                    <ListItem button key={menuTitle} onClick={() => {handleMenuClick(pageURL); handleDrawerToggle()}}>
+                        <ListItemText primary={menuTitle} />
+                    </ListItem>
+                );
             })}
         </List>
         </div>
@@ -106,7 +106,7 @@ function Header(props) {
                         <MenuIcon />
                     </IconButton>
                     <Typography variant="h6" noWrap>
-                        Bokeroo
+                        Bookeroo
                     </Typography>
 
                     {/* Menu for Desktop*/}
@@ -117,6 +117,7 @@ function Header(props) {
                                 <Button
                                     onClick={() => handleMenuClick(pageURL)}
                                     className={classes.menuItemDesktop}
+                                    key={menuTitle}
                                 >
                                     {menuTitle}
                                 </Button>
