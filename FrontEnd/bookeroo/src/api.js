@@ -18,9 +18,11 @@ export async function createBook(data) {
  * @returns {Promise<Object>} Promise that resolves with the server's response.
  */
 export async function createBookForSale(data) {
-    if (typeof data.book !== 'string') {
-        data.book = new URL((await createBook(data.book))._links.self).pathname;
-    }
+    console.log(data);
+    data.book = new URL(
+        data.book._links?.self?.href ||
+            (await createBook(data.book))._links.self.href
+    ).pathname;
     const url = new URL(`/api/bookForSales`, document.location);
     url.port = 8081;
     const response = await axios.post(url, data);

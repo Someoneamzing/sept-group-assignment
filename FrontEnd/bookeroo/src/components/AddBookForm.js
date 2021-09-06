@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import {useFormik} from 'formik';
 import {TextField, Button} from '@material-ui/core';
 import FilePicker, {VALID_IMAGE_TYPES} from './FilePicker';
@@ -42,6 +42,11 @@ export default function AddBookForm({
             }
         },
     });
+    const fileOnChangeHandler = useCallback(
+        (files) =>
+            formik.setFieldValue('coverArtURL', files?.length ? files[0] : ''),
+        [formik]
+    );
     return (
         <>
             <ContentComponent>
@@ -93,12 +98,7 @@ export default function AddBookForm({
                         className="AddBookForm-tableOfContents"
                     />
                     <FilePicker
-                        onChange={(files) =>
-                            formik.setFieldValue(
-                                'coverArtURL',
-                                files.length ? files[0] : ''
-                            )
-                        }
+                        onChange={fileOnChangeHandler}
                         className="AddBookForm-coverArt"
                         accept={VALID_IMAGE_TYPES.join(',')}
                     />

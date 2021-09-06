@@ -1,6 +1,7 @@
 import React from 'react';
 import Header from './components/Layout/Header';
 import Contact from './components/Layout/Contact';
+import AddBookForSaleForm from './components/AddBookForSaleForm';
 import {Route, Switch} from 'react-router-dom';
 import './App.css';
 import Register from './components/UserManagement/Register';
@@ -13,6 +14,7 @@ function App() {
                 <Switch>
                     <Route exact path="/register" component={Register} />
                     <Route exact path="/contact" component={Contact} />
+                    <Route exact path="/book" component={AddBookForSaleForm} />
                 </Switch>
             </div>
         </div>

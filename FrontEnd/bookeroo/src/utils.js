@@ -12,7 +12,7 @@ export function inputProps(formik, label, name) {
         onChange: formik.handleChange,
         value: formik.values[name],
         onBlur: formik.handleBlur,
-        error: formik.errors[name],
+        error: !!formik.errors[name],
         helperText: formik.errors[name],
         disabled: formik.isSubmitting,
     };

@@ -58,7 +58,12 @@ export default function BookField({allowCreate, ...props}) {
                 }}
                 noOptionsText="No Books"
                 renderInput={(params) => (
-                    <TextField {...params} label="Book" variant="outlined" />
+                    <TextField
+                        {...params}
+                        data-testid="autocomplete-input"
+                        label="Book"
+                        variant="outlined"
+                    />
                 )}
                 renderTags={() => null}
                 getOptionLabel={(option) => option.bookTitle}
