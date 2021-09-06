@@ -12,7 +12,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import CloseIcon from '@material-ui/icons/Close';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import {withRouter} from 'react-router-dom';
+import {withRouter, Link} from 'react-router-dom';
 import {makeStyles, useTheme} from '@material-ui/core/styles';
 
 const drawerWidth = 240;
@@ -20,6 +20,15 @@ const drawerWidth = 240;
 const useStyles = makeStyles((theme) => ({
     root: {
         display: 'flex',
+    },
+    title: {
+        color: 'white',
+        backgroundColor: '#3f51b5',
+        boxShadow: '0',
+        border: 'none',
+        // "&hover": {
+        //     background: "#47a7f5",
+        // },
     },
     appBar: {
         zIndex: theme.zIndex.drawer + 1,
@@ -105,9 +114,19 @@ function Header(props) {
                     >
                         <MenuIcon />
                     </IconButton>
-                    <Typography variant="h6" noWrap>
-                        Bookeroo
-                    </Typography>
+                    {/* <button
+                        onClick={() => handleMenuClick('/')}
+                        className={classes.title}
+                        key='Home'
+                    > */}
+                    <Link to= '/'>
+
+                        <Typography variant="h6" noWrap>
+                            Bookeroo
+                        </Typography>
+                    </Link>
+                    {/* </button> */}
+                    
 
                     {/* Menu for Desktop*/}
                     <Hidden xsDown implementation="css">
