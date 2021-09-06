@@ -4,7 +4,6 @@ package com.rmit.sept.bk_loginservices.services;
 
 
 import com.rmit.sept.bk_loginservices.Repositories.UserRepository;
-import com.rmit.sept.bk_loginservices.Repositories.UserTypeRepository;
 import com.rmit.sept.bk_loginservices.exceptions.ConstraintViolationException;
 import com.rmit.sept.bk_loginservices.model.User;
 import com.rmit.sept.bk_loginservices.model.UserType;
@@ -14,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -26,15 +24,13 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    private final UserTypeRepository userTypeRepository;
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
-    public UserService(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder, UserTypeRepository userTypeRepository) {
+    public UserService(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.userRepository = userRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
-        this.userTypeRepository = userTypeRepository;
     }
 
     public User saveNewUser(User newUser){
@@ -44,10 +40,8 @@ public class UserService {
         newUser.setPassword(bCryptPasswordEncoder.encode(newUser.getPassword()));
         //Username has to be unique (exception)
         newUser.setUsername(newUser.getUsername());
-        // User authorities are by default none
-        Set<UserType> auths = new HashSet<>();
-        auths.add(userTypeRepository.getPublic());
-        newUser.setAuthorities(auths);
+        // User authorities are by default Public
+        newUser.setAuthorities(Set.of(UserType.ADMIN));
         // We don't persist or show the confirmPassword
         newUser.setConfirmPassword("");
         try {

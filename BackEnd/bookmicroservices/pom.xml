@@ -8,14 +8,12 @@
         <version>2.5.4</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>com.rmit.sept</groupId>
-    <artifactId>bk_bookmicroservices</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-    <name>bk_bookmicroservices</name>
-    <description>bk_bookmicroservices</description>
+    <artifactId>bookmicroservices</artifactId>
+
     <properties>
         <java.version>11</java.version>
     </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -92,6 +90,7 @@
 
 
     <build>
+        <pluginManagement>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -129,6 +128,7 @@
                 </executions>
             </plugin>
         </plugins>
+        </pluginManagement>
     </build>
 
 </project>

@@ -10,5 +10,7 @@ spring:
       enabled: true
   jpa:
     show-sql: false
+    hibernate:
+      ddl-auto: create
 server:
   port: 8080
