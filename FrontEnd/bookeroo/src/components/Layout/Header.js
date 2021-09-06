@@ -55,6 +55,10 @@ function Header(props) {
             pageURL: '/',
         },
         {
+            menuTitle: 'Books',
+            pageURL: '/books',
+        },
+        {
             menuTitle: 'Contact',
             pageURL: '/contact',
         },
@@ -79,17 +83,15 @@ function Header(props) {
     const drawer = (
         <div>
             <List>
-                {menuItems.map((menuItem) => {
-                    const {menuTitle, pageURL} = menuItem;
-                    return (
-                        <ListItem
-                            button
-                            onClick={() => handleMenuClick(pageURL)}
-                        >
-                            <ListItemText primary={menuTitle} key={menuTitle} />
-                        </ListItem>
-                    );
-                })}
+                {menuItems.map(({menuTitle, pageURL}) => (
+                    <ListItem
+                        key={menuTitle}
+                        button
+                        onClick={() => handleMenuClick(pageURL)}
+                    >
+                        <ListItemText primary={menuTitle} />
+                    </ListItem>
+                ))}
             </List>
         </div>
     );
@@ -114,17 +116,15 @@ function Header(props) {
 
                     {/* Menu for Desktop*/}
                     <Hidden xsDown implementation="css">
-                        {menuItems.map((menuItem) => {
-                            const {menuTitle, pageURL} = menuItem;
-                            return (
-                                <Button
-                                    onClick={() => handleMenuClick(pageURL)}
-                                    className={classes.menuItemDesktop}
-                                >
-                                    {menuTitle}
-                                </Button>
-                            );
-                        })}
+                        {menuItems.map(({menuTitle, pageURL}) => (
+                            <Button
+                                key={menuTitle}
+                                onClick={() => handleMenuClick(pageURL)}
+                                className={classes.menuItemDesktop}
+                            >
+                                {menuTitle}
+                            </Button>
+                        ))}
                     </Hidden>
                 </Toolbar>
             </AppBar>
