@@ -12,6 +12,7 @@ import com.rmit.sept.bk_loginservices.validator.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -28,18 +29,29 @@ import static com.rmit.sept.bk_loginservices.security.SecurityConstant.TOKEN_PRE
 @RequestMapping("/api/users")
 public class UserController {
 
-    @Autowired
-    private MapValidationErrorService mapValidationErrorService;
+    private final MapValidationErrorService mapValidationErrorService;
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
     
-    @Autowired
-    private UserValidator userValidator;
+    private final UserValidator userValidator;
 
+    private final JwtTokenProvider tokenProvider;
+
+    private final AuthenticationManager authenticationManager;
+
+    @Autowired
+    public UserController(MapValidationErrorService mapValidationErrorService, UserService userService, UserRepository userRepository, UserValidator userValidator, JwtTokenProvider tokenProvider, AuthenticationManager authenticationManager) {
+        this.mapValidationErrorService = mapValidationErrorService;
+        this.userService = userService;
+        this.userRepository = userRepository;
+        this.userValidator = userValidator;
+        this.tokenProvider = tokenProvider;
+        this.authenticationManager = authenticationManager;
+    }
+
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/all")
     public Iterable<User> allUsers(){
         return this.userRepository.findAll();
@@ -53,21 +65,21 @@ public class UserController {
         ResponseEntity<?> errorMap = mapValidationErrorService.MapValidationService(result);
         if(errorMap != null)return errorMap;
 
-        User newUser = userService.saveUser(user);
+        User newUser = userService.saveNewUser(user);
 
-        return  new ResponseEntity<User>(newUser, HttpStatus.CREATED);
+        return  new ResponseEntity<>(newUser, HttpStatus.CREATED);
     }
 
     @GetMapping("/test")
     public String test(){
         return "test";
     }
-    @Autowired
-    private JwtTokenProvider tokenProvider;
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
 
+    @GetMapping("/bus_test")
+    public String busTest(){
+        return SecurityContextHolder.getContext().getAuthentication().getAuthorities().toString();
+    }
 
 
     @PostMapping("/login")
@@ -82,10 +94,10 @@ public class UserController {
                 )
         );
 
+//        is this required? JwtAuthenticationFilter already does this on secured routes
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = TOKEN_PREFIX +  tokenProvider.generateToken(authentication);
 
         return ResponseEntity.ok(new JWTLoginSucessReponse(true, jwt));
     }
-
 }
