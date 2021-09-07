@@ -6,7 +6,7 @@ import '@testing-library/jest-dom';
 import process from 'process';
 
 process.on('unhandledRejection', (err) => {
-    console.error(err);
+    process.strerr.write(err);
 });
 
 console.log(

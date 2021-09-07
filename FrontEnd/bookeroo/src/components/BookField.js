@@ -30,14 +30,13 @@ export default function BookField({allowCreate, ...props}) {
 
         (async () => {
             const books = await getBooks();
-            console.log(books);
             if (active) setOptions(books);
         })();
 
         return () => (active = false);
     }, [loading]);
     return (
-        <>
+        <div>
             <Autocomplete
                 id="book-select"
                 value={inputProps.value}
@@ -60,7 +59,10 @@ export default function BookField({allowCreate, ...props}) {
                 renderInput={(params) => (
                     <TextField
                         {...params}
-                        data-testid="autocomplete-input"
+                        inputProps={{
+                            ...params.inputProps,
+                            'data-testid': 'autocomplete-input',
+                        }}
                         label="Book"
                         variant="outlined"
                     />
@@ -72,6 +74,7 @@ export default function BookField({allowCreate, ...props}) {
                 }
                 loading={loading}
                 options={options}
+                disablePortal
                 filterOptions={(options, params) => {
                     const filtered = options.filter(
                         (option) =>
@@ -107,6 +110,6 @@ export default function BookField({allowCreate, ...props}) {
                     defaultValue={dialogValue}
                 ></AddBookForm>
             </Dialog>
-        </>
+        </div>
     );
 }
