@@ -13,7 +13,9 @@ import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests().anyRequest().permitAll().and().headers().frameOptions().sameOrigin().and().csrf().disable();
+        http.authorizeRequests().anyRequest().permitAll()
+                .and().headers().frameOptions().sameOrigin()
+                .and().cors().and().csrf().disable();
     }
 
     @Autowired
