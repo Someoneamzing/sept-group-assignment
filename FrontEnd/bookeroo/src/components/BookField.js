@@ -75,6 +75,7 @@ export default function BookField({allowCreate, ...props}) {
                 loading={loading}
                 options={options}
                 disablePortal
+                openOnFocus
                 filterOptions={(options, params) => {
                     const filtered = options.filter(
                         (option) =>
