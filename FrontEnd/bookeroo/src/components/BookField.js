@@ -99,7 +99,7 @@ export default function BookField({allowCreate, ...props}) {
                 onClose={() => setDialogOpen(false)}
                 maxWidth="lg"
             >
-                <DialogTitle>Add a Book</DialogTitle>
+                <DialogTitle data-testid="dialog-title">Add a Book</DialogTitle>
                 <AddBookForm
                     ContentComponent={DialogContent}
                     ActionComponent={DialogActions}
