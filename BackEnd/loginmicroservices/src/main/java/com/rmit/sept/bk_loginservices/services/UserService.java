@@ -27,7 +27,7 @@ public class UserService {
         // We don't persist or show the confirmPassword
         return userRepository.save(newUser);
        */
-//        try{
+        try{
         newUser.setPassword(bCryptPasswordEncoder.encode(newUser.getPassword()));
         //Username has to be unique (exception)
         newUser.setUsername(newUser.getUsername());
@@ -36,9 +36,9 @@ public class UserService {
         newUser.setConfirmPassword("");
         return userRepository.save(newUser);
 
-//        }catch (Exception e){
-//            throw new UsernameAlreadyExistsException("Username '"+newUser.getUsername()+"' already exists");
-//        }
+        }catch (Exception e){
+            throw new UsernameAlreadyExistsException("Username '"+newUser.getUsername()+"' already exists");
+        }
 
     }
 

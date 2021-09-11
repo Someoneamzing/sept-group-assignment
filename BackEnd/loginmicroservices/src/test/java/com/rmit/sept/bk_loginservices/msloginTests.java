@@ -4,6 +4,7 @@ import com.rmit.sept.bk_loginservices.Repositories.UserRepository;
 import com.rmit.sept.bk_loginservices.model.User;
 import com.rmit.sept.bk_loginservices.model.UserType;
 import com.rmit.sept.bk_loginservices.web.UserController;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -46,20 +47,37 @@ class msloginTests {
         user.setPassword("123456");
         user.setConfirmPassword("123456");
         user.setUserType(UserType.PUBLIC);
-
         errors = new BeanPropertyBindingResult(user, "user");
     }
 
-//    @Test
-//    void inValidUserName(){
-//        user.setUsername("etet2351");
-//
-//        ResponseEntity<?> response = userController.registerUser(user, errors);
-//        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-//    }
+    @Test
+    void inValidUserName(){
+        // must create a user inside this function... to test invalid username
+        User u = new User();
+        u.setUsername("");
+        u.setFullName("test");
+        u.setPassword("123456");
+        u.setUserType(UserType.PUBLIC);
+        ResponseEntity<?> response = userController.registerUser(u, errors);
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+    }
+
+    @Test
+    void emptyFullName(){
+        // must create a user inside this function... to test invalid full name
+        User u = new User();
+        u.setUsername("test2@gmail.com");
+        u.setFullName("");
+        u.setPassword("123456");
+        u.setPassword("123456");
+        u.setUserType(UserType.PUBLIC);
+        ResponseEntity<?> response = userController.registerUser(u, errors);
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+    }
 
     @Test
     void passwordLessThanSixCharacters(){
+        // changing password
         user.setPassword("12345");
         user.setConfirmPassword("12345");
         ResponseEntity<?> response = userController.registerUser(user, errors);
@@ -68,21 +86,11 @@ class msloginTests {
 
     @Test
     void passwordsDoNotMatch(){
+        // chaning password and confirm password
         user.setPassword("123456");
         user.setConfirmPassword("654321");
         ResponseEntity<?> response = userController.registerUser(user, errors);
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-
     }
-
-    @Test
-    void userName(){
-        user.setFullName("");
-        ResponseEntity<?> response = userController.registerUser(user, errors);
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-    }
-
-
-
 
 }

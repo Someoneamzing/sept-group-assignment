@@ -19,15 +19,14 @@ const Register = () => {
     const [inValidPassword, setInValidPassword] = useState(false);
     const [inValidConfirmPassword, setInValidConfirmPassword] = useState(false);
 
+    const [msg, setMsg] = useState('');
     const [errorMessages, setErrorMessages] = useState([]);
 
     const onSubmit = (e) => {
         e.preventDefault();
+
         const newUser = { username, fullName, password, confirmPassword, userType };
 
-        console.log(newUser)
-
-        // post request to spring boot
         fetch('http://localhost:8080/api/users/register', {
             method: 'POST',
             headers: { "Content-Type": "application/json" },
@@ -35,9 +34,10 @@ const Register = () => {
         }).then(response => {
             response.json().then(data => {
                 // console.log(data);
-
-                // errros occured in the form
-                if (response.status !== 201) {
+                // console.log(data['id'])
+                // console.log('test')
+                // console.log(data['username'])
+                if (data['id'] === undefined) {
                     setErrorMessages(data);
                     for (const key in data) {
                         if (key === "username") {
@@ -50,8 +50,9 @@ const Register = () => {
                             setInValidConfirmPassword(true);
                         }
                     }
+                    setMsg("Errors in Form");
                 } else {
-                    alert("user created")
+                    setMsg("User Created");
                     setErrorMessages([]);
                     setInValidUsername(false);
                     setInValidFullName(false);
@@ -62,14 +63,13 @@ const Register = () => {
         }).catch(e => {
             alert("Failed to connect to the backend")
         })
-
     }
 
     return (
         <div className="register">
             <Container maxWidth="sm">
                 <h1> Bookeroo Registration </h1>
-
+                <span>{msg}</span>
                 {/* {registration form } */}
                 <form className="form" onSubmit={onSubmit}>
                     <TextField
