@@ -1,10 +1,8 @@
-
 import React from 'react';
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import Register from '../components/UserManagement/Register'
-import { act, Simulate } from 'react-dom/test-utils';
-import fetchMock, { enableFetchMocks } from 'jest-fetch-mock';
-
+import { act } from 'react-dom/test-utils';
+import { enableFetchMocks } from 'jest-fetch-mock';
 
 // mock responses
 const createdResponse = {
@@ -23,12 +21,11 @@ const emptyFormErrors = {
 
 enableFetchMocks();
 
-
 // GIVEN new user wants to register on bookeroo,
 // WHEN they go to the register page and fill required details
 // THEN a “user - created “ message shows up.
 test('sep-15: new user wants to register as a public user', async () => {
-
+    // mock a fetch response with the mocked data.
     fetch.mockResponseOnce(JSON.stringify(createdResponse));
     render(<Register />);
     await act(async () => {
@@ -55,7 +52,7 @@ test('sep-15: new user wants to register as a public user', async () => {
 // WHEN user clicks to sign up to submit the form
 // THEN a “User name already exists” displays to the user.
 test('sep-15: user enters the username that already exists in the database', async () => {
-
+    // mock a fetch response with the mocked data.
     fetch.mockResponseOnce(JSON.stringify(userNameAlreadyExistsError));
     render(<Register />);
     await act(async () => {
@@ -84,7 +81,7 @@ test('sep-15: user enters the username that already exists in the database', asy
 // WHEN user clicks the button to submit the form
 // THEN an error message shows up, notifying the user that the password is less than 6 characters.
 test('sep-15: new user wants to register as a public user', async () => {
-
+    // mock a fetch response with the mocked data.
     fetch.mockResponseOnce(JSON.stringify(passwordError));
     render(<Register />);
     await act(async () => {
@@ -112,7 +109,7 @@ test('sep-15: new user wants to register as a public user', async () => {
 // WHEN user clicks the button to submit the form
 // THEN all error messages are displayed to the user.
 test('sep-15: User submits an empty form', async () => {
-
+    // mock a fetch response with the mocked data.
     fetch.mockResponseOnce(JSON.stringify(emptyFormErrors));
     render(<Register />);
     await act(async () => {

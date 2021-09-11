@@ -5,15 +5,13 @@ import TextField from '@material-ui/core/TextField';
 import Box from '@material-ui/core/Box';
 import { useState } from "react";
 
-
 const Register = () => {
 
     const [username, setUsername] = useState('');
     const [fullName, setFullName] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-    const [userType, setUserType] = useState('PUBLIC');
-    // const userType = 'PUBLIC';
+
     const [inValidUsername, setInValidUsername] = useState(false);
     const [inValidFullName, setInValidFullName] = useState(false);
     const [inValidPassword, setInValidPassword] = useState(false);
@@ -22,22 +20,24 @@ const Register = () => {
     const [msg, setMsg] = useState('');
     const [errorMessages, setErrorMessages] = useState([]);
 
+    const userType = 'PUBLIC';
+
     const onSubmit = (e) => {
         e.preventDefault();
 
+        // new user attributes
         const newUser = { username, fullName, password, confirmPassword, userType };
 
+        // make a post request
         fetch('http://localhost:8080/api/users/register', {
             method: 'POST',
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(newUser)
         }).then(response => {
             response.json().then(data => {
-                // console.log(data);
-                // console.log(data['id'])
-                // console.log('test')
-                // console.log(data['username'])
+                // if the data contains id then user is created
                 if (data['id'] === undefined) {
+                    // load errors in the form from the response
                     setErrorMessages(data);
                     for (const key in data) {
                         if (key === "username") {
@@ -52,6 +52,7 @@ const Register = () => {
                     }
                     setMsg("Errors in Form");
                 } else {
+                    // no errors in form
                     setMsg("User Created");
                     setErrorMessages([]);
                     setInValidUsername(false);
@@ -61,6 +62,7 @@ const Register = () => {
                 }
             })
         }).catch(e => {
+            // backend is not started
             alert("Failed to connect to the backend")
         })
     }
@@ -69,6 +71,7 @@ const Register = () => {
         <div className="register">
             <Container maxWidth="sm">
                 <h1> Bookeroo Registration </h1>
+                {/* small message showing if the user is created or not */}
                 <span>{msg}</span>
                 {/* {registration form } */}
                 <form className="form" onSubmit={onSubmit}>

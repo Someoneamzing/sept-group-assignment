@@ -1,29 +1,22 @@
 package com.rmit.sept.bk_loginservices;
 
-import com.rmit.sept.bk_loginservices.Repositories.UserRepository;
 import com.rmit.sept.bk_loginservices.model.User;
 import com.rmit.sept.bk_loginservices.model.UserType;
 import com.rmit.sept.bk_loginservices.web.UserController;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BeanPropertyBindingResult;
-import org.springframework.validation.Errors;
 import org.springframework.web.client.RestTemplate;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
 class msloginTests {
-
-    @Autowired
-    private UserRepository userRepository;
 
     @Autowired
     private UserController userController;
@@ -86,7 +79,7 @@ class msloginTests {
 
     @Test
     void passwordsDoNotMatch(){
-        // chaning password and confirm password
+        // changing password and confirm password
         user.setPassword("123456");
         user.setConfirmPassword("654321");
         ResponseEntity<?> response = userController.registerUser(user, errors);
