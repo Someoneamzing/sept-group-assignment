@@ -14,13 +14,3 @@ export default function Root() {
         </React.StrictMode>
     );
 }
-
-export function WrapperRoot({children}) {
-    return (
-        <React.StrictMode>
-            <RecoilRoot>
-                <BrowserRouter>{children}</BrowserRouter>
-            </RecoilRoot>
-        </React.StrictMode>
-    );
-}

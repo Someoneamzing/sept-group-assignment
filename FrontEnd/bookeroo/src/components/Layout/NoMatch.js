@@ -3,8 +3,7 @@ import React from 'react';
 import {useLocation} from 'react-router-dom';
 
 export default function NoMatch() {
-    let location = useLocation();
-
+    const location = useLocation();
     return (
         <Box margin="1rem">
             <h1>404</h1>

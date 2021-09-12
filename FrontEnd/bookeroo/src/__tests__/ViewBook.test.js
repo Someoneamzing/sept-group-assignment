@@ -1,10 +1,12 @@
 import React from 'react';
 import {fireEvent, render, screen, waitFor} from '@testing-library/react';
-import Root, {WrapperRoot} from '../Root';
+import Root from '../Root';
+import MockRoot from '../testing_utils/MockRoot';
 import {ViewBookSuspense} from '../components/BookManagement/ViewBook';
 
 // add mock book microservice to testing context
 import '../testing_utils/books_microservice/mockServer';
+import {createMemoryHistory} from 'history';
 
 /*
 GIVEN I am viewing a list of books,
@@ -31,9 +33,9 @@ THEN the system displays the books table of contents.
 */
 test("SEP-10: I want to see a book's table of contents", async () => {
     render(
-        <WrapperRoot>
+        <MockRoot>
             <ViewBookSuspense bookId="1" />
-        </WrapperRoot>
+        </MockRoot>
     );
     await waitFor(() => screen.getByText('Preview Book'));
     fireEvent.click(screen.getByText('Preview Book'));
@@ -48,11 +50,14 @@ WHEN the component finishes loading
 THEN It should say the book is not found (404)
 */
 test('SEP-10: I want to see a 404 page if a book does not exist', async () => {
+    const history = new createMemoryHistory();
+    history.push('/book/3453');
     render(
-        <WrapperRoot>
+        <MockRoot history={history}>
             <ViewBookSuspense bookId="3453" />
-        </WrapperRoot>
+        </MockRoot>
     );
+
     await waitFor(() => screen.getByText('404'));
-    waitFor(() => screen.getByText('No match for /book/3453'));
+    await waitFor(() => screen.getByText('/book/3453'));
 });

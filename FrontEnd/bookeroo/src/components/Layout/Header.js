@@ -91,6 +91,7 @@ function Header() {
             <List>
                 {Object.entries(menuItems).map(([menuTitle, pageURL]) => (
                     <Link
+                        key={pageURL}
                         to={pageURL}
                         style={{textDecoration: 'none'}}
                         onClick={handleDrawerToggle}
