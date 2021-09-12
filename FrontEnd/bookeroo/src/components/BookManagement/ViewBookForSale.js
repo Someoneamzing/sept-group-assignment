@@ -1,8 +1,8 @@
-import {Box, Button, Paper, TextField} from '@material-ui/core';
+import {Box, Button, TextField} from '@material-ui/core';
 import React, {Suspense} from 'react';
 import {useRecoilValue} from 'recoil';
-import {bookAtomFamily} from '../../state/books';
-import {useBookForSale} from '../../state/booksForSale';
+import {bookAtomFamily} from '../../state/books/books';
+import {useBookForSale} from '../../state/books/booksForSale';
 import {ViewBookLayout} from './ViewBook';
 import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart';
 import NoMatch from '../Layout/NoMatch';

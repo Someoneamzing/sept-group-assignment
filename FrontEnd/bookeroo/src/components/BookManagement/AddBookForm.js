@@ -1,10 +1,10 @@
 import React from 'react';
 import {useFormik} from 'formik';
 import {TextField, Button} from '@material-ui/core';
-import FilePicker from './FilePicker';
+import FilePicker from '../FilePicker';
 import './AddBookForm.css';
-import {createBook} from '../api';
-import {inputProps} from '../utils';
+import {createBook} from '../../api';
+import {inputProps} from '../../utils';
 
 const BOOK_DEFAULT = {
     bookTitle: '',

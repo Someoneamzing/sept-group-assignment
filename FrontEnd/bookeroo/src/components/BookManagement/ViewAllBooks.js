@@ -2,7 +2,7 @@ import {Box, Container} from '@material-ui/core';
 import React, {Suspense} from 'react';
 import {Link} from 'react-router-dom';
 import {useRecoilValue} from 'recoil';
-import {bookAtomFamily, useAllBooksQuery} from '../../state/books';
+import {bookAtomFamily, useAllBooksQuery} from '../../state/books/books';
 
 function BookListItem({bookId}) {
     const bookData = useRecoilValue(bookAtomFamily(bookId));

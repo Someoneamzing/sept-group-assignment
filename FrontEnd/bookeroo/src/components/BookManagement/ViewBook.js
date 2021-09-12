@@ -10,7 +10,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import Reviews, {RatingContainer} from './Reviews';
 import {useRecoilValue} from 'recoil';
-import {bookAtomFamily} from '../../state/books';
+import {bookAtomFamily} from '../../state/books/books';
 import CreateBook from './_DEBUG_components/CreateBook';
 import NoMatch from '../Layout/NoMatch';
 import {useTheme} from '@material-ui/core/styles';
@@ -133,12 +133,11 @@ function ViewBookContainer({bookId}) {
     }
     return (
         <>
-        <ViewBookLayout
-            {...{...bookData, bookId}}
-            RightBox={<>Pretend there is a list of sellers here</>}
-        />
-                    <Reviews bookId={bookId} />
-
+            <ViewBookLayout
+                {...{...bookData, bookId}}
+                RightBox={<>Pretend there is a list of sellers here</>}
+            />
+            <Reviews bookId={bookId} />
         </>
     );
 }

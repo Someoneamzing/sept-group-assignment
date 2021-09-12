@@ -2,7 +2,7 @@ import {Button, InputAdornment, TextField} from '@material-ui/core';
 import BookField from './BookField';
 import {Formik} from 'formik';
 import React from 'react';
-import {inputProps} from '../utils';
+import {inputProps} from '../../utils';
 
 export default function AddBookForSaleForm({onSubmit, ...props}) {
     const formikProps = {

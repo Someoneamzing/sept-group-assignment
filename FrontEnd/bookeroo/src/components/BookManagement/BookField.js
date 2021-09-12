@@ -10,7 +10,7 @@ import {
     DialogContent,
 } from '@material-ui/core';
 import BookThumbnail from './BookThumbnail';
-import {getBooks} from '../api';
+import {getBooks} from '../../api';
 
 export default function BookField({allowCreate, ...props}) {
     const [dialogOpen, setDialogOpen] = useState(false);
