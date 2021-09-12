@@ -26,8 +26,8 @@ const bookForSaleCacheKeyAtom = atom({
 const bookForSaleSelectorFamily = selectorFamily({
     key: 'booksForSale_info_v1',
     get:
-        ({bookId, cacheKey}) =>
-        async ({}) => {
+        ({bookId}) =>
+        async () => {
             const bookForSale = await fetchBookForSale(bookId);
             return bookForSale;
         },

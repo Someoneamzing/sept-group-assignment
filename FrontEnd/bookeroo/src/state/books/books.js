@@ -1,5 +1,5 @@
 import axios from 'axios';
-import {useCallback, useEffect} from 'react';
+import {useEffect} from 'react';
 import {
     atom,
     atomFamily,
@@ -7,24 +7,6 @@ import {
     useRecoilCallback,
     useRecoilValue,
 } from 'recoil';
-
-function later(delay) {
-    return new Promise(function (resolve) {
-        setTimeout(resolve, delay);
-    });
-}
-
-const PLACEHOLDER_BOOK = {
-    id: '234',
-    bookTitle: 'The Curious Incident of the Dog in the Night-Time',
-    author: 'Bob Bobson',
-    publisher: 'sdfsdfsdf',
-    isbn: 25298452,
-    publishDate: Date.now() / 1000,
-    priceInCents: 1099,
-    coverArtURL: '/bookbook.png',
-    tableOfContents: 'chapter 1\nchapter 2\nchapter 3',
-};
 
 const fetchBook = async (bookId) => {
     const config = {
@@ -79,6 +61,7 @@ export function useAllBooksQuery() {
     const allBooks = useRecoilValue(allBookIdsAtom);
     const loadBooks = useRecoilCallback(({set}) => async () => {
         const allBooks = await fetchAllBooks();
+        if (allBooks == null) return;
         const allBookIds = [];
         for (const book of allBooks) {
             const bookId = book._links.self.href.split('/').pop();
@@ -87,8 +70,9 @@ export function useAllBooksQuery() {
         }
         set(allBookIdsAtom, allBookIds);
     });
+    // (refetches books each time calling component is newly mounted)
     useEffect(() => {
         loadBooks();
-    }, []);
+    }, [loadBooks]);
     return {allBooks, loadBooks};
 }
