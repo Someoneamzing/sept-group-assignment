@@ -3,7 +3,7 @@ import React from 'react';
 import {Router} from 'react-router';
 import {RecoilRoot} from 'recoil';
 
-export default function WrapperRoot({children, ...props}) {
+export default function MockRoot({children, ...props}) {
     if (!props.history) props.history = createMemoryHistory();
     return (
         <React.StrictMode>
