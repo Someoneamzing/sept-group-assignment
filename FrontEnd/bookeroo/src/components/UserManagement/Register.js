@@ -12,13 +12,8 @@ const Register = () => {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
 
-    const [inValidUsername, setInValidUsername] = useState(false);
-    const [inValidFullName, setInValidFullName] = useState(false);
-    const [inValidPassword, setInValidPassword] = useState(false);
-    const [inValidConfirmPassword, setInValidConfirmPassword] = useState(false);
-
     const [msg, setMsg] = useState('');
-    const [errorMessages, setErrorMessages] = useState([]);
+    const [errorMessages, setErrorMessages] = useState({});
 
     const userType = 'PUBLIC';
 
@@ -39,26 +34,11 @@ const Register = () => {
                 if (data['id'] === undefined) {
                     // load errors in the form from the response
                     setErrorMessages(data);
-                    for (const key in data) {
-                        if (key === "username") {
-                            setInValidUsername(true);
-                        } else if (key === "fullName") {
-                            setInValidFullName(true);
-                        } else if (key === "password") {
-                            setInValidPassword(true);
-                        } else if (key === "confirmPassword") {
-                            setInValidConfirmPassword(true);
-                        }
-                    }
                     setMsg("Errors in Form");
                 } else {
                     // no errors in form
                     setMsg("User Created");
-                    setErrorMessages([]);
-                    setInValidUsername(false);
-                    setInValidFullName(false);
-                    setInValidPassword(false);
-                    setInValidConfirmPassword(false);
+                    setErrorMessages({});
                 }
             })
         }).catch(e => {
@@ -76,7 +56,7 @@ const Register = () => {
                 {/* {registration form } */}
                 <form className="form" onSubmit={onSubmit}>
                     <TextField
-                        error={inValidUsername}
+                        error={!!errorMessages['username']}
                         variant="outlined"
                         margin="normal"
                         fullWidth
@@ -89,7 +69,7 @@ const Register = () => {
                         onChange={(e) => setUsername(e.target.value)}
                     />
                     <TextField
-                        error={inValidFullName}
+                        error={!!errorMessages['fullName']}
                         variant="outlined"
                         margin="normal"
                         fullWidth
@@ -102,7 +82,7 @@ const Register = () => {
                         onChange={(e) => setFullName(e.target.value)}
                     />
                     <TextField
-                        error={inValidPassword}
+                        error={!!errorMessages['password']}
                         variant="outlined"
                         margin="normal"
                         fullWidth
@@ -115,7 +95,7 @@ const Register = () => {
                         onChange={(e) => setPassword(e.target.value)}
                     />
                     <TextField
-                        error={inValidConfirmPassword}
+                        error={!!errorMessages['confirmPassword']}
                         variant="outlined"
                         margin="normal"
                         fullWidth
