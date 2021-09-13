@@ -36,7 +36,7 @@ const Register = () => {
 
                 {/* {registration form } */}
 
-                <form className="form" validate onSubmit={onSubmit}>
+                <form className="form" validate="true" onSubmit={onSubmit}>
                     <TextField
                         variant="outlined"
                         margin="normal"

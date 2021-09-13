@@ -12,7 +12,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import CloseIcon from '@material-ui/icons/Close';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import {withRouter} from 'react-router-dom';
+import {withRouter, Link} from 'react-router-dom';
 import {makeStyles, useTheme} from '@material-ui/core/styles';
 
 const drawerWidth = 240;
@@ -20,6 +20,14 @@ const drawerWidth = 240;
 const useStyles = makeStyles((theme) => ({
     root: {
         display: 'flex',
+    },
+    title: {
+        color: 'white',
+        textDecoration: 'none',
+    },
+    toolbar: theme.mixins.toolbar,
+    drawerPaper: {
+        width: drawerWidth,
     },
     appBar: {
         zIndex: theme.zIndex.drawer + 1,
@@ -30,17 +38,13 @@ const useStyles = makeStyles((theme) => ({
             display: 'none',
         },
     },
-    toolbar: theme.mixins.toolbar,
-    drawerPaper: {
-        width: drawerWidth,
+    closeMenuButton: {
+        marginRight: 'auto',
+        marginLeft: 0,
     },
     content: {
         flexGrow: 1,
         padding: theme.spacing(3),
-    },
-    closeMenuButton: {
-        marginRight: 'auto',
-        marginLeft: 0,
     },
     menuItemDesktop: {
         marginLeft: theme.spacing(5),
@@ -49,6 +53,13 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function Header(props) {
+    const classes = useStyles();
+    const theme = useTheme();
+    const {history} = props;
+    const [mobileOpen, setMobileOpen] = React.useState(false);
+    const title = 'Bookeroo';
+
+    // array of nav-links for left side in navbar
     const menuItems = [
         {
             menuTitle: 'Home',
@@ -63,43 +74,46 @@ function Header(props) {
             pageURL: '/register',
         },
     ];
-    const classes = useStyles();
-    const theme = useTheme();
-    const {history} = props;
-    const [mobileOpen, setMobileOpen] = React.useState(false);
 
+    // menu/button handler to push page url on history
     function handleMenuClick(pageURL) {
         history.push(pageURL);
     }
 
+    // mobile menu/drawer handler
     function handleDrawerToggle() {
         setMobileOpen(!mobileOpen);
     }
 
-  function handleDrawerToggle() {
-    setMobileOpen(!mobileOpen);
-  }
-  
-  const drawer = (
-    <div>
-      <List>
-        {menuItems.map(menuItem => {
-          const { menuTitle, pageURL } = menuItem;
-          return (
-            <ListItem button onClick={() => {handleMenuClick(pageURL); handleDrawerToggle()}}>
-              <ListItemText primary={menuTitle} key={menuTitle} />
-            </ListItem>
-          );
-        })}
-      </List>
-    </div>
-  );
+    // mobile menu/drawer nav links
+    const drawer = (
+        <div>
+            <List>
+                {menuItems.map((menuItem) => {
+                    const {menuTitle, pageURL} = menuItem;
+                    return (
+                        <ListItem
+                            button
+                            key={menuTitle}
+                            onClick={() => {
+                                handleMenuClick(pageURL);
+                                handleDrawerToggle();
+                            }}
+                        >
+                            <ListItemText primary={menuTitle} />
+                        </ListItem>
+                    );
+                })}
+            </List>
+        </div>
+    );
 
     return (
         <div className={classes.root}>
             <CssBaseline />
             <AppBar position="fixed" className={classes.appBar}>
                 <Toolbar>
+                    {/* Menu for Mobile*/}
                     <IconButton
                         color="inherit"
                         aria-label="Open drawer"
@@ -109,9 +123,13 @@ function Header(props) {
                     >
                         <MenuIcon />
                     </IconButton>
-                    <Typography variant="h6" noWrap>
-                        Bokeroo
-                    </Typography>
+
+                    {/* Title*/}
+                    <Link to={'/'} className={classes.title}>
+                        <Typography variant="h6" noWrap>
+                            {title}
+                        </Typography>
+                    </Link>
 
                     {/* Menu for Desktop*/}
                     <Hidden xsDown implementation="css">
@@ -121,6 +139,7 @@ function Header(props) {
                                 <Button
                                     onClick={() => handleMenuClick(pageURL)}
                                     className={classes.menuItemDesktop}
+                                    key={menuTitle}
                                 >
                                     {menuTitle}
                                 </Button>
@@ -130,6 +149,7 @@ function Header(props) {
                 </Toolbar>
             </AppBar>
 
+            {/* Mobile Drawer*/}
             <nav className={classes.drawer}>
                 <Hidden smUp implementation="css">
                     <Drawer
@@ -154,6 +174,8 @@ function Header(props) {
                     </Drawer>
                 </Hidden>
             </nav>
+
+            {/* Spacer for content below navbar */}
             <div className={classes.content}>
                 <div className={classes.toolbar} />
             </div>
