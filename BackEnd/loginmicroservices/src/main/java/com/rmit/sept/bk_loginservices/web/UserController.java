@@ -3,6 +3,7 @@ package com.rmit.sept.bk_loginservices.web;
 
 import com.rmit.sept.bk_loginservices.Repositories.UserRepository;
 import com.rmit.sept.bk_loginservices.model.User;
+import com.rmit.sept.bk_loginservices.model.UserWrapper;
 import com.rmit.sept.bk_loginservices.payload.JWTLoginSucessReponse;
 import com.rmit.sept.bk_loginservices.payload.LoginRequest;
 import com.rmit.sept.bk_loginservices.security.JwtTokenProvider;
@@ -58,10 +59,21 @@ public class UserController {
         return  new ResponseEntity<User>(newUser, HttpStatus.CREATED);
     }
 
-    @GetMapping("/test")
-    public String test(){
-        return "test";
+        @PostMapping("/businessRegister")
+    public ResponseEntity<?> registerBusinessUser(@Valid @RequestBody UserWrapper user, BindingResult result){
+        // Validate passwords match
+        User u = user.getUser();
+        u.setBusinessInfo(user.getBusinessInfo());
+        userValidator.validate(u,result);
+
+        ResponseEntity<?> errorMap = mapValidationErrorService.MapValidationService(result);
+        if(errorMap != null)return errorMap;
+
+        User newUser = userService.saveUser(u);
+
+        return  new ResponseEntity<User>(newUser, HttpStatus.CREATED);
     }
+
     @Autowired
     private JwtTokenProvider tokenProvider;
 

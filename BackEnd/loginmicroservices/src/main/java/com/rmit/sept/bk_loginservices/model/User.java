@@ -39,6 +39,14 @@ public class User implements UserDetails {
     public User() {
     }
 
+    public BusinessInfo getBusinessInfo() {
+        return businessInfo;
+    }
+
+    public void setBusinessInfo(BusinessInfo businessInfo) {
+        this.businessInfo = businessInfo;
+    }
+
     public UserType getUserType() {
         return userType;
     }

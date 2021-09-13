@@ -4,28 +4,28 @@ import { Container } from '@material-ui/core';
 import TextField from '@material-ui/core/TextField';
 import Box from '@material-ui/core/Box';
 import { useState } from "react";
-import { Link } from 'react-router-dom'
 
-const Register = () => {
+const BusinessRegister = () => {
 
     const [username, setUsername] = useState('');
     const [fullName, setFullName] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+    const [abn, setAbn] = useState('');
 
     const [msg, setMsg] = useState('');
     const [errorMessages, setErrorMessages] = useState({});
 
-    const userType = 'PUBLIC';
+    const userType = 'BUSINESS';
 
     const onSubmit = (e) => {
         e.preventDefault();
 
         // new user attributes
-        const newUser = { username, fullName, password, confirmPassword, userType };
+        const newUser = { 'user': { username, fullName, password, confirmPassword, userType }, 'businessInfo': { abn } };
 
         // make a post request
-        fetch('http://localhost:8080/api/users/register', {
+        fetch('http://localhost:8080/api/users/businessRegister', {
             method: 'POST',
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(newUser)
@@ -109,7 +109,19 @@ const Register = () => {
                         helperText={errorMessages['confirmPassword']}
                         onChange={(e) => setConfirmPassword(e.target.value)}
                     />
-                    <Link to="/businessRegister">Business Registration</Link>
+                    <TextField
+                        error={!!errorMessages['businessInfo.abn']}
+                        variant="outlined"
+                        margin="normal"
+                        fullWidth
+                        id="abn"
+                        label="Abn"
+                        name="abn"
+                        autoFocus
+                        value={abn}
+                        helperText={errorMessages['businessInfo.abn']}
+                        onChange={(e) => setAbn(e.target.value)}
+                    />
                     <Box mt={1}>
                         <Button type="submit"
                             fullWidth
@@ -125,4 +137,4 @@ const Register = () => {
     )
 }
 
-export default Register
+export default BusinessRegister
