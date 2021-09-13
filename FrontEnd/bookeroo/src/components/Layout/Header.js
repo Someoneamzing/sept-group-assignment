@@ -60,6 +60,8 @@ const authedLinks = {
     Logout: '/logout',
 };
 
+const businessLinks = {Store: '/store'};
+
 const adminLinks = {Admin: '/admin'};
 
 const unauthedLinks = {
@@ -73,6 +75,9 @@ function Header() {
     if (!userState) {
         menuItems = {...menuItems, ...unauthedLinks};
     } else {
+        if (userState.authorities.includes('BUSINESS')) {
+            menuItems = {...menuItems, ...businessLinks};
+        }
         if (userState.authorities.includes('ADMIN')) {
             menuItems = {...menuItems, ...adminLinks};
         }

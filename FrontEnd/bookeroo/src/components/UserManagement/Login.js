@@ -10,7 +10,7 @@ import React, {useEffect, useState} from 'react';
 import Alert from '@material-ui/lab/Alert';
 import CloseIcon from '@material-ui/icons/Close';
 import {useRecoilState} from 'recoil';
-import {userAtom} from '../../state/user/authentication';
+import {loginApi, userAtom} from '../../state/user/authentication';
 import {Redirect} from 'react-router';
 
 export default function Login() {
@@ -29,26 +29,10 @@ export default function Login() {
         };
         setErrorMessages({});
 
-        // post request to spring boot
-        fetch('http://localhost:8080/api/users/login', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify(signIn),
-        })
-            .then((response) => {
-                response.json().then((data) => {
-                    if (response.status !== 200) {
-                        setErrorMessages(data);
-                    } else {
-                        const {authorities, token} = data;
-                        setUserState({username, authorities, token});
-                        setErrorMessages({});
-                    }
-                });
-            })
-            .catch((e) => {
-                alert('Failed to connect to the backend');
-            });
+        // post request to loginmicroservices
+        loginApi(signIn)
+            .then((data) => setUserState({...data, username}))
+            .catch((data) => setErrorMessages(data));
     };
     useEffect(() => {
         setAlertOpen(!!errorMessages['message']);
