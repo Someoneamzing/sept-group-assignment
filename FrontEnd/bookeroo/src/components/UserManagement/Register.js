@@ -54,7 +54,8 @@ const Register = () => {
                 {/* small message showing if the user is created or not */}
                 <span>{msg}</span>
                 {/* {registration form } */}
-                <form className="form" onSubmit={onSubmit}>
+
+                <form className="form" validate="true" onSubmit={onSubmit}>
                     <TextField
                         error={!!errorMessages['username']}
                         variant="outlined"
