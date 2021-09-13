@@ -41,7 +41,7 @@ public class UserService {
         //Username has to be unique (exception)
         newUser.setUsername(newUser.getUsername());
         // User authorities are by default Public
-        newUser.setAuthorities(Set.of(UserType.ADMIN));
+        newUser.setAuthorities(Set.of(UserType.PUBLIC));
         // We don't persist or show the confirmPassword
         newUser.setConfirmPassword("");
         try {
