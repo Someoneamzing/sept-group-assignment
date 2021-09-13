@@ -41,14 +41,14 @@ public class UserController {
     private UserValidator userValidator;
 
     @GetMapping("/all")
-    public Object allUsers(){
+    public Iterable<User> allUsers(){
         return this.userRepository.findAll();
     }
 
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@Valid @RequestBody User user, BindingResult result){
         // Validate passwords match
-//        userValidator.validate(user,result);
+        userValidator.validate(user,result);
 
         ResponseEntity<?> errorMap = mapValidationErrorService.MapValidationService(result);
         if(errorMap != null)return errorMap;

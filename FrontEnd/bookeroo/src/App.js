@@ -1,8 +1,8 @@
 import React from 'react';
 import Home from './pages/Home';
 import Header from './components/Layout/Header';
-import Contact from './pages/Contact';
-import {Route, Switch} from 'react-router-dom';
+import Contact from './components/Layout/Contact';
+import { Route, Switch } from 'react-router-dom';
 import './App.css';
 import Register from './components/UserManagement/Register';
 
