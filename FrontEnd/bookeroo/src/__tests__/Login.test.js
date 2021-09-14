@@ -114,18 +114,27 @@ test('Scenario 4: I want to log in as a public user with invalid credentials', a
     fireEvent.change(password, {target: {value: 'abc123'}});
     fireEvent.click(signIn);
     await waitFor(() => screen.getByText('Bad credentials'));
+    expect(screen.getAllByLabelText('User Name').length).toBeGreaterThan(0);
 });
 
 /**
-Scenario 5: I want to log in as a business owner with invalid credentials
-
-GIVEN: I am on the login page AND I am a registered business user AND I have provided  an incorrect username or password
-WHEN I click login
-THEN The system will display an error message quoting the failed login.
-
-Scenario 6: I want to log in as an admin with invalid credentials
-
-GIVEN: I am on the login page AND I am a registered admin user AND I have entered  an incorrect username or password
-WHEN I click login
-THEN The system will display an error message quoting the failed login.
+GIVEN I am on the Login page AND I am a registered regular user AND I am missing login information,
+WHEN I click “Login”
+THEN the system will display an error message quoting the missing field.
 */
+test('Scenario 5: I want to log in as a public user with a malformed request', async () => {
+    render(
+        <MockRoot>
+            <Login />
+        </MockRoot>
+    );
+    const username = screen.getByLabelText('User Name');
+    const signIn = screen.getByText('Sign In');
+    fireEvent.change(username, {target: {value: 'b@b.c'}});
+    fireEvent.click(signIn);
+    await waitFor(() => screen.getByText('Password cannot be blank'));
+    expect(screen.getAllByLabelText('User Name').length).toBeGreaterThan(0);
+    fireEvent.change(username, {target: {value: ''}});
+    fireEvent.click(signIn);
+    await waitFor(() => screen.getByText('Username cannot be blank'));
+});

@@ -33,7 +33,6 @@ const Register = () => {
                         debugger;
                         setErrorMessages(data);
                     } else {
-                        alert('user created');
                         setErrorMessages({});
                     }
                 });
