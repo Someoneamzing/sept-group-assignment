@@ -4,6 +4,7 @@ import Contact from './components/Layout/Contact';
 import {Route, Switch} from 'react-router-dom';
 import './App.css';
 import Register from './components/UserManagement/Register';
+import AddToOrderForm from './components/OrderManagement/AddToOrderForm';
 
 function App() {
     return (
@@ -13,6 +14,7 @@ function App() {
                 <Switch>
                     <Route exact path="/register" component={Register} />
                     <Route exact path="/contact" component={Contact} />
+                    <Route exact path="/order" component={AddToOrderForm} />
                 </Switch>
             </div>
         </div>
