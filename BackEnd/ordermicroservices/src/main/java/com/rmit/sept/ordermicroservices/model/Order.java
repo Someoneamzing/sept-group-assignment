@@ -2,6 +2,7 @@ package com.rmit.sept.ordermicroservices.model;
 
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -19,6 +20,14 @@ public class Order extends ServiceEntity {
     @Enumerated(EnumType.STRING)
     @NotNull
     private OrderStatus status;
+
+    @Autowired
+    public Order() {}
+
+    public Order(long userId) {
+        this.userId = userId;
+        this.status = OrderStatus.CURRENT;
+    }
 
     public List<OrderItem> getItems() {
         return items;

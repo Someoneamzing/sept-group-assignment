@@ -1,9 +1,12 @@
 spring:
   datasource:
-    url: jdbc:h2:file:~/test
+    url: jdbc:h2:file:~/order_db
     username: sa
     password:
     driver-class-name: org.h2.Driver
+    name: db_orders
+  hibernate:
+    dialect:
   h2:
     console:
       path: /h2-console
