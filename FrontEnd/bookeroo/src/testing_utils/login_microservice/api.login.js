@@ -32,7 +32,6 @@ const POST_API_USERS_LOGIN = {
             token: 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJmdWxsTmFtZSI6ImFkbWluIiwiaWQiOiIxIiwiZXhwIjoxNjMxNjcyNzgxLCJpYXQiOjE2MzE0NTY3ODEsInVzZXJuYW1lIjoiYUBiLmMifQ.E0I0Y9t_DVnC7oFPKPtVU_ClQTrVE4_P8vHZhxOebwo7JqlrKFaoWHP1pU-Etqoc-yunUmCkm-kO-7UU0o5zlg',
         },
     },
-    BAD: {message: 'Bad credentials'},
 };
 
 export default POST_API_USERS_LOGIN;

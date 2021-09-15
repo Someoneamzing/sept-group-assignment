@@ -13,8 +13,12 @@ export async function loginApi(data) {
     try {
         return (await axios.post(ENDPOINT, data)).data;
     } catch (e) {
-        console.log(Object.keys(e));
-        throw e.response.data;
+        if (e.response) {
+            throw e.response.data;
+        } else {
+            // eslint-disable-next-line no-throw-literal
+            throw {message: 'Could not connect to login service'};
+        }
     }
 }
 
