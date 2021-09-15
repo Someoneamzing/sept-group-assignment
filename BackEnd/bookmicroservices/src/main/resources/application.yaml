@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:h2:file:~/SEP_book_db
+    url: jdbc:h2:file:~/SEP_book_db;AUTO_SERVER=TRUE
     username: sa
     password:
     driver-class-name: org.h2.Driver
