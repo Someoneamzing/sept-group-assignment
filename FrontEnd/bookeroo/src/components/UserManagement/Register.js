@@ -1,119 +1,138 @@
-// import React, { Component } from 'react'
+import React, {useEffect, useState} from 'react';
+import {Collapse, IconButton} from '@material-ui/core';
 import {Button} from '@material-ui/core';
 import {Container} from '@material-ui/core';
 import TextField from '@material-ui/core/TextField';
+import Alert from '@material-ui/lab/Alert';
+import CloseIcon from '@material-ui/icons/Close';
 import Box from '@material-ui/core/Box';
-import {useState} from 'react';
+import {Redirect} from 'react-router';
+import {postUserApi} from '../../state/user/authentication';
 
 const Register = () => {
     const [username, setUsername] = useState('');
     const [fullName, setFullName] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+    const [alertOpen, setAlertOpen] = useState(true);
     const [errorMessages, setErrorMessages] = useState({});
+    const [result, setResult] = useState(false);
 
     const onSubmit = (e) => {
         e.preventDefault();
-        const newUser = {username, fullName, password, confirmPassword};
 
-        console.log(newUser);
+        // new user attributes
+        const newUser = {
+            username,
+            fullName,
+            password,
+            confirmPassword,
+        };
+        setErrorMessages({});
 
-        // post request to spring boot
-        fetch('http://localhost:8080/api/users/register', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify(newUser),
-        })
-            .then((response) => {
-                response.json().then((data) => {
-                    // console.log(data);
-
-                    // errros occured in the form
-                    if (response.status !== 201) {
-                        debugger;
-                        setErrorMessages(data);
-                    } else {
-                        setErrorMessages({});
-                    }
-                });
+        // make a post request
+        postUserApi(newUser, 'register')
+            .then((data) => {
+                setResult(data);
             })
-            .catch((e) => {
-                alert('Failed to connect to the backend');
-            });
+            .catch(setErrorMessages);
     };
+    useEffect(() => {
+        setAlertOpen(!!errorMessages['message']);
+    }, [errorMessages]);
 
     return (
-        <div className="register">
-            <Container maxWidth="sm">
-                <h1> Bookeroo Registration </h1>
+        <Container maxWidth="sm">
+            {/* redirect to login page if user registered */}
+            {result && <Redirect to="/login" />}
 
-                {/* {registration form } */}
-                <form className="form" onSubmit={onSubmit}>
-                    <TextField
-                        error={errorMessages['username']}
-                        variant="outlined"
-                        margin="normal"
+            <h1>Bookeroo Registration</h1>
+            <form className="form" onSubmit={onSubmit}>
+                <TextField
+                    error={!!errorMessages['username']}
+                    variant="outlined"
+                    margin="normal"
+                    fullWidth
+                    id="username"
+                    label="User Name"
+                    name="username"
+                    autoFocus
+                    helperText={errorMessages['username']}
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                />
+                <TextField
+                    error={!!errorMessages['fullName']}
+                    variant="outlined"
+                    margin="normal"
+                    fullWidth
+                    id="fullName"
+                    label="Full Name"
+                    name="fullName"
+                    autoFocus
+                    value={fullName}
+                    helperText={errorMessages['fullName']}
+                    onChange={(e) => setFullName(e.target.value)}
+                />
+                <TextField
+                    error={!!errorMessages['password']}
+                    variant="outlined"
+                    margin="normal"
+                    fullWidth
+                    name="password"
+                    label="Password"
+                    type="password"
+                    id="password"
+                    value={password}
+                    helperText={errorMessages['password']}
+                    onChange={(e) => setPassword(e.target.value)}
+                />
+                <TextField
+                    error={!!errorMessages['confirmPassword']}
+                    variant="outlined"
+                    margin="normal"
+                    fullWidth
+                    id="confirmPassword"
+                    label="Confirm Password"
+                    name="confirmPassword"
+                    autoFocus
+                    value={confirmPassword}
+                    helperText={errorMessages['confirmPassword']}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                />
+                <Box mt={1}>
+                    <Button
+                        type="submit"
                         fullWidth
-                        id="username"
-                        label="User Name"
-                        name="username"
-                        autoFocus
-                        helperText={errorMessages['username']}
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                    />
-                    <TextField
-                        error={errorMessages['fullName']}
-                        variant="outlined"
-                        margin="normal"
-                        fullWidth
-                        id="fullName"
-                        label="Full Name"
-                        name="fullName"
-                        autoFocus
-                        value={fullName}
-                        helperText={errorMessages['fullName']}
-                        onChange={(e) => setFullName(e.target.value)}
-                    />
-                    <TextField
-                        error={errorMessages['password']}
-                        variant="outlined"
-                        margin="normal"
-                        fullWidth
-                        name="password"
-                        label="Password"
-                        type="password"
-                        id="password"
-                        value={password}
-                        helperText={errorMessages['password']}
-                        onChange={(e) => setPassword(e.target.value)}
-                    />
-                    <TextField
-                        error={!!errorMessages['confirmPassword']}
-                        variant="outlined"
-                        margin="normal"
-                        fullWidth
-                        id="confirmPassword"
-                        label="Confirm Password"
-                        name="confirmPassword"
-                        autoFocus
-                        value={confirmPassword}
-                        helperText={errorMessages['confirmPassword']}
-                        onChange={(e) => setConfirmPassword(e.target.value)}
-                    />
-                    <Box mt={1}>
-                        <Button
-                            type="submit"
-                            fullWidth
-                            variant="contained"
-                            color="primary"
+                        variant="contained"
+                        color="primary"
+                    >
+                        Sign Up
+                    </Button>
+                </Box>
+                {errorMessages['message'] && (
+                    <Collapse in={alertOpen}>
+                        <Alert
+                            severity="warning"
+                            action={
+                                <IconButton
+                                    aria-label="close"
+                                    color="inherit"
+                                    size="small"
+                                    onClick={() => {
+                                        setAlertOpen(false);
+                                    }}
+                                >
+                                    <CloseIcon fontSize="inherit" />
+                                </IconButton>
+                            }
                         >
-                            Sign Up
-                        </Button>
-                    </Box>
-                </form>
-            </Container>
-        </div>
+                            {errorMessages['message']}
+                        </Alert>
+                    </Collapse>
+                )}
+            </form>
+        </Container>
     );
 };
 

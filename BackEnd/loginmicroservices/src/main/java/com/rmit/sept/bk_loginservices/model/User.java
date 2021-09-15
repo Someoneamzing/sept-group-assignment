@@ -1,6 +1,7 @@
 package com.rmit.sept.bk_loginservices.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.validator.constraints.UniqueElements;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -29,9 +30,11 @@ public class User implements UserDetails {
     private String username;
     @NotBlank(message = "Please enter your full name")
     private String fullName;
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @NotBlank(message = "Password field is required")
     private String password;
     @Transient
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String confirmPassword;
     private Date create_At;
     private Date update_At;
@@ -72,6 +75,7 @@ public class User implements UserDetails {
         this.fullName = fullName;
     }
 
+    @JsonIgnore
     public String getPassword() {
         return password;
     }
@@ -80,6 +84,7 @@ public class User implements UserDetails {
         this.password = password;
     }
 
+    @JsonIgnore
     public String getConfirmPassword() {
         return confirmPassword;
     }

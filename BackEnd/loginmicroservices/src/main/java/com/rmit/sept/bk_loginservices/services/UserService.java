@@ -36,16 +36,16 @@ public class UserService {
     public User saveNewUser(User newUser){
 
         //Username has to be unique (exception)
-        // We don't persist or show the confirmPassword
         newUser.setPassword(bCryptPasswordEncoder.encode(newUser.getPassword()));
-        //Username has to be unique (exception)
+
         newUser.setUsername(newUser.getUsername());
         // User authorities are by default Public
         newUser.setAuthorities(Set.of(UserType.PUBLIC));
+
         // We don't persist or show the confirmPassword
         newUser.setConfirmPassword("");
         try {
-        return userRepository.save(newUser);
+            return userRepository.save(newUser);
         }catch (Exception e){
             logger.error(e);
             throw new ConstraintViolationException("A constraint was not properly validated, the error has been logged.");
