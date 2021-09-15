@@ -9,7 +9,7 @@ import Box from '@material-ui/core/Box';
 import {Redirect} from 'react-router';
 import {postUserApi} from '../../state/user/authentication';
 
-const Register = () => {
+export default function Register() {
     const [username, setUsername] = useState('');
     const [fullName, setFullName] = useState('');
     const [password, setPassword] = useState('');
@@ -45,9 +45,9 @@ const Register = () => {
         <Container maxWidth="sm">
             {/* redirect to login page if user registered */}
             {result && <Redirect to="/login" />}
-
+            {result && 'Redirecting'}
             <h1>Bookeroo Registration</h1>
-            <form className="form" onSubmit={onSubmit}>
+            <form onSubmit={onSubmit}>
                 <TextField
                     error={!!errorMessages['username']}
                     variant="outlined"
@@ -69,7 +69,6 @@ const Register = () => {
                     id="fullName"
                     label="Full Name"
                     name="fullName"
-                    autoFocus
                     value={fullName}
                     helperText={errorMessages['fullName']}
                     onChange={(e) => setFullName(e.target.value)}
@@ -94,8 +93,8 @@ const Register = () => {
                     fullWidth
                     id="confirmPassword"
                     label="Confirm Password"
+                    type="password"
                     name="confirmPassword"
-                    autoFocus
                     value={confirmPassword}
                     helperText={errorMessages['confirmPassword']}
                     onChange={(e) => setConfirmPassword(e.target.value)}
@@ -134,6 +133,4 @@ const Register = () => {
             </form>
         </Container>
     );
-};
-
-export default Register;
+}
