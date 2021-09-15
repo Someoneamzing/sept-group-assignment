@@ -46,7 +46,9 @@ public class UserService {
         newUser.setConfirmPassword("");
         try {
             return userRepository.save(newUser);
-        }catch (Exception e){
+        } catch (javax.validation.ConstraintViolationException e) {
+            throw e;
+        } catch (Exception e){
             logger.error(e);
             throw new ConstraintViolationException("A constraint was not properly validated, the error has been logged.");
         }

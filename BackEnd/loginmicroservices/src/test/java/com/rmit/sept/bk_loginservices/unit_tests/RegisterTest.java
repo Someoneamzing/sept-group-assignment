@@ -28,15 +28,41 @@ class RegisterTest {
 
     private final CustomResponseEntityExceptionHandler handler = new CustomResponseEntityExceptionHandler();
 
-    @BeforeEach
-    void beforeEach(){
+    // Some constraint violation exceptions are handled by @ControllerAdvice CustomErrorHandler
+    CustomResponseEntityExceptionHandler.APIError catchConstraintViolations() {
+        ConstraintViolationException exps = assertThrows(ConstraintViolationException.class, () -> userController.registerUser(user, errors), "constraint violation did not throw");
+        ResponseEntity<?> response = handler.handleConstraintViolationException(exps);
+        return (CustomResponseEntityExceptionHandler.APIError) response.getBody();
+    }
+
+    User createUser() {
         user = new User();
         user.setUsername("test@gmail.com");
         user.setFullName("test");
         user.setPassword("123456");
         user.setConfirmPassword("123456");
+        return user;
+    }
 
+    @BeforeEach
+    void beforeEach(){
+        user = createUser();
         errors = new BeanPropertyBindingResult(user, "user");
+    }
+
+    @Test
+    void successfulRegister() {
+        ResponseEntity<?> response = userController.registerUser(user, errors);
+        assertEquals(HttpStatus.CREATED, response.getStatusCode());
+    }
+
+    @Test
+    void usernameMustBeUnique() {
+        ResponseEntity<?> response = userController.registerUser(user, errors);
+        User newUser = createUser();
+        errors = new BeanPropertyBindingResult(newUser, "user1");
+        ResponseEntity<?> response2 = userController.registerUser(user, errors);
+        assertEquals("Username must be unique", errors.getFieldErrors().get(0).getDefaultMessage());
     }
 
     @Test
@@ -44,7 +70,7 @@ class RegisterTest {
         user.setPassword("12345");
         user.setConfirmPassword("12345");
         ResponseEntity<?> response = userController.registerUser(user, errors);
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertEquals("Password must be at least 6 characters", errors.getFieldErrors().get(0).getDefaultMessage());
     }
 
     @Test
@@ -52,35 +78,21 @@ class RegisterTest {
         user.setPassword("123456");
         user.setConfirmPassword("654321");
         ResponseEntity<?> response = userController.registerUser(user, errors);
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-
+        assertEquals("Passwords must match", errors.getFieldErrors().get(0).getDefaultMessage());
     }
 
+
     @Test
-    void userName(){
+    void fullNameEmpty(){
         user.setFullName("");
-//        constraint violations are handled by @ControllerAdvice CustomErrorHandler
-        ConstraintViolationException excps = assertThrows(ConstraintViolationException.class, () -> userController.registerUser(user, errors), "constraint violation did not throw");
-        ResponseEntity<?> response = handler.handleConstraintViolationException(excps);
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-        CustomResponseEntityExceptionHandler.APIError violations = (CustomResponseEntityExceptionHandler.APIError) response.getBody();
-        assertEquals(1, violations.violations.size());
-        CustomResponseEntityExceptionHandler.APIError.Violation v = violations.violations.get(0);
-        assertEquals("Please enter your full name", v.error);
+        CustomResponseEntityExceptionHandler.APIError v = catchConstraintViolations();
+        assertEquals("Please enter your full name", v.violations.get(0).error);
     }
 
     @Test
-    void inValidUserName(){
+    void invalidEmail(){
         user.setUsername("etet2351");
-//        constraint violations are handled by @ControllerAdvice CustomErrorHandler
-        ConstraintViolationException excps = assertThrows(ConstraintViolationException.class, () -> userController.registerUser(user, errors), "constraint violation did not throw");
-        ResponseEntity<?> response = handler.handleConstraintViolationException(excps);
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-        CustomResponseEntityExceptionHandler.APIError violations = (CustomResponseEntityExceptionHandler.APIError) response.getBody();
-        assertEquals(1, violations.violations.size());
-        CustomResponseEntityExceptionHandler.APIError.Violation v = violations.violations.get(0);
-        assertEquals("Username needs to be an email", v.error);
+        CustomResponseEntityExceptionHandler.APIError v = catchConstraintViolations();
+        assertEquals("Username needs to be an email", v.violations.get(0).error);
     }
-
-
 }
