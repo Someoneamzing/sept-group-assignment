@@ -14,6 +14,9 @@ import java.util.Date;
 @Entity
 @Table(name="books")
 @Where(clause = "deleted = false")
+/**
+ * Represents details about a published book.
+ */
 public class Book extends ServiceEntity {
 
 

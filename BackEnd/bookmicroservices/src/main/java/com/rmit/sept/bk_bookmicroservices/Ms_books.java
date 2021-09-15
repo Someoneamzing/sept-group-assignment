@@ -13,6 +13,10 @@ public class Ms_books {
         SpringApplication.run(Ms_books.class, args);
     }
 
+    /**
+     * Configures CORS to allow all paths over COR
+     * @return
+     */
     @Bean
     public WebMvcConfigurer corsConfigurer() {
         return new WebMvcConfigurer() {

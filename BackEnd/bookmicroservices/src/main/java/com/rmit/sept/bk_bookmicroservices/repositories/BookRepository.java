@@ -5,6 +5,9 @@ import com.rmit.sept.bk_bookmicroservices.model.Book;
 import org.springframework.stereotype.Repository;
 
 @Repository
+/**
+ * The Repository storing Books. Standard exposure of CRUD operations from Spring Data REST
+ */
 public interface BookRepository extends JpaRepository<Book, Long> {
 
 }

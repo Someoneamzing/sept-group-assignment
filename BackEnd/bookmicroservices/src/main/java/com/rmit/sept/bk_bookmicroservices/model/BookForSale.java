@@ -13,6 +13,9 @@ import java.util.Date;
 @Entity
 @Table(name="booksforsale")
 @Where(clause = "deleted = false")
+/**
+ * Represents details about a book that has been put up for sale. Includes price, seller and quantity information.
+ */
 public class BookForSale extends ServiceEntity {
 
     @JoinColumn(nullable = false)
