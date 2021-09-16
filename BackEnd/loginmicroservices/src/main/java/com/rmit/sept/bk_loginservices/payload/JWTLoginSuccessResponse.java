@@ -4,12 +4,14 @@ import com.rmit.sept.bk_loginservices.model.User;
 
 import java.util.Collection;
 
-public class JWTLoginSucessReponse {
+public class JWTLoginSuccessResponse {
     private Collection<String> authorities;
     private boolean success;
     private String token;
 
-    public JWTLoginSucessReponse(boolean success, String token, Collection<String> authorities) {
+    public JWTLoginSuccessResponse(){};
+
+    public JWTLoginSuccessResponse(boolean success, String token, Collection<String> authorities) {
         this.success = success;
         this.token = token;
         this.authorities = authorities;
@@ -35,7 +37,7 @@ public class JWTLoginSucessReponse {
 
     @Override
     public String toString() {
-        return "JWTLoginSucessReponse{" +
+        return "JWTLoginSuccessResponse{" +
                 "success=" + success +
                 ", token='" + token + '\'' +
                 '}';

@@ -35,8 +35,8 @@ class RegisterTest {
         return (CustomResponseEntityExceptionHandler.APIError) response.getBody();
     }
 
-    User createUser() {
-        user = new User();
+    public static User createUser() {
+        User user = new User();
         user.setUsername("test@gmail.com");
         user.setFullName("test");
         user.setPassword("123456");
@@ -54,6 +54,8 @@ class RegisterTest {
     void successfulRegister() {
         ResponseEntity<?> response = userController.registerUser(user, errors);
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
+        assertEquals("[PUBLIC]", user.getAuthorities().toString());
+        assertEquals(1, user.getAuthorities().size());
     }
 
     @Test
