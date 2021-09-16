@@ -1,23 +1,9 @@
 package com.rmit.sept.bk_bookmicroservices.model;
 
-import org.hibernate.annotations.Filter;
-import org.hibernate.annotations.FilterDef;
-import org.hibernate.annotations.ParamDef;
-import org.hibernate.annotations.SQLDelete;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 
-
-//@FilterDef(
-//        name = "deletedFilter",
-//        parameters = @ParamDef(name = "isDeleted", type = "boolean")
-//)
-//@Filter(
-//        name = "deletedFilter",
-//        condition = "deleted = :isDeleted"
-//)
 @MappedSuperclass
 public abstract class ServiceEntity {
     @Id
@@ -30,13 +16,13 @@ public abstract class ServiceEntity {
     private boolean deleted;
 
     @PrePersist
-    protected void onCreate(){
+    protected void onCreate() {
         this.createAt = new Date();
         this.updateAt = this.createAt;
     }
 
     @PreUpdate
-    protected void onUpdate(){
+    protected void onUpdate() {
         this.updateAt = new Date();
     }
 

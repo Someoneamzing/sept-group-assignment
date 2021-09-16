@@ -7,11 +7,10 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
-import java.util.Date;
 
 @SQLDelete(sql = "UPDATE booksforsale SET deleted=TRUE WHERE id=?")
 @Entity
-@Table(name="booksforsale")
+@Table(name = "booksforsale")
 @Where(clause = "deleted = false")
 public class BookForSale extends ServiceEntity {
 
