@@ -14,3 +14,6 @@ spring:
       ddl-auto: create
 server:
   port: 8080
+  error:
+#    set this to never in production
+    include-stacktrace: on_param
