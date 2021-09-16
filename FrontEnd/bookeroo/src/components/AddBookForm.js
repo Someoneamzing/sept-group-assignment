@@ -26,8 +26,8 @@ const BOOK_DEFAULT = {
 export default function AddBookForm({
     onSubmit: onSubmitExt,
     onCancel,
-    ContentComponent,
-    ActionComponent,
+    ContentComponent = 'div',
+    ActionComponent = 'div',
     defaultValue = {},
 }) {
     const formik = useFormik({
@@ -53,6 +53,7 @@ export default function AddBookForm({
                 <form
                     onSubmit={formik.handleSubmit}
                     className="AddBookForm-form"
+                    data-testid="add-book-form"
                 >
                     <TextField
                         {...inputProps(formik, 'Book Title', 'bookTitle')}

@@ -18,7 +18,8 @@ export default function AddBookForSaleForm({onSubmit, ...props}) {
             salePriceInCents: 0,
         },
         onSubmit: async (values) => {
-            await createBookForSale({...values, sellerId: 0});
+            const response = await createBookForSale({...values, sellerId: 0});
+            onSubmit(response);
         },
     };
     return (
@@ -28,6 +29,7 @@ export default function AddBookForSaleForm({onSubmit, ...props}) {
                     <form
                         onSubmit={formik.handleSubmit}
                         onReset={formik.handleReset}
+                        data-testid="add-book-for-sale-form"
                     >
                         <BookField
                             {...inputProps(formik, 'Book', 'book')}
