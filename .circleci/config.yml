@@ -2,9 +2,15 @@
 # See: https://circleci.com/docs/2.0/configuration-reference
 version: 2.1
 
+orbs:
+  node: circleci/node@4.7.0
+
 jobs:
+  # based on https://discuss.circleci.com/t/maven-multi-module-project-reactor-install-goal-does-not-see-dependencies-that-have-been-built-a-while-ago/29051/2
+  # based on https://gist.github.com/dartov/149a1680a50c636b418119ba653a6ebb
   # Below is the definition of your job to build and test your app, you can rename and customize it as you want.
-  build-and-test:  
+  build-and-test-microservices:
+    working_directory: ~/BackEnd
     # These next lines define a Docker executor: https://circleci.com/docs/2.0/executor-types/
     # You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
     # Be sure to update the Docker image tag below to openjdk version of your application.
@@ -14,20 +20,56 @@ jobs:
     steps:
       # Checkout the code as the first step.
       - checkout
-      # Use mvn clean and package as the standard maven build phase
-      - run:
-          name: Build
-          command: mvn -B -DskipTests clean package
       # Then run your tests!
       - run:
-          name: Test
-          command: mvn test
+          name: Generate cumulitive pom.xml checksum
+          command: |
+            find . -type f -name "pom.xml" -exec sh -c "sha256sum {} >> ~/pom-checksum.tmp" \;
+            sort -o ~/pom-checksum ~/pom-checksum.tmp
+          when: always
+
+      - restore_cache:
+          keys: 
+            - BackEnd-{{ checksum "~/pom-checksum" }}
+            - BackEnd-
+
+      - run: mvn de.qaware.maven:go-offline-maven-plugin:resolve-dependencies
+
+      - save_cache:
+          paths:
+            - "~/.m2"
+          key: BackEnd-{{ checksum "~/pom-checksum" }}
+
+      - run: mvn package
+
+      - run:
+          name: Save test results
+          command: |
+            mkdir -p ~/test-results/junit/
+            find . -type f -regex ".*/target/surefire-reports/.*xml" -exec cp {} ~/test-results/junit/ \;
+
+      - store_test_results:
+          path: ~/test-results
+
+      - run:
+          name: Save build jars
+          command: |
+            mkdir -p ~/build_results/
+            find . -type f -regex ".*/target/.*jar" -exec cp {} ~/build_results/ \;
+
+      - store_artifacts:
+          path: ~/build_results/
+
 
 workflows:
   # Below is the definition of your workflow.
   # Inside the workflow, you provide the jobs you want to run, e.g this workflow runs the build-and-test job above.
   # CircleCI will run this workflow on every commit.
   # For more details on extending your workflow, see the configuration docs: https://circleci.com/docs/2.0/configuration-reference/#workflows
-  sample: 
+  build_and_test_project: 
     jobs:
-      - build-and-test
+      - build-and-test-microservices
+      - node/test:
+          app-dir: ~/FrontEnd/bookeroo
+          run-command: test
+          
