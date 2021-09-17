@@ -37,6 +37,15 @@ public class BookForSale extends ServiceEntity {
     @Positive
     private int sellPriceInCents;
 
+    public BookForSale() {}
+
+    public BookForSale(Book book, Long sellerId, int availableStock, int sellPriceInCents) {
+        this.book = book;
+        this.sellerId = sellerId;
+        this.availableStock = availableStock;
+        this.sellPriceInCents = sellPriceInCents;
+    }
+
     public Book getBook() {
         return book;
     }
@@ -67,5 +76,18 @@ public class BookForSale extends ServiceEntity {
 
     public void setSellPriceInCents(int sellPriceInCents) {
         this.sellPriceInCents = sellPriceInCents;
+    }
+
+    @Override
+    public String toString() {
+        return "BookForSale{" +
+                "id='" + getId() + '\'' +
+                ", book=" + book +
+                ", sellerId=" + sellerId +
+                ", availableStock=" + availableStock +
+                ", sellPriceInCents=" + sellPriceInCents +
+                ", createAt='" + getCreateAt() + '\'' +
+                ", updateAt='" + getUpdateAt() + '\'' +
+                '}';
     }
 }

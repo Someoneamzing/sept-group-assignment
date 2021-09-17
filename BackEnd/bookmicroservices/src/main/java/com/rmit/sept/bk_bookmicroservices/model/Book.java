@@ -40,6 +40,16 @@ public class Book extends ServiceEntity {
 
     public Book(){}
 
+    public Book(String bookTitle, String author, String publisher, Date publishDate, String ISBN, String coverArtURL, String tableOfContents) {
+        this.bookTitle = bookTitle;
+        this.author = author;
+        this.publisher = publisher;
+        this.publishDate = publishDate;
+        this.ISBN = ISBN;
+        this.coverArtURL = coverArtURL;
+        this.tableOfContents = tableOfContents;
+    }
+
     public String getBookTitle() {
         return bookTitle;
     }
@@ -96,5 +106,19 @@ public class Book extends ServiceEntity {
         this.tableOfContents = tableOfContents;
     }
 
-
+    @Override
+    public String toString() {
+        return "Book{" +
+                "id='" + getId() + '\'' +
+                ", bookTitle='" + bookTitle + '\'' +
+                ", author='" + author + '\'' +
+                ", publisher='" + publisher + '\'' +
+                ", publishDate=" + publishDate +
+                ", ISBN='" + ISBN + '\'' +
+                ", coverArtURL='" + coverArtURL + '\'' +
+                ", tableOfContents='" + tableOfContents + '\'' +
+                ", createAt='" + getCreateAt() + '\'' +
+                ", updateAt='" + getUpdateAt() + '\'' +
+                '}';
+    }
 }

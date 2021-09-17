@@ -4,6 +4,8 @@ import org.hibernate.annotations.Filter;
 import org.hibernate.annotations.FilterDef;
 import org.hibernate.annotations.ParamDef;
 import org.hibernate.annotations.SQLDelete;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -14,6 +16,8 @@ import java.util.Date;
  * Base abstract class for all database entities. Ensures consistent structure for IDs, timestamps and deletion behaviour.
  */
 public abstract class ServiceEntity {
+    private static final Logger log = LoggerFactory.getLogger(ServiceEntity.class);
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     /**
@@ -37,6 +41,7 @@ public abstract class ServiceEntity {
      * Updates the createAt timestamp on creation
      */
     protected void onCreate(){
+        log.info(String.format("OnCreate called for id: %s", this));
         this.createAt = new Date();
         this.updateAt = this.createAt;
     }
