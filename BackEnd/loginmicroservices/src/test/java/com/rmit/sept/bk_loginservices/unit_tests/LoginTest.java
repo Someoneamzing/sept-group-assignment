@@ -21,7 +21,6 @@ import java.util.Set;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @AutoConfigureMockMvc
@@ -39,14 +38,12 @@ public class LoginTest {
 
     private User user;
 
-    private BeanPropertyBindingResult errors;
     private LoginRequest request;
-    private ObjectMapper oMap = new ObjectMapper();
+    private final ObjectMapper oMap = new ObjectMapper();
 
     @BeforeEach
     void beforeEach(){
         request = new LoginRequest();
-        errors = new BeanPropertyBindingResult(request, "login");
         user = RegisterTest.createUser();
         userController.registerUser(user, new BeanPropertyBindingResult(user, "login"));
     }
