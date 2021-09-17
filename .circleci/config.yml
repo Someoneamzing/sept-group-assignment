@@ -34,17 +34,21 @@ jobs:
             - BackEnd-
 
       - run:
-            name: Resolve dependencies
-            command: |
-              cd BackEnd
-              mvn de.qaware.maven:go-offline-maven-plugin:resolve-dependencies
+          name: Resolve dependencies
+          command: |
+            cd BackEnd
+            mvn de.qaware.maven:go-offline-maven-plugin:resolve-dependencies
 
       - save_cache:
           paths:
             - "~/.m2"
           key: BackEnd-{{ checksum "~/pom-checksum" }}
 
-      - run: mvn package
+      - run:
+          name: Build microservices
+          command: |
+            cd BackEnd
+            mvn package
 
       - run:
           name: Save test results
@@ -74,6 +78,6 @@ workflows:
     jobs:
       - build-and-test-microservices
       - node/test:
-          app-dir: ~/FrontEnd/bookeroo/
+          app-dir: ./FrontEnd/bookeroo/
           run-command: test
           
