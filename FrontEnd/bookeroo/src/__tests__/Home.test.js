@@ -1,13 +1,17 @@
 import {fireEvent, render, screen} from '@testing-library/react';
 import Home from '../pages/Home';
-import {BrowserRouter} from 'react-router-dom';
 import {createMemoryHistory} from 'history';
 import App from '../App';
+import MockRoot from '../testing_utils/MockRoot';
 
-const renderWithRouter = (ui, {route = '/'} = {}) => {
-    window.history.pushState({}, 'Test page', route);
-
-    return render(ui, {wrapper: BrowserRouter});
+const renderApp = () => {
+    const history = createMemoryHistory();
+    history.push('/');
+    render(
+        <MockRoot history={history}>
+            <App />
+        </MockRoot>
+    );
 };
 
 describe('Home', () => {
@@ -34,8 +38,7 @@ describe('Home', () => {
 
         // Testing if buttons are clickable and redirect to Register page
         it('Button "Register as a Customer" should redirect to /register', async () => {
-            const history = createMemoryHistory();
-            renderWithRouter(<App props={history} />);
+            renderApp();
             const button = screen.getByRole('button', {
                 name: /Register as a Customer/i,
             });
@@ -46,8 +49,7 @@ describe('Home', () => {
         });
 
         it('Button "Register as a business" should redirect to /register', async () => {
-            const history = createMemoryHistory();
-            renderWithRouter(<App props={history} />);
+            renderApp();
             const button = screen.getByRole('button', {
                 name: /Register as a business/i,
             });
