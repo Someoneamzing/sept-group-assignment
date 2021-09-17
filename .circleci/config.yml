@@ -78,6 +78,6 @@ workflows:
     jobs:
       - build-and-test-microservices
       - node/test:
-          app-dir: ./FrontEnd/bookeroo/
+          app-dir: ~/project/FrontEnd/bookeroo/
           run-command: test
           
