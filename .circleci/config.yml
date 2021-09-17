@@ -80,4 +80,4 @@ workflows:
       - node/test:
           app-dir: ~/project/FrontEnd/bookeroo/
           run-command: test
-          
+          cache-version: v2
