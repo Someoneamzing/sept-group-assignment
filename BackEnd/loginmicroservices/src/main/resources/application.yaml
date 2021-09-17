@@ -9,14 +9,14 @@ spring:
       path: /h2-console
       enabled: true
   jpa:
-    defer-datasource-initialization: true
+#    defer-datasource-initialization: true
     show-sql: false
     hibernate:
       ddl-auto: create-drop
     database-platform: org.hibernate.dialect.H2Dialect
-  sql:
-    init:
-      mode: always
+#  sql:
+#    init:
+#      mode: always
 server:
   error:
     include-stacktrace: always

@@ -51,4 +51,23 @@ public class UserService {
             throw new ConstraintViolationException("A constraint was not properly validated, the error has been logged.");
         }
     }
+
+    // Do I need a saveNewAdmin for security reasons?
+    public User saveNewAdmin(User newAdmin){
+        //Username has to be unique (exception)
+        // We don't persist or show the confirmPassword
+        newAdmin.setPassword(bCryptPasswordEncoder.encode(newAdmin.getPassword()));
+        //Username has to be unique (exception)
+        newAdmin.setUsername(newAdmin.getUsername());
+        // User authorities are by default Public
+        newAdmin.setAuthorities(Set.of(UserType.ADMIN));
+        // We don't persist or show the confirmPassword
+        newAdmin.setConfirmPassword("");
+        try {
+            return userRepository.save(newAdmin);
+        }catch (Exception e){
+            logger.error(e);
+            throw new ConstraintViolationException("A constraint was not properly validated, the error has been logged.");
+        }
+    }
 }
