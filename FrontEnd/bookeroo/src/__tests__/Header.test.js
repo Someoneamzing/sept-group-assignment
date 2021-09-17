@@ -2,11 +2,16 @@ import App from '../App';
 import {fireEvent, render, screen} from '@testing-library/react';
 import {BrowserRouter} from 'react-router-dom';
 import {createMemoryHistory} from 'history';
+import MockRoot from '../testing_utils/MockRoot';
 
-const renderWithRouter = (ui, {route = '/'} = {}) => {
-    window.history.pushState({}, 'Test page', route);
-
-    return render(ui, {wrapper: BrowserRouter});
+const renderApp = () => {
+    const history = createMemoryHistory();
+    history.push('/');
+    render(
+        <MockRoot history={history}>
+            <App />
+        </MockRoot>
+    );
 };
 
 describe('Header', () => {
@@ -18,8 +23,7 @@ describe('Header', () => {
             THEN the system will display the Home page.
         */
         it('Navlink to Home redirects to home page', async () => {
-            const history = createMemoryHistory();
-            renderWithRouter(<App props={history} />);
+            renderApp();
 
             // redirecting to register first
             const registerButton = screen.getAllByRole('button', {
@@ -41,8 +45,7 @@ describe('Header', () => {
         });
 
         it('click on Bookeroo redirects to home page', async () => {
-            const history = createMemoryHistory();
-            renderWithRouter(<App props={history} />);
+            renderApp();
 
             // redirecting to register first
             const button = screen.getAllByRole('button', {
@@ -64,8 +67,8 @@ describe('Header', () => {
         });
 
         it('Navlink to Register redirects to register page', async () => {
-            const history = createMemoryHistory();
-            renderWithRouter(<App props={history} />);
+            renderApp();
+
             const button = screen.getAllByRole('button', {
                 name: /Register/i,
             });
@@ -81,8 +84,8 @@ describe('Header', () => {
             THEN the system will display the business contact details.
         */
         it('Navlink to Contact redirects to contact us page', async () => {
-            const history = createMemoryHistory();
-            renderWithRouter(<App props={history} />);
+            renderApp();
+
             const button = screen.getByRole('button', {
                 name: /Contact/i,
             });

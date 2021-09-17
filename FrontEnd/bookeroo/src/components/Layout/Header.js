@@ -54,6 +54,8 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
+const title = 'Bookeroo';
+
 const defaultLinks = {
     Home: '/',
     Contact: '/contact',
@@ -75,6 +77,8 @@ const unauthedLinks = {
 
 function Header() {
     const userState = useRecoilValue(userAtom);
+
+    // array of nav-links for the navbar
     let menuItems = defaultLinks;
     if (!userState) {
         menuItems = {...menuItems, ...unauthedLinks};
