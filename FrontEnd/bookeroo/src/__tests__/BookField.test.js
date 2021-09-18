@@ -12,7 +12,7 @@ import {
 import {getBooks} from '../api';
 import {Formik} from 'formik';
 import TEST_BOOKS from '../testingUtils/books_microservice/api.books';
-import BookField from '../components/BookField';
+import BookField from '../components/BookManagement/BookField';
 import '../testingUtils/books_microservice/mockServer';
 process.on('unhandledRejection', (err) => {
     console.error(err);

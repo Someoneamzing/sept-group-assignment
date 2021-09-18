@@ -2,8 +2,8 @@ import {Button, InputAdornment, TextField} from '@material-ui/core';
 import BookField from './BookField';
 import {Formik} from 'formik';
 import React from 'react';
-import {inputProps} from '../utils';
-import {createBookForSale} from '../api';
+import {inputProps} from '../../utils';
+import {createBookForSale} from '../../api';
 
 /**
  * A form for adding a BookForSale.

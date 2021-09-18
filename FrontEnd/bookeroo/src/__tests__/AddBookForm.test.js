@@ -7,7 +7,7 @@ import {
     waitFor,
     getByTestId,
 } from '@testing-library/react';
-import AddBookForm from '../components/AddBookForm';
+import AddBookForm from '../components/BookManagement/AddBookForm.js';
 import FilePicker from '../components/FilePicker.js';
 import {createBook} from '../api.js';
 

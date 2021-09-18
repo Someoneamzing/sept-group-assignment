@@ -7,11 +7,11 @@ import {
     waitFor,
     getByTestId,
 } from '@testing-library/react';
-import BookField from '../components/BookField.js';
-import AddBookForSaleForm from '../components/AddBookForSaleForm.js';
+import BookField from '../components/BookManagement/BookField.js';
+import AddBookForSaleForm from '../components/BookManagement/AddBookForSaleForm.js';
 import {createBookForSale} from '../api.js';
 
-jest.mock('../components/BookField.js');
+jest.mock('../components/BookManagement/BookField.js');
 jest.mock('../api.js');
 
 // Simple test data. The actual data does not matter, just the identity.
