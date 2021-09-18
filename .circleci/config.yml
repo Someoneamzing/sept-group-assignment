@@ -79,7 +79,7 @@ jobs:
           cache-version: v1
           cache-path: node_modules
       - run:
-          command: cd ~/project/FrontEnd/bookeroo && npm run test
+          command: cd ~/project/FrontEnd/bookeroo && npm run test:ci
           name: Test frontend
       - store_test_results:
           path: ~/project/FrontEnd/bookeroo/junit.xml
