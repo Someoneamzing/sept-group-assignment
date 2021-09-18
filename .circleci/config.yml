@@ -74,12 +74,13 @@ jobs:
     steps:
     # checkout the code
       - checkout
+      
     # installs dependencies and validate lock file against packge.json
       - run:
           name: Resolve FrontEnd node dependencies
           command: |
             cd FrontEnd/bookeroo
-            npm ci
+            npm install
 
     # run tests
       - run:
@@ -90,7 +91,7 @@ jobs:
 
     # run build
       - run:
-          command: cd ~/project/FrontEnd/bookeroo && npm run build
+          command: cd ~/project/FrontEnd/bookeroo && npm run build  
       - store_artifacts:
           path: ~/project/FrontEnd/bookeroo/build/
 
@@ -101,5 +102,5 @@ workflows:
   # For more details on extending your workflow, see the configuration docs: https://circleci.com/docs/2.0/configuration-reference/#workflows
   build_and_test_project: 
     jobs:
-      - build-and-test-microservices
       - build-and-test-frontend
+      - build-and-test-microservices
