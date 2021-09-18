@@ -84,6 +84,7 @@ jobs:
           name: Test frontend
       - store_test_results:
           path: ~/project/FrontEnd/bookeroo/junit.xml
+          
     # run build
       - run:
           command: cd ~/project/FrontEnd/bookeroo && npm run build
