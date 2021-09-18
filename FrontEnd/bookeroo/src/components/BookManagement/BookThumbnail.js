@@ -1,6 +1,11 @@
 import React from 'react';
 import './BookThumbnail.css';
 
+/**
+ * A component for displaying the thumbnail and summary information about a book.
+ * @param {Object} props The props for the component
+ * @returns a BookThumbnail component
+ */
 export default function BookThumbnail({book, ...props}) {
     return (
         <div className="BookThumbnail">

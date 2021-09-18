@@ -3,7 +3,13 @@ import BookField from './BookField';
 import {Formik} from 'formik';
 import React from 'react';
 import {inputProps} from '../../utils';
+import {createBookForSale} from '../../api';
 
+/**
+ * A form for adding a BookForSale.
+ * @param {Object} props
+ * @returns An AddBookForSaleForm component.
+ */
 export default function AddBookForSaleForm({onSubmit, ...props}) {
     const formikProps = {
         initialValues: {
@@ -11,7 +17,10 @@ export default function AddBookForSaleForm({onSubmit, ...props}) {
             availableStock: 0,
             salePriceInCents: 0,
         },
-        onSubmit,
+        onSubmit: async (values) => {
+            const response = await createBookForSale({...values, sellerId: 0});
+            onSubmit(response);
+        },
     };
     return (
         <Formik {...formikProps}>
@@ -20,6 +29,7 @@ export default function AddBookForSaleForm({onSubmit, ...props}) {
                     <form
                         onSubmit={formik.handleSubmit}
                         onReset={formik.handleReset}
+                        data-testid="add-book-for-sale-form"
                     >
                         <BookField
                             {...inputProps(formik, 'Book', 'book')}
@@ -29,7 +39,7 @@ export default function AddBookForSaleForm({onSubmit, ...props}) {
                             {...inputProps(
                                 formik,
                                 'Sale Price',
-                                'salePriceInCents'
+                                'sellPriceInCents'
                             )}
                             fullWidth
                             variant="outlined"

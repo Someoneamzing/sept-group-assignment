@@ -7,6 +7,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 //@RestController
 //@RequestMapping("/api/books")
+
+/**
+ * Unused controller used as a placeholder for future behaviour.
+ */
 public class BookController {
 
 }
