@@ -3,7 +3,7 @@ package com.rmit.sept.bk_loginservices.web;
 
 import com.rmit.sept.bk_loginservices.Repositories.UserRepository;
 import com.rmit.sept.bk_loginservices.model.User;
-import com.rmit.sept.bk_loginservices.payload.JWTLoginSucessReponse;
+import com.rmit.sept.bk_loginservices.payload.JWTLoginSuccessResponse;
 import com.rmit.sept.bk_loginservices.payload.LoginRequest;
 import com.rmit.sept.bk_loginservices.security.JwtTokenProvider;
 import com.rmit.sept.bk_loginservices.services.MapValidationErrorService;
@@ -12,14 +12,18 @@ import com.rmit.sept.bk_loginservices.validator.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+
+import java.util.stream.Collectors;
 
 import static com.rmit.sept.bk_loginservices.security.SecurityConstant.TOKEN_PREFIX;
 
@@ -28,19 +32,30 @@ import static com.rmit.sept.bk_loginservices.security.SecurityConstant.TOKEN_PRE
 @RequestMapping("/api/users")
 public class UserController {
 
-    @Autowired
-    private MapValidationErrorService mapValidationErrorService;
+    private final MapValidationErrorService mapValidationErrorService;
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
     
-    @Autowired
-    private UserValidator userValidator;
+    private final UserValidator userValidator;
 
-    @GetMapping("/all")
+    private final JwtTokenProvider tokenProvider;
+
+    private final AuthenticationManager authenticationManager;
+
+    @Autowired
+    public UserController(MapValidationErrorService mapValidationErrorService, UserService userService, UserRepository userRepository, UserValidator userValidator, JwtTokenProvider tokenProvider, AuthenticationManager authenticationManager) {
+        this.mapValidationErrorService = mapValidationErrorService;
+        this.userService = userService;
+        this.userRepository = userRepository;
+        this.userValidator = userValidator;
+        this.tokenProvider = tokenProvider;
+        this.authenticationManager = authenticationManager;
+    }
+
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @GetMapping("/")
     public Iterable<User> allUsers(){
         return this.userRepository.findAll();
     }
@@ -53,21 +68,15 @@ public class UserController {
         ResponseEntity<?> errorMap = mapValidationErrorService.MapValidationService(result);
         if(errorMap != null)return errorMap;
 
-        User newUser = userService.saveUser(user);
+        User newUser = userService.saveNewUser(user);
 
-        return  new ResponseEntity<User>(newUser, HttpStatus.CREATED);
+        return  new ResponseEntity<>(newUser, HttpStatus.CREATED);
     }
 
-    @GetMapping("/test")
-    public String test(){
-        return "test";
+    @GetMapping("/my_authorities")
+    public String myAuthorities(){
+        return SecurityContextHolder.getContext().getAuthentication().getAuthorities().toString();
     }
-    @Autowired
-    private JwtTokenProvider tokenProvider;
-
-    @Autowired
-    private AuthenticationManager authenticationManager;
-
 
 
     @PostMapping("/login")
@@ -82,10 +91,10 @@ public class UserController {
                 )
         );
 
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+//        is this required? JwtAuthenticationFilter already does this on secured routes
+//        SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = TOKEN_PREFIX +  tokenProvider.generateToken(authentication);
 
-        return ResponseEntity.ok(new JWTLoginSucessReponse(true, jwt));
+        return ResponseEntity.ok(new JWTLoginSuccessResponse(true, jwt, authentication.getAuthorities().stream().map(GrantedAuthority::toString).collect(Collectors.toSet())));
     }
-
 }
