@@ -68,10 +68,12 @@ jobs:
       - store_artifacts:
           path: ~/build_results/
   build-and-test-frontend:
+    working_directory: ~/project/FrontEnd/bookeroo
     # Reuse Docker container specification given by the node Orb
     executor: node/default
     steps:
-      - checkout
+      - checkout:
+          path: ~/project/FrontEnd/bookeroo
       # Install the latest npm - the node Orb takes care of it
       - node/install-npm
       - node/install-packages:
