@@ -2,6 +2,9 @@
 # See: https://circleci.com/docs/2.0/configuration-reference
 version: 2.1
 
+orbs:
+  node: circleci/node@4.7.0
+
 jobs:
   # based on https://discuss.circleci.com/t/maven-multi-module-project-reactor-install-goal-does-not-see-dependencies-that-have-been-built-a-while-ago/29051/2
   # based on https://gist.github.com/dartov/149a1680a50c636b418119ba653a6ebb
@@ -67,7 +70,7 @@ jobs:
   build-and-test-frontend:
     # Use container with node and npm installed
     docker:
-      - image: circleci/node:14
+      - image: cimg/node:lts
     steps:
     # checkout the code
       - checkout
