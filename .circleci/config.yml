@@ -80,7 +80,7 @@ jobs:
           name: Resolve FrontEnd node dependencies
           command: |
             cd FrontEnd/bookeroo
-            npm install
+            npm install --no-optional
 
     # run tests
       - run:
