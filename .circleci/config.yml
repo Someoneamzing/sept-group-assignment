@@ -76,7 +76,7 @@ jobs:
       - node/install-npm
       - node/install-packages:
           app-dir: ~/project/FrontEnd/bookeroo
-          cache-version: v1
+          cache-version: v2
           cache-path: node_modules
       - run:
           command: cd ~/project/FrontEnd/bookeroo && npm run test:ci
