@@ -80,11 +80,11 @@ jobs:
 
     # run tests
       - run:
-          command: cd ~/project/FrontEnd/bookeroo && npm run test:ci
+          command: cd ~/project/FrontEnd/bookeroo && CI=true && npm run test:ci
           name: Test frontend
       - store_test_results:
           path: ~/project/FrontEnd/bookeroo/junit.xml
-          
+
     # run build
       - run:
           command: cd ~/project/FrontEnd/bookeroo && npm run build
