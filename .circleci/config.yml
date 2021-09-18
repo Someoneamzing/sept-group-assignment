@@ -2,9 +2,6 @@
 # See: https://circleci.com/docs/2.0/configuration-reference
 version: 2.1
 
-orbs:
-  node: circleci/node@4.7.0
-
 jobs:
   # based on https://discuss.circleci.com/t/maven-multi-module-project-reactor-install-goal-does-not-see-dependencies-that-have-been-built-a-while-ago/29051/2
   # based on https://gist.github.com/dartov/149a1680a50c636b418119ba653a6ebb
@@ -34,7 +31,7 @@ jobs:
             - BackEnd-
 
       - run:
-          name: Resolve dependencies
+          name: Resolve submodule maven dependencies
           command: |
             cd BackEnd
             mvn de.qaware.maven:go-offline-maven-plugin:resolve-dependencies
@@ -68,23 +65,26 @@ jobs:
       - store_artifacts:
           path: ~/build_results/
   build-and-test-frontend:
-    working_directory: ~/project/FrontEnd/bookeroo
-    # Reuse Docker container specification given by the node Orb
-    executor: node/default
+    # Use container with node and npm installed
+    docker:
+      - image: cimg/node:16.9.1
     steps:
-      - checkout:
-          path: ~/project/FrontEnd/bookeroo
-      # Install the latest npm - the node Orb takes care of it
-      - node/install-npm
-      - node/install-packages:
-          app-dir: ~/project/FrontEnd/bookeroo
-          cache-version: v2
-          cache-path: node_modules
+    # checkout the code
+      - checkout
+    # installs dependencies and validate lock file against packge.json
+      - run:
+          name: Resolve FrontEnd node dependencies
+          command: |
+            cd FrontEnd/bookeroo
+            npm ci
+
+    # run tests
       - run:
           command: cd ~/project/FrontEnd/bookeroo && npm run test:ci
           name: Test frontend
       - store_test_results:
           path: ~/project/FrontEnd/bookeroo/junit.xml
+    # run build
       - run:
           command: cd ~/project/FrontEnd/bookeroo && npm run build
       - store_artifacts:
