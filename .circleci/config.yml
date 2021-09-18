@@ -103,4 +103,4 @@ workflows:
   build_and_test_project: 
     jobs:
       - build-and-test-frontend
-      - build-and-test-microservices
+      # - build-and-test-microservices
