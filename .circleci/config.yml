@@ -74,13 +74,22 @@ jobs:
     steps:
     # checkout the code
       - checkout
-      
+
+      - restore_cache:
+          key: dependency-cache-{{ checksum "~/project/FrontEnd/bookeroo/package.json" }}
+
     # installs dependencies and validate lock file against packge.json
       - run:
           name: Resolve FrontEnd node dependencies
           command: |
             cd FrontEnd/bookeroo
             npm install --no-optional
+
+    # save node_modules
+      - save_cache:
+          key: dependency-cache-{{ checksum "~/project/FrontEnd/bookeroo/package.json" }}
+          paths:
+            - ~/project/FrontEnd/bookeroo/node_modules
 
     # run tests
       - run:
@@ -103,4 +112,4 @@ workflows:
   build_and_test_project: 
     jobs:
       - build-and-test-frontend
-      # - build-and-test-microservices
+      - build-and-test-microservices
