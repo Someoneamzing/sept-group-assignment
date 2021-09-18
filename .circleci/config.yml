@@ -68,7 +68,6 @@ jobs:
       - store_artifacts:
           path: ~/build_results/
   build-and-test-frontend:
-    working_directory: ~/project/FrontEnd/bookeroo
     # Reuse Docker container specification given by the node Orb
     executor: node/default
     steps:
@@ -80,14 +79,14 @@ jobs:
           cache-version: v1
           cache-path: node_modules
       - run:
-          command: npm run test
+          command: cd ~/project/FrontEnd/bookeroo && npm run test
           name: Test frontend
       - store_test_results:
-          path: junit.xml
+          path: ~/project/FrontEnd/bookeroo/junit.xml
       - run:
-          command: npm run build
+          command: cd ~/project/FrontEnd/bookeroo && npm run build
       - store_artifacts:
-          path: build/
+          path: ~/project/FrontEnd/bookeroobuild/
 
 workflows:
   # Below is the definition of your workflow.
