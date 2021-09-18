@@ -88,7 +88,7 @@ jobs:
       - run:
           command: cd ~/project/FrontEnd/bookeroo && npm run build
       - store_artifacts:
-          path: ~/project/FrontEnd/bookeroobuild/
+          path: ~/project/FrontEnd/bookeroo/build/
 
 workflows:
   # Below is the definition of your workflow.
