@@ -1,12 +1,22 @@
 package com.rmit.sept.bk_loginservices.validator;
 
+import com.rmit.sept.bk_loginservices.Repositories.UserRepository;
 import com.rmit.sept.bk_loginservices.model.User;
+import com.rmit.sept.bk_loginservices.services.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
 @Component
 public class UserValidator implements Validator {
+
+    private final UserRepository userRepository;
+
+    @Autowired
+    public UserValidator(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     @Override
     public boolean supports(Class<?> aClass) {
@@ -18,18 +28,18 @@ public class UserValidator implements Validator {
 
         User user = (User) object;
 
-        if(user.getPassword().length() <6){
+        if(user.getPassword().length() < 6){
             errors.rejectValue("password","Length", "Password must be at least 6 characters");
         }
 
+        //confirmPassword
         if(!user.getPassword().equals(user.getConfirmPassword())){
             errors.rejectValue("confirmPassword","Match", "Passwords must match");
-
         }
 
-        //confirmPassword
-
-
-
+//        confirm unique username
+        if (userRepository.existsByUsername(user.getUsername())) {
+            errors.rejectValue("username", "Unique", "Username must be unique");
+        }
     }
 }

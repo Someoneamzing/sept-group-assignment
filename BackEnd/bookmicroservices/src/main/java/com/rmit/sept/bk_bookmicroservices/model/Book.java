@@ -7,6 +7,7 @@ import org.hibernate.validator.constraints.URL;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import java.util.Date;
 
 @SQLDelete(sql = "UPDATE books SET deleted=TRUE WHERE id=?")
@@ -27,7 +28,9 @@ public class Book extends ServiceEntity {
     @NotBlank(message = "ISBN must not be blank.")
     private String ISBN;
     @NotBlank(message = "Cover Art must be provided")
-    @URL(message = "Cover Art must be a valid URL")
+    @Lob
+    @Pattern(message = "Cover Art must be a valid Data URI", regexp = "^data:(\\w+/[-+.\\w]+)?(;base64),[a-zA-Z0-9\\+/]*={0,3}$")
+    @Column(name="cover_art_url", columnDefinition = "CLOB")
     private String coverArtURL;
     @NotBlank(message = "Table of contents must be provided")
     private String tableOfContents;
