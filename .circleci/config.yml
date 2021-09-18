@@ -67,7 +67,7 @@ jobs:
   build-and-test-frontend:
     # Use container with node and npm installed
     docker:
-      - image: circleci/node:16
+      - image: circleci/node:14
     steps:
     # checkout the code
       - checkout
