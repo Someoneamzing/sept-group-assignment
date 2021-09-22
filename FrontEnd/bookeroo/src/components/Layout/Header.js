@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Drawer from '@material-ui/core/Drawer';
@@ -12,14 +12,24 @@ import MenuIcon from '@material-ui/icons/Menu';
 import CloseIcon from '@material-ui/icons/Close';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import {withRouter} from 'react-router-dom';
+import {withRouter, Link} from 'react-router-dom';
 import {makeStyles, useTheme} from '@material-ui/core/styles';
+import {useRecoilValue} from 'recoil';
+import {userAtom} from '../../state/user/authentication';
 
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
     root: {
         display: 'flex',
+    },
+    title: {
+        color: 'white',
+        textDecoration: 'none',
+    },
+    toolbar: theme.mixins.toolbar,
+    drawerPaper: {
+        width: drawerWidth,
     },
     appBar: {
         zIndex: theme.zIndex.drawer + 1,
@@ -30,17 +40,13 @@ const useStyles = makeStyles((theme) => ({
             display: 'none',
         },
     },
-    toolbar: theme.mixins.toolbar,
-    drawerPaper: {
-        width: drawerWidth,
+    closeMenuButton: {
+        marginRight: 'auto',
+        marginLeft: 0,
     },
     content: {
         flexGrow: 1,
         padding: theme.spacing(3),
-    },
-    closeMenuButton: {
-        marginRight: 'auto',
-        marginLeft: 0,
     },
     menuItemDesktop: {
         marginLeft: theme.spacing(5),
@@ -48,58 +54,78 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-function Header(props) {
-    const menuItems = [
-        {
-            menuTitle: 'Home',
-            pageURL: '/',
-        },
-        {
-            menuTitle: 'Contact',
-            pageURL: '/contact',
-        },
-        {
-            menuTitle: 'Register',
-            pageURL: '/register',
-        },
-    ];
+const title = 'Bookeroo';
+
+const defaultLinks = {
+    Home: '/',
+    Contact: '/contact',
+    Books: '/books',
+};
+
+const authedLinks = {
+    Logout: '/logout',
+};
+
+const businessLinks = {Store: '/store'};
+
+const adminLinks = {Admin: '/admin'};
+
+const unauthedLinks = {
+    Register: '/register',
+    Login: '/login',
+};
+
+function Header() {
+    const userState = useRecoilValue(userAtom);
+
+    // array of nav-links for the navbar
+    let menuItems = defaultLinks;
+    if (!userState) {
+        menuItems = {...menuItems, ...unauthedLinks};
+    } else {
+        if (userState.authorities.includes('BUSINESS')) {
+            menuItems = {...menuItems, ...businessLinks};
+        }
+        if (userState.authorities.includes('ADMIN')) {
+            menuItems = {...menuItems, ...adminLinks};
+        }
+        menuItems = {...menuItems, ...authedLinks};
+    }
     const classes = useStyles();
     const theme = useTheme();
-    const {history} = props;
-    const [mobileOpen, setMobileOpen] = React.useState(false);
+    const [mobileOpen, setMobileOpen] = useState(false);
 
-    function handleMenuClick(pageURL) {
-        history.push(pageURL);
-    }
-
+    // mobile menu/drawer handler
     function handleDrawerToggle() {
         setMobileOpen(!mobileOpen);
     }
 
-  function handleDrawerToggle() {
-    setMobileOpen(!mobileOpen);
-  }
-  
-  const drawer = (
-    <div>
-      <List>
-        {menuItems.map(menuItem => {
-          const { menuTitle, pageURL } = menuItem;
-          return (
-            <ListItem button onClick={() => {handleMenuClick(pageURL); handleDrawerToggle()}}>
-              <ListItemText primary={menuTitle} key={menuTitle} />
-            </ListItem>
-          );
-        })}
-      </List>
-    </div>
-  );
+    // mobile menu/drawer nav links
+    const drawer = (
+        <div>
+            <List>
+                {Object.entries(menuItems).map(([menuTitle, pageURL]) => (
+                    <Link
+                        key={pageURL}
+                        to={pageURL}
+                        style={{textDecoration: 'none'}}
+                        onClick={handleDrawerToggle}
+                    >
+                        <ListItem key={menuTitle} button>
+                            <ListItemText primary={menuTitle} />
+                        </ListItem>
+                    </Link>
+                ))}
+            </List>
+        </div>
+    );
 
     return (
         <div className={classes.root}>
             <CssBaseline />
             <AppBar position="fixed" className={classes.appBar}>
                 <Toolbar>
+                    {/* Menu for Mobile*/}
                     <IconButton
                         color="inherit"
                         aria-label="Open drawer"
@@ -109,27 +135,30 @@ function Header(props) {
                     >
                         <MenuIcon />
                     </IconButton>
-                    <Typography variant="h6" noWrap>
-                        Bokeroo
-                    </Typography>
+
+                    {/* Title*/}
+                    <Link to={'/'} className={classes.title}>
+                        <Typography variant="h6" noWrap>
+                            {title}
+                        </Typography>
+                    </Link>
 
                     {/* Menu for Desktop*/}
                     <Hidden xsDown implementation="css">
-                        {menuItems.map((menuItem) => {
-                            const {menuTitle, pageURL} = menuItem;
-                            return (
-                                <Button
-                                    onClick={() => handleMenuClick(pageURL)}
-                                    className={classes.menuItemDesktop}
-                                >
-                                    {menuTitle}
-                                </Button>
-                            );
-                        })}
+                        {Object.entries(menuItems).map(
+                            ([menuTitle, pageURL]) => (
+                                <Link to={pageURL} key={menuTitle}>
+                                    <Button className={classes.menuItemDesktop}>
+                                        {menuTitle}
+                                    </Button>
+                                </Link>
+                            )
+                        )}
                     </Hidden>
                 </Toolbar>
             </AppBar>
 
+            {/* Mobile Drawer*/}
             <nav className={classes.drawer}>
                 <Hidden smUp implementation="css">
                     <Drawer
@@ -154,6 +183,8 @@ function Header(props) {
                     </Drawer>
                 </Hidden>
             </nav>
+
+            {/* Spacer for content below navbar */}
             <div className={classes.content}>
                 <div className={classes.toolbar} />
             </div>

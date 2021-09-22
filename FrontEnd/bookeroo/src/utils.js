@@ -5,8 +5,8 @@
  * @param {string} name The name of the field. Used to get the value and error data
  * @returns An object containing the required props for rendering an input field with formik.
  */
-export function inputProps(formik, label, name) {
-    return {
+export function inputProps(formik, label, name, addId = true) {
+    const res = {
         label,
         name,
         onChange: formik.handleChange,
@@ -16,4 +16,6 @@ export function inputProps(formik, label, name) {
         helperText: formik.errors[name],
         disabled: formik.isSubmitting,
     };
+    if (addId) res.id = name;
+    return res;
 }

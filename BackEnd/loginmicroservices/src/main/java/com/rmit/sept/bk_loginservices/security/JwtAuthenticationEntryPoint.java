@@ -1,5 +1,6 @@
 package com.rmit.sept.bk_loginservices.security;
 import com.google.gson.Gson;
+import com.rmit.sept.bk_loginservices.exceptions.ConstraintViolationExceptionResponse;
 import com.rmit.sept.bk_loginservices.exceptions.InvalidLoginResponse;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
@@ -17,13 +18,13 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
     public void commence(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
                          AuthenticationException e) throws IOException, ServletException {
 
-        InvalidLoginResponse loginResponse = new InvalidLoginResponse();
-        String jsonLoginResponse = new Gson().toJson(loginResponse);
+        ConstraintViolationExceptionResponse response = new ConstraintViolationExceptionResponse(e.getMessage());
+        String jsonResponse = new Gson().toJson(response);
 
 
         httpServletResponse.setContentType("application/json");
         httpServletResponse.setStatus(401);
-        httpServletResponse.getWriter().print(jsonLoginResponse);
+        httpServletResponse.getWriter().print(jsonResponse);
 
 
     }

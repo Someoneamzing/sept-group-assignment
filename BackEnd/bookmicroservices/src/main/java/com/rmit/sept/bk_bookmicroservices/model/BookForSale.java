@@ -12,6 +12,9 @@ import javax.validation.constraints.PositiveOrZero;
 @Entity
 @Table(name = "booksforsale")
 @Where(clause = "deleted = false")
+/**
+ * Represents details about a book that has been put up for sale. Includes price, seller and quantity information.
+ */
 public class BookForSale extends ServiceEntity {
 
     @JoinColumn(nullable = false)
@@ -32,6 +35,15 @@ public class BookForSale extends ServiceEntity {
     // The sale price of the book. Is in cents for precision reasons
     @Positive
     private int sellPriceInCents;
+
+    public BookForSale() {}
+
+    public BookForSale(Book book, Long sellerId, int availableStock, int sellPriceInCents) {
+        this.book = book;
+        this.sellerId = sellerId;
+        this.availableStock = availableStock;
+        this.sellPriceInCents = sellPriceInCents;
+    }
 
     public Book getBook() {
         return book;
@@ -63,5 +75,18 @@ public class BookForSale extends ServiceEntity {
 
     public void setSellPriceInCents(int sellPriceInCents) {
         this.sellPriceInCents = sellPriceInCents;
+    }
+
+    @Override
+    public String toString() {
+        return "BookForSale{" +
+                "id='" + getId() + '\'' +
+                ", book=" + book +
+                ", sellerId=" + sellerId +
+                ", availableStock=" + availableStock +
+                ", sellPriceInCents=" + sellPriceInCents +
+                ", createAt='" + getCreateAt() + '\'' +
+                ", updateAt='" + getUpdateAt() + '\'' +
+                '}';
     }
 }
