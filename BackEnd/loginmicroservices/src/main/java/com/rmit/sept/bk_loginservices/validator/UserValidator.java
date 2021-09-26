@@ -27,7 +27,11 @@ public class UserValidator implements Validator {
     public void validate(Object object, Errors errors) {
 
         User user = (User) object;
+
+        // use this prefix string to separate public and business user field errors
         String prefix = errors.getObjectName().equals("userWrapper") ? "user." : "";
+
+        // password length check
         if(user.getPassword().length() < 6){
             errors.rejectValue(prefix + "password","Length", "Password must be at least 6 characters");
         }

@@ -46,6 +46,21 @@ const emptyABNError = {
     },
     status: 400,
 }
+const acceptedResponse = {
+    response: {
+        id: 4,
+        username: 'test12@b.c',
+        fullName: 'test tset',
+        create_At: '2021-09-126T17:00:36.620+00:00',
+        update_At: null,
+        authorities: [
+            {
+                authority: 'PUBLIC',
+            },
+        ],
+    },
+    status: 202,
+};
 
 const EP = 'http://localhost:8080/api/users/register';
 const EP_2 = 'http://localhost:8080/api/users/businessRegister';
@@ -203,7 +218,7 @@ test('sep-16: New User inputs empty ABN', async () => {
 // Then the page redirects to the login page.
 test('sep-15: Successful registration request', async () => {
     // mock a fetch response with the mocked data.
-    const close = SetMockResponse(createdResponse, EP_2);
+    const close = SetMockResponse(acceptedResponse, EP_2);
     mockRootRender(<BusinessRegister />);
     fireEvent.change(screen.getByLabelText('User Name'), {
         target: { value: 'test@gmail.com' },
@@ -231,10 +246,7 @@ test('sep-15: Successful registration request', async () => {
 // and the user clicks the “Business Register” link
 // Then the page redirects to the business registration page.
 test('sep-15 Navigate to the business register page from the public register.', async () => {
-    // mock a fetch response with the mocked data.
-    const close = SetMockResponse(createdResponse, EP_2);
     mockRootRender(<Register />);
 
     expect(screen.getByText('Business Register')).toHaveAttribute('href', '/businessRegister');
-    close();
 });
