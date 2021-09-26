@@ -18,10 +18,6 @@ public class UserWrapper {
         return user;
     }
 
-    public String getPassword(){
-        return this.user.getPassword();
-    }
-
     public void setUser(User user) {
         this.user = user;
     }

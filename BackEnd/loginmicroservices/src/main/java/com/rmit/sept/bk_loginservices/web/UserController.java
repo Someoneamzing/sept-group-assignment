@@ -81,7 +81,7 @@ public class UserController {
         User user = userInfo.getUser();
         BusinessInfo businessInfo = userInfo.getBusinessInfo();
         user.setBusinessInfo(businessInfo);
-
+        System.out.println(result.getObjectName());
         // Validate passwords match
         userValidator.validate(user, result);
 

@@ -92,7 +92,7 @@ export default function BusinessRegister() {
                     onChange={(e) => setPassword(e.target.value)}
                 />
                 <TextField
-                    error={!!errorMessages['confirmPassword']}
+                    error={!!errorMessages['user.confirmPassword']}
                     variant="outlined"
                     margin="normal"
                     fullWidth
@@ -101,7 +101,7 @@ export default function BusinessRegister() {
                     type="password"
                     name="confirmPassword"
                     value={confirmPassword}
-                    helperText={errorMessages['confirmPassword']}
+                    helperText={errorMessages['user.confirmPassword']}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                 />
                 <TextField
