@@ -54,10 +54,6 @@ public class User implements UserDetails {
         this.businessInfo = businessInfo;
     }
 
-    public UserType getUserType() {
-        return userType;
-    }
-
     public User() {
     }
 

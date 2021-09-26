@@ -1,140 +1,154 @@
-// import React, { Component } from 'react'
+import React, { useEffect, useState } from 'react';
+import { Collapse, IconButton } from '@material-ui/core';
 import { Button } from '@material-ui/core';
 import { Container } from '@material-ui/core';
 import TextField from '@material-ui/core/TextField';
+import Alert from '@material-ui/lab/Alert';
+import CloseIcon from '@material-ui/icons/Close';
 import Box from '@material-ui/core/Box';
-import { useState } from "react";
+import { Redirect } from 'react-router';
+import { postUserApi } from '../../state/user/authentication';
 
-const BusinessRegister = () => {
-
+export default function BusinessRegister() {
     const [username, setUsername] = useState('');
     const [fullName, setFullName] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-    const [abn, setAbn] = useState('');
-
-    const [msg, setMsg] = useState('');
+    const [alertOpen, setAlertOpen] = useState(true);
     const [errorMessages, setErrorMessages] = useState({});
-
-    const userType = 'BUSINESS';
+    const [result, setResult] = useState(false);
+    const [abn, setAbn] = useState('');
 
     const onSubmit = (e) => {
         e.preventDefault();
 
-        // new user attributes
-        const newUser = { 'user': { username, fullName, password, confirmPassword, userType }, 'businessInfo': { abn } };
+        const newUser = {
+            'user': {
+                username,
+                fullName,
+                password,
+                confirmPassword,
+            }, 'businessInfo':
+                { abn }
+        };
+
+        setErrorMessages({});
 
         // make a post request
-        fetch('http://localhost:8080/api/users/businessRegister', {
-            method: 'POST',
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(newUser)
-        }).then(response => {
-            response.json().then(data => {
-                // if the data contains id then user is created
-                if (data['id'] === undefined) {
-                    // load errors in the form from the response
-                    setErrorMessages(data);
-                    setMsg("Errors in Form");
-                } else {
-                    // no errors in form
-                    setMsg("User Created");
-                    setErrorMessages({});
-                }
+        postUserApi(newUser, 'businessRegister')
+            .then((data) => {
+                setResult(data);
             })
-        }).catch(e => {
-            // backend is not started
-            alert("Failed to connect to the backend")
-        })
-    }
+            .catch(setErrorMessages);
+    };
+    useEffect(() => {
+        setAlertOpen(!!errorMessages['message']);
+    }, [errorMessages]);
 
     return (
-        <div className="register">
-            <Container maxWidth="sm">
-                <h1> Bookeroo Registration </h1>
-                {/* small message showing if the user is created or not */}
-                <span>{msg}</span>
-                {/* {registration form } */}
-
-                <form className="form" validate="true" onSubmit={onSubmit}>
-                    <TextField
-                        error={!!errorMessages['username']}
-                        variant="outlined"
-                        margin="normal"
+        <Container maxWidth="sm">
+            {/* redirect to login page if user registered */}
+            {result && <Redirect to="/login" />}
+            {result && 'Redirecting'}
+            <h1>Business Registration</h1>
+            <form onSubmit={onSubmit}>
+                <TextField
+                    error={!!errorMessages['user.username']}
+                    variant="outlined"
+                    margin="normal"
+                    fullWidth
+                    id="username"
+                    label="User Name"
+                    name="username"
+                    autoFocus
+                    helperText={errorMessages['user.username']}
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                />
+                <TextField
+                    error={!!errorMessages['user.fullName']}
+                    variant="outlined"
+                    margin="normal"
+                    fullWidth
+                    id="fullName"
+                    label="Full Name"
+                    name="fullName"
+                    autoFocus
+                    value={fullName}
+                    helperText={errorMessages['user.fullName']}
+                    onChange={(e) => setFullName(e.target.value)}
+                />
+                <TextField
+                    error={!!errorMessages['user.password']}
+                    variant="outlined"
+                    margin="normal"
+                    fullWidth
+                    name="password"
+                    label="Password"
+                    type="password"
+                    id="password"
+                    value={password}
+                    helperText={errorMessages['user.password']}
+                    onChange={(e) => setPassword(e.target.value)}
+                />
+                <TextField
+                    error={!!errorMessages['confirmPassword']}
+                    variant="outlined"
+                    margin="normal"
+                    fullWidth
+                    id="confirmPassword"
+                    label="Confirm Password"
+                    type="password"
+                    name="confirmPassword"
+                    value={confirmPassword}
+                    helperText={errorMessages['confirmPassword']}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                />
+                <TextField
+                    error={!!errorMessages['businessInfo.ABN']}
+                    variant="outlined"
+                    margin="normal"
+                    fullWidth
+                    id="ABN"
+                    label="ABN"
+                    name="ABN"
+                    autoFocus
+                    value={abn}
+                    helperText={errorMessages['businessInfo.ABN']}
+                    onChange={(e) => setAbn(e.target.value)}
+                />
+                <Box mt={1}>
+                    <Button
+                        type="submit"
                         fullWidth
-                        id="username"
-                        label="User Name"
-                        name="username"
-                        autoFocus
-                        helperText={errorMessages['username']}
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                    />
-                    <TextField
-                        error={!!errorMessages['fullName']}
-                        variant="outlined"
-                        margin="normal"
-                        fullWidth
-                        id="fullName"
-                        label="Full Name"
-                        name="fullName"
-                        autoFocus
-                        value={fullName}
-                        helperText={errorMessages['fullName']}
-                        onChange={(e) => setFullName(e.target.value)}
-                    />
-                    <TextField
-                        error={!!errorMessages['password']}
-                        variant="outlined"
-                        margin="normal"
-                        fullWidth
-                        name="password"
-                        label="Password"
-                        type="password"
-                        id="password"
-                        value={password}
-                        helperText={errorMessages['password']}
-                        onChange={(e) => setPassword(e.target.value)}
-                    />
-                    <TextField
-                        error={!!errorMessages['confirmPassword']}
-                        variant="outlined"
-                        margin="normal"
-                        fullWidth
-                        id="confirmPassword"
-                        label="Confirm Password"
-                        name="confirmPassword"
-                        autoFocus
-                        value={confirmPassword}
-                        helperText={errorMessages['confirmPassword']}
-                        onChange={(e) => setConfirmPassword(e.target.value)}
-                    />
-                    <TextField
-                        error={!!errorMessages['businessInfo.abn']}
-                        variant="outlined"
-                        margin="normal"
-                        fullWidth
-                        id="abn"
-                        label="Abn"
-                        name="abn"
-                        autoFocus
-                        value={abn}
-                        helperText={errorMessages['businessInfo.abn']}
-                        onChange={(e) => setAbn(e.target.value)}
-                    />
-                    <Box mt={1}>
-                        <Button type="submit"
-                            fullWidth
-                            variant="contained"
-                            color="primary">
-                            Sign Up
-                        </Button>
-                    </Box>
-
-                </form>
-            </Container>
-        </div>
-    )
+                        variant="contained"
+                        color="primary"
+                    >
+                        Sign Up
+                    </Button>
+                </Box>
+                {errorMessages['message'] && (
+                    <Collapse in={alertOpen}>
+                        <Alert
+                            severity="warning"
+                            action={
+                                <IconButton
+                                    aria-label="close"
+                                    color="inherit"
+                                    size="small"
+                                    onClick={() => {
+                                        setAlertOpen(false);
+                                    }}
+                                >
+                                    <CloseIcon fontSize="inherit" />
+                                </IconButton>
+                            }
+                        >
+                            {errorMessages['message']}
+                        </Alert>
+                    </Collapse>
+                )}
+            </form>
+        </Container>
+    );
 }
-
-export default BusinessRegister

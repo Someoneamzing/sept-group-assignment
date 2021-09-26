@@ -1,13 +1,14 @@
-import React, {useEffect, useState} from 'react';
-import {Collapse, IconButton} from '@material-ui/core';
-import {Button} from '@material-ui/core';
-import {Container} from '@material-ui/core';
+import React, { useEffect, useState } from 'react';
+import { Collapse, IconButton } from '@material-ui/core';
+import { Button } from '@material-ui/core';
+import { Container } from '@material-ui/core';
 import TextField from '@material-ui/core/TextField';
 import Alert from '@material-ui/lab/Alert';
 import CloseIcon from '@material-ui/icons/Close';
 import Box from '@material-ui/core/Box';
-import {Redirect} from 'react-router';
-import {postUserApi} from '../../state/user/authentication';
+import { Redirect } from 'react-router';
+import { postUserApi } from '../../state/user/authentication';
+import { Link } from "react-router-dom";
 
 export default function Register() {
     const [username, setUsername] = useState('');
@@ -46,7 +47,7 @@ export default function Register() {
             {/* redirect to login page if user registered */}
             {result && <Redirect to="/login" />}
             {result && 'Redirecting'}
-            <h1>Bookeroo Registration</h1>
+            <h1>Business Registration</h1>
             <form onSubmit={onSubmit}>
                 <TextField
                     error={!!errorMessages['username']}
@@ -99,6 +100,7 @@ export default function Register() {
                     helperText={errorMessages['confirmPassword']}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                 />
+                <Link to="/businessRegister">Business Register</Link>
                 <Box mt={1}>
                     <Button
                         type="submit"
