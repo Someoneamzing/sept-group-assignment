@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Drawer from '@material-ui/core/Drawer';
@@ -14,6 +14,8 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import {withRouter, Link} from 'react-router-dom';
 import {makeStyles, useTheme} from '@material-ui/core/styles';
+import {useRecoilValue} from 'recoil';
+import {userAtom} from '../../state/user/authentication';
 
 const drawerWidth = 240;
 
@@ -52,33 +54,46 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-function Header(props) {
+const title = 'Bookeroo';
+
+const defaultLinks = {
+    Home: '/',
+    Contact: '/contact',
+    Books: '/books',
+};
+
+const authedLinks = {
+    Logout: '/logout',
+};
+
+const businessLinks = {Store: '/store'};
+
+const adminLinks = {Admin: '/admin'};
+
+const unauthedLinks = {
+    Register: '/register',
+    Login: '/login',
+};
+
+function Header() {
+    const userState = useRecoilValue(userAtom);
+
+    // array of nav-links for the navbar
+    let menuItems = defaultLinks;
+    if (!userState) {
+        menuItems = {...menuItems, ...unauthedLinks};
+    } else {
+        if (userState.authorities.includes('BUSINESS')) {
+            menuItems = {...menuItems, ...businessLinks};
+        }
+        if (userState.authorities.includes('ADMIN')) {
+            menuItems = {...menuItems, ...adminLinks};
+        }
+        menuItems = {...menuItems, ...authedLinks};
+    }
     const classes = useStyles();
     const theme = useTheme();
-    const {history} = props;
-    const [mobileOpen, setMobileOpen] = React.useState(false);
-    const title = 'Bookeroo';
-
-    // array of nav-links for left side in navbar
-    const menuItems = [
-        {
-            menuTitle: 'Home',
-            pageURL: '/',
-        },
-        {
-            menuTitle: 'Contact',
-            pageURL: '/contact',
-        },
-        {
-            menuTitle: 'Register',
-            pageURL: '/register',
-        },
-    ];
-
-    // menu/button handler to push page url on history
-    function handleMenuClick(pageURL) {
-        history.push(pageURL);
-    }
+    const [mobileOpen, setMobileOpen] = useState(false);
 
     // mobile menu/drawer handler
     function handleDrawerToggle() {
@@ -89,21 +104,18 @@ function Header(props) {
     const drawer = (
         <div>
             <List>
-                {menuItems.map((menuItem) => {
-                    const {menuTitle, pageURL} = menuItem;
-                    return (
-                        <ListItem
-                            button
-                            key={menuTitle}
-                            onClick={() => {
-                                handleMenuClick(pageURL);
-                                handleDrawerToggle();
-                            }}
-                        >
+                {Object.entries(menuItems).map(([menuTitle, pageURL]) => (
+                    <Link
+                        key={pageURL}
+                        to={pageURL}
+                        style={{textDecoration: 'none'}}
+                        onClick={handleDrawerToggle}
+                    >
+                        <ListItem key={menuTitle} button>
                             <ListItemText primary={menuTitle} />
                         </ListItem>
-                    );
-                })}
+                    </Link>
+                ))}
             </List>
         </div>
     );
@@ -133,18 +145,15 @@ function Header(props) {
 
                     {/* Menu for Desktop*/}
                     <Hidden xsDown implementation="css">
-                        {menuItems.map((menuItem) => {
-                            const {menuTitle, pageURL} = menuItem;
-                            return (
-                                <Button
-                                    onClick={() => handleMenuClick(pageURL)}
-                                    className={classes.menuItemDesktop}
-                                    key={menuTitle}
-                                >
-                                    {menuTitle}
-                                </Button>
-                            );
-                        })}
+                        {Object.entries(menuItems).map(
+                            ([menuTitle, pageURL]) => (
+                                <Link to={pageURL} key={menuTitle}>
+                                    <Button className={classes.menuItemDesktop}>
+                                        {menuTitle}
+                                    </Button>
+                                </Link>
+                            )
+                        )}
                     </Hidden>
                 </Toolbar>
             </AppBar>

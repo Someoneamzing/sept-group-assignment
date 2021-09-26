@@ -1,14 +1,21 @@
 package com.rmit.sept.bk_loginservices.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import org.hibernate.validator.constraints.UniqueElements;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
-import java.util.Date;
 import java.util.Collection;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 
 @Entity
@@ -23,21 +30,21 @@ public class User implements UserDetails {
     private String username;
     @NotBlank(message = "Please enter your full name")
     private String fullName;
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @NotBlank(message = "Password field is required")
     private String password;
     @Transient
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String confirmPassword;
     private Date create_At;
     private Date update_At;
-    @Enumerated(EnumType.STRING)
-    private UserType userType;
     @Embedded
     private BusinessInfo businessInfo;
 
-    //OneToMany with Project
+    @ElementCollection
+    @UniqueElements
+    private Collection<String> authorities = new HashSet<>();
 
-    public User() {
-    }
 
     public BusinessInfo getBusinessInfo() {
         return businessInfo;
@@ -51,8 +58,7 @@ public class User implements UserDetails {
         return userType;
     }
 
-    public void setUserType(UserType userType) {
-        this.userType = userType;
+    public User() {
     }
 
     public Long getId() {
@@ -79,6 +85,7 @@ public class User implements UserDetails {
         this.fullName = fullName;
     }
 
+    @JsonIgnore
     public String getPassword() {
         return password;
     }
@@ -87,6 +94,7 @@ public class User implements UserDetails {
         this.password = password;
     }
 
+    @JsonIgnore
     public String getConfirmPassword() {
         return confirmPassword;
     }
@@ -125,10 +133,14 @@ public class User implements UserDetails {
     UserDetails interface methods
      */
 
+    @Transactional
     @Override
-    @JsonIgnore
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return this.authorities.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toSet());
+    }
+
+    public void setAuthorities(Set<String> authorities) {
+        this.authorities = authorities;
     }
 
     @Override
