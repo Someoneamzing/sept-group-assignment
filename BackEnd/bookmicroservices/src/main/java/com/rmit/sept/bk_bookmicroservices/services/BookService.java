@@ -7,6 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
+/**
+ * The service for implementing the business logic of Books.
+ * @note Unused at the moment but left here as it is soon to be used in future features.
+ */
 public class BookService {
 
     private final BookRepository bookRepository;

@@ -1,11 +1,11 @@
 import React, {useEffect} from 'react';
+import Home from './pages/Home';
+import Contact from './pages/Contact';
 import Header from './components/Layout/Header';
-import Contact from './components/Layout/Contact';
 import ViewBook from './components/BookManagement/ViewBook';
 import {Route, Switch} from 'react-router-dom';
 import './App.css';
 import Register from './components/UserManagement/Register';
-import {Container} from '@material-ui/core';
 import AddBookForSaleForm from './components/BookManagement/AddBookForSaleForm';
 import NoMatch from './components/Layout/NoMatch';
 import ViewBookForSalePage from './components/BookManagement/ViewBookForSale';
@@ -30,11 +30,7 @@ function App() {
             <Header />
             <div>
                 <Switch>
-                    <Route
-                        exact
-                        path="/"
-                        children={<Container>HomePage</Container>}
-                    />
+                    <Route exact path="/" component={Home} />
                     <Route exact path="/register" component={Register} />
                     <Route exact path="/login" component={Login} />
                     <Route exact path="/logout" component={Logout} />

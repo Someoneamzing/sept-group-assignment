@@ -1,5 +1,11 @@
 import React from 'react';
-import {fireEvent, render, screen, waitFor} from '@testing-library/react';
+import {
+    fireEvent,
+    render,
+    screen,
+    waitFor,
+    waitForElementToBeRemoved,
+} from '@testing-library/react';
 import Root from '../Root';
 import MockRoot from '../testing_utils/MockRoot';
 // mock api server for loginmicroservices endpoint
@@ -37,7 +43,7 @@ test('Scenario 1: I want to log in as a public user with my credentials', async 
     fireEvent.change(username, {target: {value: 'a@b.c'}});
     fireEvent.change(password, {target: {value: 'abc123'}});
     fireEvent.click(signIn);
-    await waitFor(() => screen.getByText('HomePage'));
+    await waitForElementToBeRemoved(signIn);
     expect(screen.queryAllByText('Admin').length).toEqual(0);
     expect(screen.queryAllByText('Store').length).toEqual(0);
     expect(screen.queryAllByText('Logout').length).toBeGreaterThan(0);
@@ -63,7 +69,7 @@ test('Scenario 2: I want to log in as a business owner with my credentials', asy
     fireEvent.change(username, {target: {value: 'business@b.c'}});
     fireEvent.change(password, {target: {value: 'abc123'}});
     fireEvent.click(signIn);
-    await waitFor(() => screen.getByText('HomePage'));
+    await waitForElementToBeRemoved(signIn);
     expect(screen.queryAllByText('Admin').length).toEqual(0);
     expect(screen.queryAllByText('Logout').length).toBeGreaterThan(0);
     expect(screen.queryAllByText('Store').length).toBeGreaterThan(0);
@@ -89,7 +95,7 @@ test('Scenario 3: I want to log in as an admin with my credentials', async () =>
     fireEvent.change(username, {target: {value: 'admin@b.c'}});
     fireEvent.change(password, {target: {value: 'abc123'}});
     fireEvent.click(signIn);
-    await waitFor(() => screen.getByText('HomePage'));
+    await waitForElementToBeRemoved(signIn);
     expect(screen.queryAllByText('Admin').length).toBeGreaterThan(0);
     expect(screen.queryAllByText('Logout').length).toBeGreaterThan(0);
     expect(screen.queryAllByText('Store').length).toBeGreaterThan(0);

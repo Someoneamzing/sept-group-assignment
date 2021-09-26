@@ -3,7 +3,7 @@ package com.rmit.sept.bk_loginservices.web;
 
 import com.rmit.sept.bk_loginservices.Repositories.UserRepository;
 import com.rmit.sept.bk_loginservices.model.User;
-import com.rmit.sept.bk_loginservices.payload.JWTLoginSucessReponse;
+import com.rmit.sept.bk_loginservices.payload.JWTLoginSuccessResponse;
 import com.rmit.sept.bk_loginservices.payload.LoginRequest;
 import com.rmit.sept.bk_loginservices.security.JwtTokenProvider;
 import com.rmit.sept.bk_loginservices.services.MapValidationErrorService;
@@ -55,7 +55,7 @@ public class UserController {
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
-    @GetMapping("/all")
+    @GetMapping("/")
     public Iterable<User> allUsers(){
         return this.userRepository.findAll();
     }
@@ -73,14 +73,8 @@ public class UserController {
         return  new ResponseEntity<>(newUser, HttpStatus.CREATED);
     }
 
-    @GetMapping("/test")
-    public String test(){
-        return "test";
-    }
-
-
-    @GetMapping("/bus_test")
-    public String busTest(){
+    @GetMapping("/my_authorities")
+    public String myAuthorities(){
         return SecurityContextHolder.getContext().getAuthentication().getAuthorities().toString();
     }
 
@@ -98,9 +92,9 @@ public class UserController {
         );
 
 //        is this required? JwtAuthenticationFilter already does this on secured routes
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+//        SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = TOKEN_PREFIX +  tokenProvider.generateToken(authentication);
 
-        return ResponseEntity.ok(new JWTLoginSucessReponse(true, jwt, authentication.getAuthorities().stream().map(GrantedAuthority::toString).collect(Collectors.toSet())));
+        return ResponseEntity.ok(new JWTLoginSuccessResponse(true, jwt, authentication.getAuthorities().stream().map(GrantedAuthority::toString).collect(Collectors.toSet())));
     }
 }

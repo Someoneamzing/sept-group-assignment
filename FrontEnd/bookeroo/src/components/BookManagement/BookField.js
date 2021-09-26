@@ -12,6 +12,11 @@ import {
 import BookThumbnail from './BookThumbnail';
 import {getBooks} from '../../api';
 
+/**
+ * A filed for selecting a book. Displays a list of already available books and can configurably allow creation of new books.
+ * @param {Object} props
+ * @returns A BookField Component
+ */
 export default function BookField({allowCreate, ...props}) {
     const [dialogOpen, setDialogOpen] = useState(false);
     const [dialogValue, setDialogValue] = useState(null);
@@ -25,14 +30,13 @@ export default function BookField({allowCreate, ...props}) {
 
         (async () => {
             const books = await getBooks();
-            console.log(books);
             if (active) setOptions(books);
         })();
 
         return () => (active = false);
     }, [loading]);
     return (
-        <>
+        <div>
             <Autocomplete
                 id="book-select"
                 value={inputProps.value}
@@ -53,7 +57,15 @@ export default function BookField({allowCreate, ...props}) {
                 }}
                 noOptionsText="No Books"
                 renderInput={(params) => (
-                    <TextField {...params} label="Book" variant="outlined" />
+                    <TextField
+                        {...params}
+                        inputProps={{
+                            ...params.inputProps,
+                            'data-testid': 'autocomplete-input',
+                        }}
+                        label="Book"
+                        variant="outlined"
+                    />
                 )}
                 renderTags={() => null}
                 getOptionLabel={(option) => option.bookTitle}
@@ -62,6 +74,8 @@ export default function BookField({allowCreate, ...props}) {
                 }
                 loading={loading}
                 options={options}
+                disablePortal
+                openOnFocus
                 filterOptions={(options, params) => {
                     const filtered = options.filter(
                         (option) =>
@@ -85,7 +99,7 @@ export default function BookField({allowCreate, ...props}) {
                 onClose={() => setDialogOpen(false)}
                 maxWidth="lg"
             >
-                <DialogTitle>Add a Book</DialogTitle>
+                <DialogTitle data-testid="dialog-title">Add a Book</DialogTitle>
                 <AddBookForm
                     ContentComponent={DialogContent}
                     ActionComponent={DialogActions}
@@ -97,6 +111,6 @@ export default function BookField({allowCreate, ...props}) {
                     defaultValue={dialogValue}
                 ></AddBookForm>
             </Dialog>
-        </>
+        </div>
     );
 }

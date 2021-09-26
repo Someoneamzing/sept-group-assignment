@@ -10,15 +10,14 @@ import React, {useEffect, useState} from 'react';
 import Alert from '@material-ui/lab/Alert';
 import CloseIcon from '@material-ui/icons/Close';
 import {useRecoilState} from 'recoil';
-import {loginApi, userAtom} from '../../state/user/authentication';
+import {postUserApi, userAtom} from '../../state/user/authentication';
 import {Redirect} from 'react-router';
 
 export default function Login() {
     const [userState, setUserState] = useRecoilState(userAtom);
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const [alertOpen, setAlertOpen] = React.useState(true);
-
+    const [alertOpen, setAlertOpen] = useState(true);
     const [errorMessages, setErrorMessages] = useState({});
 
     const onSubmit = (e) => {
@@ -30,9 +29,9 @@ export default function Login() {
         setErrorMessages({});
 
         // post request to loginmicroservices
-        loginApi(signIn)
+        postUserApi(signIn, 'login')
             .then((data) => setUserState({...data, username}))
-            .catch((data) => setErrorMessages(data));
+            .catch(setErrorMessages);
     };
     useEffect(() => {
         setAlertOpen(!!errorMessages['message']);
@@ -42,8 +41,8 @@ export default function Login() {
         <Container maxWidth="sm">
             {/* redirect to homepage if user logged in */}
             {userState && userState.token && <Redirect to="/" />}
-            <h1> Bookeroo Sign In </h1>
 
+            <h1>Bookeroo Login</h1>
             <form onSubmit={onSubmit}>
                 <TextField
                     error={!!errorMessages['username']}

@@ -21,3 +21,6 @@ server:
   error:
     include-stacktrace: always
   port: 8080
+  error:
+#    set this to never in production
+    include-stacktrace: on_param

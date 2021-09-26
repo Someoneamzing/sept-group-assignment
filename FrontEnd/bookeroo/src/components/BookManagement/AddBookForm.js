@@ -1,11 +1,14 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import {useFormik} from 'formik';
 import {TextField, Button} from '@material-ui/core';
-import FilePicker from '../FilePicker';
+import FilePicker, {VALID_IMAGE_TYPES} from '../FilePicker';
 import './AddBookForm.css';
 import {createBook} from '../../api';
 import {inputProps} from '../../utils';
 
+/**
+ * The default values used when opening a book form
+ */
 const BOOK_DEFAULT = {
     bookTitle: '',
     author: '',
@@ -23,8 +26,8 @@ const BOOK_DEFAULT = {
 export default function AddBookForm({
     onSubmit: onSubmitExt,
     onCancel,
-    ContentComponent,
-    ActionComponent,
+    ContentComponent = 'div',
+    ActionComponent = 'div',
     defaultValue = {},
 }) {
     const formik = useFormik({
@@ -39,12 +42,18 @@ export default function AddBookForm({
             }
         },
     });
+    const fileOnChangeHandler = useCallback(
+        (files) =>
+            formik.setFieldValue('coverArtURL', files?.length ? files[0] : ''),
+        [formik]
+    );
     return (
         <>
             <ContentComponent>
                 <form
                     onSubmit={formik.handleSubmit}
                     className="AddBookForm-form"
+                    data-testid="add-book-form"
                 >
                     <TextField
                         {...inputProps(formik, 'Book Title', 'bookTitle')}
@@ -90,13 +99,9 @@ export default function AddBookForm({
                         className="AddBookForm-tableOfContents"
                     />
                     <FilePicker
-                        onChange={(files) =>
-                            formik.setFieldValue(
-                                'coverArtURL',
-                                files.length ? files[0] : ''
-                            )
-                        }
+                        onChange={fileOnChangeHandler}
                         className="AddBookForm-coverArt"
+                        accept={VALID_IMAGE_TYPES.join(',')}
                     />
                 </form>
             </ContentComponent>

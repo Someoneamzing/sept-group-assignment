@@ -1,8 +1,6 @@
-import {render, screen} from '@testing-library/react';
+import {render} from '@testing-library/react';
 import Root from './Root';
 
-test('renders HomePage', () => {
+test('renders Home Page', () => {
     render(<Root />);
-    const homePage = screen.getByText(/HomePage/i);
-    expect(homePage).toBeInTheDocument();
 });

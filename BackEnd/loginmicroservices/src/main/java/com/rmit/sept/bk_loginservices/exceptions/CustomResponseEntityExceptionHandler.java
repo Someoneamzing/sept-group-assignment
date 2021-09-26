@@ -18,8 +18,8 @@ import java.util.Set;
 @RestController
 public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
 
-    public class APIError {
-        public class Violation {
+    public static class APIError {
+        public static class Violation {
             public String field;
             public String error;
             public Violation(String field, String error) {
@@ -27,7 +27,6 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
                 this.error = error;
             }
         }
-        public String status = HttpStatus.BAD_REQUEST.toString();
         public List<Violation> violations;
         public APIError(Set<ConstraintViolation<?>> violations) {
             this.violations = new ArrayList<>(violations.size());

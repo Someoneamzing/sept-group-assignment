@@ -10,8 +10,14 @@ import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 
 @Configuration
 @EnableWebSecurity
+/**
+ * Basic Security Configuration
+ */
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
+    /**
+     * Configured to allow all requests, permit iframes, enable CORS and disable CSRF
+     */
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests().anyRequest().permitAll()
                 .and().headers().frameOptions().sameOrigin()
@@ -19,6 +25,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Autowired
+    /**
+     * Disables authentication and grants everyone USER role, with `user` and `password` as their credentials.
+     * This is for testing purposes only as authentication and roles have not been implemented.
+     */
     public void ConfigureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         auth.inMemoryAuthentication().passwordEncoder(NoOpPasswordEncoder.getInstance()).withUser("user").password("password").roles("USER");
     }

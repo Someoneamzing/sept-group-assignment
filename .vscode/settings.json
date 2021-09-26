@@ -1,0 +1,7 @@
+{
+    "conventionalCommits.scopes": [
+        "frontend",
+        "backend_books",
+        "project_meta"
+    ]
+}

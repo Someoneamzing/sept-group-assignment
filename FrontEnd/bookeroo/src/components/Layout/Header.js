@@ -12,7 +12,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import CloseIcon from '@material-ui/icons/Close';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import {Link, withRouter} from 'react-router-dom';
+import {withRouter, Link} from 'react-router-dom';
 import {makeStyles, useTheme} from '@material-ui/core/styles';
 import {useRecoilValue} from 'recoil';
 import {userAtom} from '../../state/user/authentication';
@@ -23,6 +23,14 @@ const useStyles = makeStyles((theme) => ({
     root: {
         display: 'flex',
     },
+    title: {
+        color: 'white',
+        textDecoration: 'none',
+    },
+    toolbar: theme.mixins.toolbar,
+    drawerPaper: {
+        width: drawerWidth,
+    },
     appBar: {
         zIndex: theme.zIndex.drawer + 1,
     },
@@ -32,23 +40,21 @@ const useStyles = makeStyles((theme) => ({
             display: 'none',
         },
     },
-    toolbar: theme.mixins.toolbar,
-    drawerPaper: {
-        width: drawerWidth,
+    closeMenuButton: {
+        marginRight: 'auto',
+        marginLeft: 0,
     },
     content: {
         flexGrow: 1,
         padding: theme.spacing(3),
-    },
-    closeMenuButton: {
-        marginRight: 'auto',
-        marginLeft: 0,
     },
     menuItemDesktop: {
         marginLeft: theme.spacing(5),
         color: '#FFFFFF',
     },
 }));
+
+const title = 'Bookeroo';
 
 const defaultLinks = {
     Home: '/',
@@ -71,6 +77,8 @@ const unauthedLinks = {
 
 function Header() {
     const userState = useRecoilValue(userAtom);
+
+    // array of nav-links for the navbar
     let menuItems = defaultLinks;
     if (!userState) {
         menuItems = {...menuItems, ...unauthedLinks};
@@ -87,10 +95,12 @@ function Header() {
     const theme = useTheme();
     const [mobileOpen, setMobileOpen] = useState(false);
 
+    // mobile menu/drawer handler
     function handleDrawerToggle() {
         setMobileOpen(!mobileOpen);
     }
 
+    // mobile menu/drawer nav links
     const drawer = (
         <div>
             <List>
@@ -115,6 +125,7 @@ function Header() {
             <CssBaseline />
             <AppBar position="fixed" className={classes.appBar}>
                 <Toolbar>
+                    {/* Menu for Mobile*/}
                     <IconButton
                         color="inherit"
                         aria-label="Open drawer"
@@ -124,9 +135,13 @@ function Header() {
                     >
                         <MenuIcon />
                     </IconButton>
-                    <Typography variant="h6" noWrap>
-                        Bokeroo
-                    </Typography>
+
+                    {/* Title*/}
+                    <Link to={'/'} className={classes.title}>
+                        <Typography variant="h6" noWrap>
+                            {title}
+                        </Typography>
+                    </Link>
 
                     {/* Menu for Desktop*/}
                     <Hidden xsDown implementation="css">
@@ -143,6 +158,7 @@ function Header() {
                 </Toolbar>
             </AppBar>
 
+            {/* Mobile Drawer*/}
             <nav className={classes.drawer}>
                 <Hidden smUp implementation="css">
                     <Drawer
@@ -167,6 +183,8 @@ function Header() {
                     </Drawer>
                 </Hidden>
             </nav>
+
+            {/* Spacer for content below navbar */}
             <div className={classes.content}>
                 <div className={classes.toolbar} />
             </div>
