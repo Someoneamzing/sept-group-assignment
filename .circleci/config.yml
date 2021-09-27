@@ -127,7 +127,7 @@ workflows:
   # For more details on extending your workflow, see the configuration docs: https://circleci.com/docs/2.0/configuration-reference/#workflows
   build_and_test_project: 
     jobs:
-      - build-and-test-frontend
+      # - build-and-test-frontend
       - build-and-test-microservices
       - aws-ecr/build-and-push-image:
           repo: "sep-mon-g4"
