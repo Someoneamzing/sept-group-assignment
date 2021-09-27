@@ -1,0 +1,21 @@
+spring:
+  datasource:
+    url: jdbc:h2:file:~/SEP_book_db
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+  h2:
+    console:
+      path: /h2-console
+      enabled: true
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+  data:
+    rest:
+      base-path: api/
+server:
+  error:
+    include-stacktrace: always
+  port: 8081
