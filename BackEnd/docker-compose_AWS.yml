@@ -1,0 +1,30 @@
+version: '2.1'
+#https://github.com/bitnami/bitnami-docker-mysql
+#https://stackoverflow.com/questions/31746182/docker-compose-wait-for-container-x-before-starting-y/41854997#41854997
+networks:
+  app-tier:
+    driver: bridge
+
+services:
+  my_login_service:
+    image: 'login:2.5.4'
+    environment:
+      - RDS_HOSTNAME=${RDS_HOSTNAME}
+      - RDS_USERNAME=${RDS_USERNAME}
+      - RDS_PASSWORD=${RDS_PASSWORD}
+      - SERVER_PORT=8080
+    networks:
+      - app-tier
+    ports:
+      - "8080:8080"
+  my_book_service:
+    image: 'book:2.5.4'
+    environment:
+      - RDS_HOSTNAME=${RDS_HOSTNAME}
+      - RDS_USERNAME=${RDS_USERNAME}
+      - RDS_PASSWORD=${RDS_PASSWORD}
+      - SERVER_PORT=8081
+    networks:
+      - app-tier
+    ports:
+      - "8081:8081"

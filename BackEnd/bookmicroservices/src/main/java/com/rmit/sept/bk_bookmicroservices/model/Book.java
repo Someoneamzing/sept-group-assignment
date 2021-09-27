@@ -33,7 +33,7 @@ public class Book extends ServiceEntity {
     @NotBlank(message = "Cover Art must be provided")
     @Lob
     @Pattern(message = "Cover Art must be a valid Data URI", regexp = "^data:(\\w+/[-+.\\w]+)?(;base64),[a-zA-Z0-9\\+/]*={0,3}$")
-    @Column(name="cover_art_url", columnDefinition = "CLOB")
+    @Column(name="cover_art_url", columnDefinition = "BLOB")
     private String coverArtURL;
     @NotBlank(message = "Table of contents must be provided")
     private String tableOfContents;
