@@ -133,7 +133,7 @@ workflows:
           repo: "sep-mon-g4"
           tag: "login_ms_${CIRCLE_BRANCH}_${CIRCLE_SHA1},${CIRCLE_BRANCH}_latest"
           attach-workspace: true
-          workspace-root: BackEnd/loginmicroservices
+          path: BackEnd/loginmicroservices
           requires:
             - build-and-test-microservices
           filters:
