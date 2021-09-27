@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="com.rmit.sept.bk_loginservices.unit_tests.LoginTest" time="10.67" tests="3" errors="0" skipped="0" failures="0">
-  <properties/>
-  <testcase name="unauthorizedAccess" classname="com.rmit.sept.bk_loginservices.unit_tests.LoginTest" time="0.74"/>
-  <testcase name="successfulLoginAndAuthorizedAccess" classname="com.rmit.sept.bk_loginservices.unit_tests.LoginTest" time="0.436"/>
-  <testcase name="failedLoginAttempts" classname="com.rmit.sept.bk_loginservices.unit_tests.LoginTest" time="0.173"/>
-</testsuite>
