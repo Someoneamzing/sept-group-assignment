@@ -3,7 +3,7 @@
 version: 2.1
 
 orbs:
-  node: circleci/node@4.7.0
+  aws-ecr: circleci/aws-ecr@7.2.0
 
 jobs:
   # based on https://discuss.circleci.com/t/maven-multi-module-project-reactor-install-goal-does-not-see-dependencies-that-have-been-built-a-while-ago/29051/2
@@ -45,10 +45,13 @@ jobs:
           key: BackEnd-{{ checksum "~/pom-checksum" }}
 
       - run:
-          name: Build microservices
+          name: Test microservices
           command: |
             cd BackEnd
-            mvn package
+            # replace application.yaml with test_application.yaml
+            find . -type f -regex ".*/src/main/resources/application.yaml" -exec cp test_application.yaml {} \;
+            # run tests
+            mvn test
 
       - run:
           name: Save test results
@@ -60,13 +63,25 @@ jobs:
           path: ~/test-results
 
       - run:
-          name: Save build jars
+          name: Build repackaged jars
           command: |
+            cd BackEnd
+            # replace application.yaml with mysql_application.yaml
+            find . -type f -regex ".*/src/main/resources/application.yaml" -exec cp mysql_application.yaml {} \;
+            # build packages using spring-boot
+            mvn package spring-boot:repackage -Dmaven.test.skip
             mkdir -p ~/build_results/
             find . -type f -regex ".*/target/.*jar" -exec cp {} ~/build_results/ \;
 
       - store_artifacts:
           path: ~/build_results/
+
+      - persist_to_workspace:
+          root: .
+          paths:
+            - BackEnd/bookmicroservices/target
+            - BackEnd/loginmicroservices/target
+
   build-and-test-frontend:
     # Use container with node and npm installed
     docker:
@@ -104,6 +119,7 @@ jobs:
       - store_artifacts:
           path: ~/project/FrontEnd/bookeroo/build/
 
+
 workflows:
   # Below is the definition of your workflow.
   # Inside the workflow, you provide the jobs you want to run, e.g this workflow runs the build-and-test job above.
@@ -113,3 +129,15 @@ workflows:
     jobs:
       - build-and-test-frontend
       - build-and-test-microservices
+      - aws-ecr/build-and-push-image:
+          repo: "sep-mon-g4"
+          tag: "login_ms_${CIRCLE_BRANCH}_${CIRCLE_SHA1},${CIRCLE_BRANCH}_latest"
+          attach-workspace: true
+          workspace-root: BackEnd/loginmicroservices
+          requires:
+            - build-and-test-microservices
+          filters:
+            branches:
+              only:
+                - main
+                - develop

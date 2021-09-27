@@ -21,10 +21,10 @@ import java.util.List;
 import java.util.Set;
 
 @SpringBootApplication
-public class Ms_books {
+public class MsBooks {
 
     public static void main(String[] args) {
-        SpringApplication.run(Ms_books.class, args);
+        SpringApplication.run(MsBooks.class, args);
     }
 
     /**
