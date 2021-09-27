@@ -14,13 +14,14 @@ function UserListItem({userId}) {
     return (
         <Box width="100%">
             <Link to={`/user/${userId}`}>
-                {userData.userName} · {userData.authorities}
+                {userData.username}
             </Link>
         </Box>
     );
 }
 
 function ViewAllUsersLayout() {
+    debugger;
     const {allUsers} = useAllUsersQuery();
 
     return (
@@ -28,7 +29,7 @@ function ViewAllUsersLayout() {
             <h1>(debug) view all users</h1>
             <Box display="flex" flexDirection="column" width="100%">
                 {allUsers.map((n) => (
-                    <Suspense fallback="loading book" key={n}>
+                    <Suspense fallback="loading user" key={n}>
                         <UserListItem userId={n} />
                     </Suspense>
                 ))}
@@ -39,7 +40,7 @@ function ViewAllUsersLayout() {
 
 export default function ViewAllUsersPage() {
     return (
-        <Suspense fallback="loading all books">
+        <Suspense fallback="loading all users">
             <ViewAllUsersLayout />
         </Suspense>
     );

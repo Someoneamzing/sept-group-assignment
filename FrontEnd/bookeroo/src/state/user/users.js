@@ -1,5 +1,6 @@
 import axios from 'axios';
 import {useEffect} from 'react';
+import {userAtom} from '../../state/user/authentication';
 import {
     atom,
     atomFamily,
@@ -8,12 +9,13 @@ import {
     useRecoilValue,
 } from 'recoil';
 
-const fetchUser = async (userId) => {
+const fetchUser = async (userId, token) => {
     const config = {
         config: 'GET',
-        url: `http://localhost:8081/api/users/${userId}`,
+        url: `http://localhost:8080/api/users/${userId}`,
         headers: {
             'Content-Type': 'application/json',
+            'Authorization': token,
         },
     };
     try {
@@ -28,24 +30,25 @@ export const userAtomFamily = atomFamily({
     key: 'users_info_v1',
     default: selectorFamily({
         key: 'users_info_v1/default',
-        get: (userId) => async () => {
-            const user = await fetchUser(userId);
+        get: (userId) => async ({get}) => {
+            const user = await fetchUser(userId, get(userAtom).token);
             return user;
         },
     }),
 });
 
-const fetchAllUsers = async () => {
+const fetchAllUsers = async (token) => {
     const config = {
         config: 'GET',
-        url: 'http://localhost:8081/api/users/',
+        url: 'http://localhost:8080/api/users/',
         headers: {
             'Content-Type': 'application-json',
+            'Authorization': token,
         },
     };
     try {
         const res = await axios(config);
-        return res.data._embedded.users;
+        return res.data;
     } catch (e) {
         console.log(e);
         return null;
@@ -57,19 +60,20 @@ const allUserIdsAtom = atom({
     default: [],
 });
 
-export function useAllBooksQuery() {
+export function useAllUsersQuery() {
     const allUsers = useRecoilValue(allUserIdsAtom);
-    const loadUsers = useRecoilCallback(({set}) => async () => {
-        const allUsers = await fetchAllUsers();
+    const loadUsers = useRecoilCallback(({set, snapshot}) => async () => {
+		const user = await snapshot.getPromise(userAtom);
+        const allUsers = await fetchAllUsers(user.token);
         if (allUsers == null) return;
         const allUserIds = [];
         for (const user of allUsers) {
-            const userId = user._links.self.href.split('/').pop();
+            const userId = user.id;
             allUserIds.push(userId);
             set(userAtomFamily(userId), user);
         }
-        set(allUserIdsAtom, allUserIds);
-    });
+        set(allUserIdsAtom, allUserIds);	
+    }, []);
     // (refetches books each time calling component is newly mounted)
     useEffect(() => {
         loadUsers();
