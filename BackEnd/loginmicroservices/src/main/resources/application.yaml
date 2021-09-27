@@ -18,8 +18,8 @@ spring:
 #    init:
 #      mode: always
 server:
-  error:
-    include-stacktrace: always
+#  error:
+#    include-stacktrace: always
   port: 8080
   error:
 #    set this to never in production

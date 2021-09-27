@@ -27,6 +27,20 @@ export async function postUserApi(data, endpoint) {
     }
 }
 
+export async function getUserApi(data, endpoint) {
+    if (!endpoint) throw Error('endpoint not supplied');
+    try {
+        return (await axios.get(PATH + endpoint, data)).data;
+    } catch (e) {
+        if (e.response) {
+            throw e.response.data;
+        } else {
+            // eslint-disable-next-line no-throw-literal
+            throw {message: 'Could not connect to auth service'};
+        }
+    }
+}
+
 // const userState = {
 //     authorities: ['ADMIN'],
 //     token: 'Bearer bingbong',

@@ -1,30 +1,35 @@
-import axios from 'axios';
+import {Box, Container} from '@material-ui/core';
+import React, {Suspense} from 'react';
+import {Link} from 'react-router-dom';
+import {useRecoilValue} from 'recoil';
+import {userAtomFamily, useAllUsersQuery} from '../../state/user/users';
 
-const fetchAllUsers = async () => {
-    const config = {
-        config: 'GET',
-        url: 'http://localhost:8081/api/users/all',
-        headers: {
-            'Content-Type': 'application-json',
-        },
-    };
-    try {
-        const res = await axios(config);
-        return res.data._embedded.users;
-    } catch (e) {
-        console.log(e);
-        return null;
+function UserListItem({userId}) {
+    const userData = useRecoilValue(userAtomFamily(userId));
+
+    if (userData == null) {
+        return 'Book Not Found';
     }
-};
 
-function ViewAllUsers() {
+    return (
+        <Box width="100%">
+            <Link to={`/user/${userId}`}>
+                {userData.userName} · {userData.authorities}
+            </Link>
+        </Box>
+    );
+}
+
+function ViewAllUsersLayout() {
+    const {allUsers} = useAllUsersQuery();
+
     return (
         <Container maxWidth="lg">
-            <h1>(debug) view all books</h1>
+            <h1>(debug) view all users</h1>
             <Box display="flex" flexDirection="column" width="100%">
-                {fetchAllUsers.map((n) => (
+                {allUsers.map((n) => (
                     <Suspense fallback="loading book" key={n}>
-                        <BookListItem bookId={n} />
+                        <UserListItem userId={n} />
                     </Suspense>
                 ))}
             </Box>
@@ -32,10 +37,10 @@ function ViewAllUsers() {
     );
 }
 
-export default function ViewAllBooksPage() {
+export default function ViewAllUsersPage() {
     return (
         <Suspense fallback="loading all books">
-            <ViewAllBooksLayout />
+            <ViewAllUsersLayout />
         </Suspense>
     );
 }
