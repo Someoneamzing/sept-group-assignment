@@ -44,23 +44,23 @@ jobs:
             - "~/.m2"
           key: BackEnd-{{ checksum "~/pom-checksum" }}
 
-      - run:
-          name: Test microservices
-          command: |
-            cd BackEnd
-            # replace application.yaml with test_application.yaml
-            find . -type f -regex ".*/src/main/resources/application.yaml" -exec cp test_application.yaml {} \;
-            # run tests
-            mvn test
+      # - run:
+      #     name: Test microservices
+      #     command: |
+      #       cd BackEnd
+      #       # replace application.yaml with test_application.yaml
+      #       find . -type f -regex ".*/src/main/resources/application.yaml" -exec cp test_application.yaml {} \;
+      #       # run tests
+      #       mvn test
 
-      - run:
-          name: Save test results
-          command: |
-            mkdir -p ~/test-results/junit/
-            find . -type f -regex ".*/target/surefire-reports/.*xml" -exec cp {} ~/test-results/junit/ \;
+      # - run:
+      #     name: Save test results
+      #     command: |
+      #       mkdir -p ~/test-results/junit/
+      #       find . -type f -regex ".*/target/surefire-reports/.*xml" -exec cp {} ~/test-results/junit/ \;
 
-      - store_test_results:
-          path: ~/test-results
+      # - store_test_results:
+      #     path: ~/test-results
 
       - run:
           name: Build repackaged jars
@@ -73,8 +73,8 @@ jobs:
             mkdir -p ~/build_results/
             find . -type f -regex ".*/target/.*jar" -exec cp {} ~/build_results/ \;
 
-      - store_artifacts:
-          path: ~/build_results/
+      # - store_artifacts:
+      #     path: ~/build_results/
 
       - persist_to_workspace:
           root: .
