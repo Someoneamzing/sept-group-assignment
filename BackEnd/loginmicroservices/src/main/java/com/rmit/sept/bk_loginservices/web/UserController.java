@@ -60,9 +60,9 @@ public class UserController {
         return this.userRepository.findAll();
     }
 
-    @PostMapping("/version")
+    @GetMapping("/version")
     public String version() {
-        return "v2";
+        return "v3";
     }
 
     @PostMapping("/register")
