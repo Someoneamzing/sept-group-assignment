@@ -9,11 +9,10 @@ spring:
       path: /h2-console
       enabled: true
   jpa:
-    show-sql: false
+    show-sql: true
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
 server:
   port: 8080
   error:
-#    set this to never in production
-    include-stacktrace: on_param
+    include-stacktrace: always

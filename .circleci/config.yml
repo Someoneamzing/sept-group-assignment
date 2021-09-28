@@ -130,6 +130,7 @@ workflows:
       - build-and-test-frontend
       - build-and-test-microservices
       - aws-ecr/build-and-push-image:
+          name: login-ms-build-push-ecr
           repo: "sep-mon-g4"
           tag: "login_ms_${CIRCLE_BRANCH}_${CIRCLE_SHA1},${CIRCLE_BRANCH}_latest"
           attach-workspace: true
@@ -141,3 +142,15 @@ workflows:
               only:
                 - main
                 - develop
+      - aws-ecs/deploy-service-update:
+          name: login-ms-update-deploy-development
+          requires:
+            - aws-ecr/build-and-push-image 
+          family: "CICDec2task"
+          cluster-name: "CICDcluster"
+          service-name: "login_ms_develop"
+          container-image-name-updates: "container=DevelopmentLoginMicroservice,tag=login_ms_${CIRCLE_BRANCH}_${CIRCLE_SHA1}"
+          filters:
+            branches:
+              only:
+                - development
