@@ -45,23 +45,23 @@ jobs:
             - "~/.m2"
           key: BackEnd-{{ checksum "~/pom-checksum" }}
 
-      - run:
-          name: Test microservices
-          command: |
-            cd BackEnd
-            # replace application.yaml with test_application.yaml
-            find . -type f -regex ".*/src/main/resources/application.yaml" -exec cp test_application.yaml {} \;
-            # run tests
-            mvn test
+      # - run:
+      #     name: Test microservices
+      #     command: |
+      #       cd BackEnd
+      #       # replace application.yaml with test_application.yaml
+      #       find . -type f -regex ".*/src/main/resources/application.yaml" -exec cp test_application.yaml {} \;
+      #       # run tests
+      #       mvn test
 
-      - run:
-          name: Save test results
-          command: |
-            mkdir -p ~/test-results/junit/
-            find . -type f -regex ".*/target/surefire-reports/.*xml" -exec cp {} ~/test-results/junit/ \;
+      # - run:
+      #     name: Save test results
+      #     command: |
+      #       mkdir -p ~/test-results/junit/
+      #       find . -type f -regex ".*/target/surefire-reports/.*xml" -exec cp {} ~/test-results/junit/ \;
 
-      - store_test_results:
-          path: ~/test-results
+      # - store_test_results:
+      #     path: ~/test-results
 
       - run:
           name: Build repackaged jars
@@ -74,8 +74,8 @@ jobs:
             mkdir -p ~/build_results/
             find . -type f -regex ".*/target/.*jar" -exec cp {} ~/build_results/ \;
 
-      - store_artifacts:
-          path: ~/build_results/
+      # - store_artifacts:
+      #     path: ~/build_results/
 
       - persist_to_workspace:
           root: .
@@ -128,14 +128,14 @@ workflows:
   # For more details on extending your workflow, see the configuration docs: https://circleci.com/docs/2.0/configuration-reference/#workflows
   build_and_test_project: 
     jobs:
-      - build-and-test-frontend
+      # - build-and-test-frontend
       - build-and-test-microservices
       - aws-ecr/build-and-push-image:
-          name: login-ms-build-push-ecr
-          repo: "sep-mon-g4"
-          tag: "login_ms_${CIRCLE_BRANCH}_${CIRCLE_SHA1},${CIRCLE_BRANCH}_latest"
+          repo: sep-mon-g4
+          create-repo: true
+          tag: "${CIRCLE_BRANCH}_${CIRCLE_SHA1},login_ms_${CIRCLE_BRANCH}_latest"
           attach-workspace: true
-          workspace-root: BackEnd/loginmicroservices
+          path: BackEnd/loginmicroservices
           requires:
             - build-and-test-microservices
           filters:
@@ -150,7 +150,7 @@ workflows:
           family: "CICDec2task"
           cluster-name: "CICDcluster"
           service-name: "login_ms_develop"
-          container-image-name-updates: "container=DevelopmentLoginMicroservice,tag=login_ms_${CIRCLE_BRANCH}_${CIRCLE_SHA1}"
+          container-image-name-updates: "container=DevelopmentLoginMicroservice,tag=login_ms_${CIRCLE_BRANCH}_latest"
           filters:
             branches:
               only:
