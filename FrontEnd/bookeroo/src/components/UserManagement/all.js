@@ -21,7 +21,6 @@ function UserListItem({userId}) {
 }
 
 function ViewAllUsersLayout() {
-    debugger;
     const {allUsers} = useAllUsersQuery();
 
     return (

@@ -78,5 +78,6 @@ export function useAllUsersQuery() {
     useEffect(() => {
         loadUsers();
     }, [loadUsers]);
+
     return {allUsers, loadUsers};
 }

@@ -1,5 +1,9 @@
 import axios from 'axios';
 import {atom} from 'recoil';
+import {recoilPersist} from 'recoil-persist';
+
+debugger;
+const { persistAtom } = recoilPersist();
 
 const PATH = 'http://localhost:8080/api/users/';
 
@@ -36,4 +40,5 @@ export async function postUserApi(data, endpoint) {
 export const userAtom = atom({
     key: 'userAtom',
     default: null,
+    effects_UNSTABLE: [persistAtom],
 });
