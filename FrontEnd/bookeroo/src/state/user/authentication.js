@@ -1,8 +1,7 @@
 import axios from 'axios';
-import {atom} from 'recoil';
-import {recoilPersist} from 'recoil-persist';
+import { atom } from 'recoil';
+import { recoilPersist } from 'recoil-persist';
 
-debugger;
 const { persistAtom } = recoilPersist();
 
 const PATH = 'http://localhost:8080/api/users/';

@@ -3,12 +3,13 @@ import React, {Suspense} from 'react';
 import {Link} from 'react-router-dom';
 import {useRecoilValue} from 'recoil';
 import {userAtomFamily, useAllUsersQuery} from '../../state/user/users';
+import NoMatch from '../../components/Layout/NoMatch';
 
 function UserListItem({userId}) {
     const userData = useRecoilValue(userAtomFamily(userId));
 
     if (userData == null) {
-        return 'Book Not Found';
+        return 'User Not Found';
     }
 
     return (
@@ -23,18 +24,22 @@ function UserListItem({userId}) {
 function ViewAllUsersLayout() {
     const {allUsers} = useAllUsersQuery();
 
-    return (
-        <Container maxWidth="lg">
-            <h1>(debug) view all users</h1>
-            <Box display="flex" flexDirection="column" width="100%">
-                {allUsers.map((n) => (
-                    <Suspense fallback="loading user" key={n}>
-                        <UserListItem userId={n} />
-                    </Suspense>
-                ))}
-            </Box>
-        </Container>
-    );
+    if (allUsers.length) {     
+        return (
+            <Container maxWidth="lg">
+                <h1>(debug) view all users</h1>
+                <Box display="flex" flexDirection="column" width="100%">
+                    {allUsers.map((n) => (
+                        <Suspense fallback="loading user" key={n}>
+                            <UserListItem userId={n} />
+                        </Suspense>
+                    ))}
+                </Box>
+            </Container>
+        );
+    } else {
+        return (<NoMatch/ >);
+    } 
 }
 
 export default function ViewAllUsersPage() {

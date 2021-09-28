@@ -64,8 +64,11 @@ export function useAllUsersQuery() {
     const allUsers = useRecoilValue(allUserIdsAtom);
     const loadUsers = useRecoilCallback(({set, snapshot}) => async () => {
 		const user = await snapshot.getPromise(userAtom);
-        const allUsers = await fetchAllUsers(user.token);
-        if (allUsers == null) return;
+
+		if (user == null) {
+			return null;
+		} 
+		const allUsers = await fetchAllUsers(user.token);
         const allUserIds = [];
         for (const user of allUsers) {
             const userId = user.id;
@@ -75,7 +78,7 @@ export function useAllUsersQuery() {
         set(allUserIdsAtom, allUserIds);	
     }, []);
     // (refetches books each time calling component is newly mounted)
-    useEffect(() => {
+	useEffect(() => {
         loadUsers();
     }, [loadUsers]);
 
