@@ -4,6 +4,7 @@ version: 2.1
 
 orbs:
   aws-ecr: circleci/aws-ecr@7.2.0
+  aws-ecs: circleci/aws-ecs@2.2.1
 
 jobs:
   # based on https://discuss.circleci.com/t/maven-multi-module-project-reactor-install-goal-does-not-see-dependencies-that-have-been-built-a-while-ago/29051/2
@@ -142,3 +143,15 @@ workflows:
               only:
                 - main
                 - develop
+      - aws-ecs/deploy-service-update:
+          name: login-ms-update-deploy-development
+          requires:
+            - aws-ecr/build-and-push-image 
+          family: "CICDec2task"
+          cluster-name: "CICDcluster"
+          service-name: "login_ms_develop"
+          container-image-name-updates: "container=DevelopmentLoginMicroservice,tag=login_ms_${CIRCLE_BRANCH}_latest"
+          filters:
+            branches:
+              only:
+                - development
