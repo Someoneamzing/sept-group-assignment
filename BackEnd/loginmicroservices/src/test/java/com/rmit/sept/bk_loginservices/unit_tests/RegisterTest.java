@@ -1,6 +1,7 @@
 package com.rmit.sept.bk_loginservices.unit_tests;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.rmit.sept.bk_loginservices.Repositories.UserRepository;
 import com.rmit.sept.bk_loginservices.exceptions.CustomResponseEntityExceptionHandler;
 import com.rmit.sept.bk_loginservices.model.User;
 import com.rmit.sept.bk_loginservices.web.UserController;
@@ -34,6 +35,9 @@ class RegisterTest {
 
     @Autowired
     private UserController userController;
+
+    @Autowired
+    private UserRepository userRepository;
 
     private User user;
 
@@ -78,6 +82,7 @@ class RegisterTest {
 
     @BeforeEach
     void beforeEach(){
+        userRepository.deleteAll();
         user = createUser();
         errors = new BeanPropertyBindingResult(user, "user");
     }
