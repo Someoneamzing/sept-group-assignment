@@ -151,7 +151,7 @@ workflows:
           family: "CICDec2task"
           cluster-name: "CICDcluster"
           service-name: "login_ms_develop"
-          container-image-name-updates: "container=DevelopmentLoginMicroservice,tag=login_ms_${CIRCLE_BRANCH}_latest"
+          container-image-name-updates: "container=DevelopmentBookMicroservice,tag=login_ms_${CIRCLE_BRANCH}_latest"
           filters:
             branches:
               only:
@@ -170,15 +170,15 @@ workflows:
               only:
                 - main
                 - develop
-      # - aws-ecs/deploy-service-update:
-      #     name: book-ms-update-deploy-development
-      #     requires:
-      #       - book-ms-build-and-push-image
-      #     family: "book_ms_develop"
-      #     cluster-name: "CICDcluster"
-      #     service-name: "book_ms_develop_service"
-      #     container-image-name-updates: "container=DevelopmentLoginMicroservice,tag=login_ms_${CIRCLE_BRANCH}_latest"
-      #     filters:
-      #       branches:
-      #         only:
-      #           - develop
+      - aws-ecs/deploy-service-update:
+          name: book-ms-update-deploy-development
+          requires:
+            - book-ms-build-and-push-image
+          family: "book_ms_develop"
+          cluster-name: "CICDcluster"
+          service-name: "book_ms_develop_service"
+          container-image-name-updates: "container=DevelopmentBookMicroservice,tag=book_ms_${CIRCLE_BRANCH}_latest"
+          filters:
+            branches:
+              only:
+                - develop
