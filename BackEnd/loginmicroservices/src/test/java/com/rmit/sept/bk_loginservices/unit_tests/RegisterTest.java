@@ -7,6 +7,7 @@ import com.rmit.sept.bk_loginservices.model.User;
 import com.rmit.sept.bk_loginservices.web.UserController;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,9 +83,13 @@ class RegisterTest {
 
     @BeforeEach
     void beforeEach(){
-        userRepository.deleteAll();
         user = createUser();
         errors = new BeanPropertyBindingResult(user, "user");
+    }
+
+    @AfterEach
+    void afterEach(){
+        userRepository.delete(user);
     }
 
     @Test
@@ -100,7 +105,7 @@ class RegisterTest {
         ResponseEntity<?> response = userController.registerUser(user, errors);
         User newUser = createUser();
         errors = new BeanPropertyBindingResult(newUser, "user1");
-        ResponseEntity<?> response2 = userController.registerUser(user, errors);
+        ResponseEntity<?> response2 = userController.registerUser(newUser, errors);
         assertEquals("Username must be unique", errors.getFieldErrors().get(0).getDefaultMessage());
     }
 
