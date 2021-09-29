@@ -10,7 +10,8 @@ import AddBookForSaleForm from './components/BookManagement/AddBookForSaleForm';
 import NoMatch from './components/Layout/NoMatch';
 import ViewBookForSalePage from './components/BookManagement/ViewBookForSale';
 import ViewAllBooksPage from './components/BookManagement/ViewAllBooks';
-import allUsers from './components/UserManagement/ViewAll'
+import ViewAllUsers from './components/UserManagement/ViewAllUsers';
+import ViewUser from './components/UserManagement/ViewUser.js';
 import Login from './components/UserManagement/Login';
 import {useResetRecoilState} from 'recoil';
 import {userAtom} from './state/user/authentication';
@@ -47,7 +48,8 @@ function App() {
                         path="/account/:sellerId/book/:bookId"
                         component={ViewBookForSalePage}
                     />
-                    <Route exact path="/users" component={allUsers} />
+                    <Route exact path="/users" component={ViewAllUsers} />
+                    <Route path="/user/:userId" component={ViewUser} />
 
                     {/*!!!!!!!!!!!!! THIS MUST GO AFTER EVERYTHING ELSE !!!!!!!!!!!!!!*/}
                     <Route

@@ -38,7 +38,7 @@ function ViewAllUsersLayout() {
             </Container>
         );
     } else {
-        return (<NoMatch/ >);
+        return <NoMatch/ >;
     } 
 }
 

@@ -31,8 +31,12 @@ export const userAtomFamily = atomFamily({
     default: selectorFamily({
         key: 'users_info_v1/default',
         get: (userId) => async ({get}) => {
-            const user = await fetchUser(userId, get(userAtom).token);
-            return user;
+			try {
+				const user = await fetchUser(userId, get(userAtom).token);
+				return user;
+			} catch (e) {
+				return null;
+			}        
         },
     }),
 });
@@ -63,19 +67,20 @@ const allUserIdsAtom = atom({
 export function useAllUsersQuery() {
     const allUsers = useRecoilValue(allUserIdsAtom);
     const loadUsers = useRecoilCallback(({set, snapshot}) => async () => {
-		const user = await snapshot.getPromise(userAtom);
-
-		if (user == null) {
+		try {
+			const user = await snapshot.getPromise(userAtom);
+			const allUsers = await fetchAllUsers(user.token);
+			const allUserIds = [];
+			for (const user of allUsers) {
+				const userId = user.id;
+				allUserIds.push(userId);
+				set(userAtomFamily(userId), user);
+			}
+			set(allUserIdsAtom, allUserIds);
+		} catch (e) {
 			return null;
-		} 
-		const allUsers = await fetchAllUsers(user.token);
-        const allUserIds = [];
-        for (const user of allUsers) {
-            const userId = user.id;
-            allUserIds.push(userId);
-            set(userAtomFamily(userId), user);
-        }
-        set(allUserIdsAtom, allUserIds);	
+		}
+			
     }, []);
     // (refetches books each time calling component is newly mounted)
 	useEffect(() => {
