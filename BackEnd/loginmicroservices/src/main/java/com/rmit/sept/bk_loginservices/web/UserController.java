@@ -6,6 +6,7 @@ import com.rmit.sept.bk_loginservices.model.User;
 import com.rmit.sept.bk_loginservices.payload.JWTLoginSuccessResponse;
 import com.rmit.sept.bk_loginservices.payload.LoginRequest;
 import com.rmit.sept.bk_loginservices.security.JwtTokenProvider;
+import com.rmit.sept.bk_loginservices.services.CustomUserDetailsService;
 import com.rmit.sept.bk_loginservices.services.MapValidationErrorService;
 import com.rmit.sept.bk_loginservices.services.UserService;
 import com.rmit.sept.bk_loginservices.validator.UserValidator;
@@ -44,20 +45,30 @@ public class UserController {
 
     private final AuthenticationManager authenticationManager;
 
+    private final CustomUserDetailsService customUserDetailsService;
+
     @Autowired
-    public UserController(MapValidationErrorService mapValidationErrorService, UserService userService, UserRepository userRepository, UserValidator userValidator, JwtTokenProvider tokenProvider, AuthenticationManager authenticationManager) {
+    public UserController(MapValidationErrorService mapValidationErrorService, UserService userService, UserRepository userRepository, UserValidator userValidator, JwtTokenProvider tokenProvider, AuthenticationManager authenticationManager, CustomUserDetailsService customUserDetailsService) {
         this.mapValidationErrorService = mapValidationErrorService;
         this.userService = userService;
         this.userRepository = userRepository;
         this.userValidator = userValidator;
         this.tokenProvider = tokenProvider;
         this.authenticationManager = authenticationManager;
+        this.customUserDetailsService = customUserDetailsService;
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/")
     public Iterable<User> allUsers(){
         return this.userRepository.findAll();
+    }
+
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @GetMapping("/{userid}")
+    public ResponseEntity<User> getUser(@PathVariable("userid") long userid)
+    {
+        return new ResponseEntity<>(userService.loadUserById(userid), HttpStatus.OK);
     }
 
     @PostMapping("/register")

@@ -22,5 +22,7 @@ server:
 #    include-stacktrace: always
   port: 8080
   error:
+    include-message: always
+    include-binding-errors: always
 #    set this to never in production
     include-stacktrace: on_param

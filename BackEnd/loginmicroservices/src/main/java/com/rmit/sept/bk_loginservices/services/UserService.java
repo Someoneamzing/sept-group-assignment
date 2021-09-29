@@ -10,6 +10,7 @@ import com.rmit.sept.bk_loginservices.model.UserType;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
@@ -71,5 +72,13 @@ public class UserService {
             logger.error(e);
             throw new ConstraintViolationException("A constraint was not properly validated, the error has been logged.");
         }
+    }
+
+    public User loadUserById(Long id) throws UsernameNotFoundException {
+        User user = userRepository.findById(id).get();
+        user.getAuthorities().size();
+        if(user==null) throw new UsernameNotFoundException("User not found");
+        return user;
+
     }
 }
