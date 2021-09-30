@@ -139,7 +139,7 @@ workflows:
       #         only:
       #           - develop
 
-      # - build-and-test-microservices
+      - build-and-test-microservices
 
       # - aws-ecr/build-and-push-image:
       #     name: login-ms-build-and-push-image
