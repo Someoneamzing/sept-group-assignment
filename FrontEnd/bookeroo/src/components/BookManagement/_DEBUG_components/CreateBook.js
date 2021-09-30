@@ -1,6 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import {Button} from '@material-ui/core';
+import {BOOK_MS_ENDPOINT} from '../../../env-vars';
 
 export default function CreateBook() {
     const createBook = async () => {
@@ -19,7 +20,7 @@ export default function CreateBook() {
         });
         let config = {
             method: 'post',
-            url: 'http://localhost:8081/api/books',
+            url: `http://${BOOK_MS_ENDPOINT}/api/books`,
             headers: {
                 'Content-Type': 'application/json',
             },
@@ -35,7 +36,7 @@ export default function CreateBook() {
                 sellPriceInCents: 55555,
             });
             config.data = bookForSale;
-            config.url = 'http://localhost:8081/api/bookForSales';
+            config.url = `http://${BOOK_MS_ENDPOINT}/api/bookForSales`;
             const bfsRes = await axios(config);
             console.log(bfsRes);
             alert(`check console for book`);
