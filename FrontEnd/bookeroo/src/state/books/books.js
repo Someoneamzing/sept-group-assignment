@@ -7,11 +7,12 @@ import {
     useRecoilCallback,
     useRecoilValue,
 } from 'recoil';
+import {BOOK_MS_ENDPOINT} from '../../env-vars';
 
 const fetchBook = async (bookId) => {
     const config = {
         config: 'GET',
-        url: `http://localhost:8081/api/books/${bookId}`,
+        url: `http://${BOOK_MS_ENDPOINT}/api/books/${bookId}`,
         headers: {
             'Content-Type': 'application/json',
         },
@@ -38,7 +39,7 @@ export const bookAtomFamily = atomFamily({
 const fetchAllBooks = async () => {
     const config = {
         config: 'GET',
-        url: 'http://localhost:8081/api/books/',
+        url: `http://${BOOK_MS_ENDPOINT}/api/books/`,
         headers: {
             'Content-Type': 'application-json',
         },
@@ -59,17 +60,21 @@ const allBookIdsAtom = atom({
 
 export function useAllBooksQuery() {
     const allBooks = useRecoilValue(allBookIdsAtom);
-    const loadBooks = useRecoilCallback(({set}) => async () => {
-        const allBooks = await fetchAllBooks();
-        if (allBooks == null) return;
-        const allBookIds = [];
-        for (const book of allBooks) {
-            const bookId = book._links.self.href.split('/').pop();
-            allBookIds.push(bookId);
-            set(bookAtomFamily(bookId), book);
-        }
-        set(allBookIdsAtom, allBookIds);
-    });
+    const loadBooks = useRecoilCallback(
+        ({set}) =>
+            async () => {
+                const allBooks = await fetchAllBooks();
+                if (allBooks == null) return;
+                const allBookIds = [];
+                for (const book of allBooks) {
+                    const bookId = book._links.self.href.split('/').pop();
+                    allBookIds.push(bookId);
+                    set(bookAtomFamily(bookId), book);
+                }
+                set(allBookIdsAtom, allBookIds);
+            },
+        []
+    );
     // (refetches books each time calling component is newly mounted)
     useEffect(() => {
         loadBooks();

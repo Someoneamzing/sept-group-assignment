@@ -1,10 +1,11 @@
 import axios from 'axios';
 import {atom, selectorFamily, useRecoilValue, useSetRecoilState} from 'recoil';
+import {BOOK_MS_ENDPOINT} from '../../env-vars';
 
 const fetchBookForSale = async (bookId) => {
     const config = {
         config: 'GET',
-        url: `http://localhost:8081/api/bookForSales/${bookId}`,
+        url: `http://${BOOK_MS_ENDPOINT}/api/bookForSales/${bookId}`,
         headers: {
             'Content-Type': 'application/json',
         },
