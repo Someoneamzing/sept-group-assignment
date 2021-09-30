@@ -12,6 +12,7 @@ import com.rmit.sept.bk_loginservices.services.UserService;
 import com.rmit.sept.bk_loginservices.validator.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -68,7 +69,15 @@ public class UserController {
     @GetMapping("/{userid}")
     public ResponseEntity<User> getUser(@PathVariable("userid") long userid)
     {
-        return new ResponseEntity<>(userService.loadUserById(userid), HttpStatus.OK);
+        return new ResponseEntity<>(userService.getUserById(userid), HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @PutMapping("/{userid}")
+    public ResponseEntity<?> updateUser(@PathVariable("userid") long userid ,@RequestBody User user)
+    {
+        userService.updateUser(userid, user);
+        return new ResponseEntity<>(userService.getUserById(userid), HttpStatus.OK);
     }
 
     @PostMapping("/register")

@@ -14,7 +14,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import java.util.HashSet;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -74,11 +75,30 @@ public class UserService {
         }
     }
 
-    public User loadUserById(Long id) throws UsernameNotFoundException {
+    public User getUserById(Long id) throws UsernameNotFoundException {
         User user = userRepository.findById(id).get();
         user.getAuthorities().size();
         if(user==null) throw new UsernameNotFoundException("User not found");
         return user;
 
+    }
+
+    //TODO: implement in case null value in userUpdate
+    public User updateUser(Long id, User userUpdate) throws UsernameNotFoundException, ConstraintViolationException {
+        try {
+            User user = userRepository.findById(id).get();
+            user.setLocked(userUpdate.isAccountNonLocked());
+            user.setFullName(userUpdate.getFullName());
+            user.setUsername(userUpdate.getUsername());
+            user.setPassword(bCryptPasswordEncoder.encode(userUpdate.getPassword()));
+            user.setAuthorities(userUpdate.getAuthoritiesSet());
+            return userRepository.save(user);
+        } catch (NoSuchElementException noSuchElementException){
+            logger.error(noSuchElementException);
+            throw new UsernameNotFoundException("User not found, error has been logged.");
+        } catch (Exception e){
+            logger.error(e);
+            throw new ConstraintViolationException("A constraint was not properly validated, the error has been logged.");
+        }
     }
 }
