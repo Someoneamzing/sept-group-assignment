@@ -112,7 +112,7 @@ jobs:
     steps:
     # checkout the code
       - checkout
-    #install aws-cli
+    # cli for updating s3/cloudfront
       - aws-cli/install
     # restore npm install from test-frontend job
       - attach_workspace:
