@@ -121,7 +121,7 @@ jobs:
     # run build and deploy to aws
       - run:
           command: |
-            bash ./scripts/deploy_frontend.sh "${DEVELOP_S3_BUCKET}" "${DEVELOP_CF_DISTRIBUTION_ID}" "${CIRCLE_BRANCH}" "${CIRCLE_SHA1}"
+            bash ./scripts/deploy_frontend.sh "${DEVELOP_S3_BUCKET}" "${DEVELOP_CF_DISTRIBUTION_ID}"
 
 workflows:
   # Below is the definition of your workflow.
