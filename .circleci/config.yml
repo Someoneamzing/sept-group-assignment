@@ -10,7 +10,6 @@ orbs:
 jobs:
   # based on https://discuss.circleci.com/t/maven-multi-module-project-reactor-install-goal-does-not-see-dependencies-that-have-been-built-a-while-ago/29051/2
   # based on https://gist.github.com/dartov/149a1680a50c636b418119ba653a6ebb
-  # Below is the definition of your job to build and test your app, you can rename and customize it as you want.
   build-and-test-microservices:
     # These next lines define a Docker executor: https://circleci.com/docs/2.0/executor-types/
     # You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
@@ -42,21 +41,21 @@ jobs:
           paths:
             - "~/.m2"
           key: BackEnd-{{ checksum "~/pom-checksum" }}
-      # - run:
-      #     name: Test microservices
-      #     command: |
-      #       cd BackEnd
-      #       # replace application.yaml with test_application.yaml
-      #       find . -type f -regex ".*/src/main/resources/application.yaml" -exec cp test_application.yaml {} \;
-      #       # run tests
-      #       mvn test
-      # - run:
-      #     name: Save test results
-      #     command: |
-      #       mkdir -p ~/test-results/junit/
-      #       find . -type f -regex ".*/target/surefire-reports/.*xml" -exec cp {} ~/test-results/junit/ \;
-      # - store_test_results:
-      #     path: ~/test-results
+      - run:
+          name: Test microservices
+          command: |
+            cd BackEnd
+            # replace application.yaml with test_application.yaml
+            find . -type f -regex ".*/src/main/resources/application.yaml" -exec cp test_application.yaml {} \;
+            # run tests
+            mvn test
+      - run:
+          name: Save test results
+          command: |
+            mkdir -p ~/test-results/junit/
+            find . -type f -regex ".*/target/surefire-reports/.*xml" -exec cp {} ~/test-results/junit/ \;
+      - store_test_results:
+          path: ~/test-results
       - run:
           name: Build repackaged jars
           command: |
@@ -124,49 +123,48 @@ jobs:
             bash ./scripts/deploy_frontend.sh "${DEVELOP_S3_BUCKET}" "${DEVELOP_CF_DISTRIBUTION_ID}"
 
 workflows:
-  # Below is the definition of your workflow.
-  # Inside the workflow, you provide the jobs you want to run, e.g this workflow runs the build-and-test job above.
-  # CircleCI will run this workflow on every commit.
-  # For more details on extending your workflow, see the configuration docs: https://circleci.com/docs/2.0/configuration-reference/#workflows
-  build_and_test_project: 
+  test_build_deploy_frontend:
     jobs:
-      # - test-frontend
-      # - deploy-frontend-develop:
-      #     requires:
-      #       - test-frontend
-      #     filters:
-      #       branches:
-      #         only:
-      #           - develop
+      - test-frontend
+      - deploy-frontend-develop:
+          requires:
+            - test-frontend
+          filters:
+            branches:
+              only:
+                - develop
 
+
+    test_build_deploy_microservices:
+    jobs:
       - build-and-test-microservices
 
-      # - aws-ecr/build-and-push-image:
-      #     name: login-ms-build-and-push-image
-      #     repo: sep-mon-g4
-      #     create-repo: true
-      #     tag: "login_ms_${CIRCLE_BRANCH}_${CIRCLE_SHA1},login_ms_${CIRCLE_BRANCH}_latest"
-      #     attach-workspace: true
-      #     path: BackEnd/loginmicroservices
-      #     requires:
-      #       - build-and-test-microservices
-      #     filters:
-      #       branches:
-      #         only:
-      #           - main
-      #           - develop
-      # - aws-ecs/deploy-service-update:
-      #     name: login-ms-update-deploy-development
-      #     requires:
-      #       - login-ms-build-and-push-image
-      #     family: "login_ms_develop"
-      #     cluster-name: "CICDcluster"
-      #     service-name: "login_ms_develop_LB"
-      #     container-image-name-updates: "container=DevelopmentLoginMicroservice,tag=login_ms_${CIRCLE_BRANCH}_latest"
-      #     filters:
-      #       branches:
-      #         only:
-      #           - develop
+      - aws-ecr/build-and-push-image:
+          name: login-ms-build-and-push-image
+          repo: sep-mon-g4
+          create-repo: true
+          tag: "login_ms_${CIRCLE_BRANCH}_${CIRCLE_SHA1},login_ms_${CIRCLE_BRANCH}_latest"
+          attach-workspace: true
+          path: BackEnd/loginmicroservices
+          requires:
+            - build-and-test-microservices
+          filters:
+            branches:
+              only:
+                - main
+                - develop
+      - aws-ecs/deploy-service-update:
+          name: login-ms-update-deploy-development
+          requires:
+            - login-ms-build-and-push-image
+          family: "login_ms_develop"
+          cluster-name: "CICDcluster"
+          service-name: "login_ms_develop_LB"
+          container-image-name-updates: "container=DevelopmentLoginMicroservice,tag=login_ms_${CIRCLE_BRANCH}_latest"
+          filters:
+            branches:
+              only:
+                - develop
 
       - aws-ecr/build-and-push-image:
           name: book-ms-build-and-push-image
