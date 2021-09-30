@@ -62,7 +62,7 @@ public class UserController {
 
     @GetMapping("/version")
     public String version() {
-        return "v4";
+        return "v5";
     }
 
     @PostMapping("/register")
