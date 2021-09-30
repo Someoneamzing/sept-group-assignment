@@ -130,14 +130,14 @@ workflows:
   # For more details on extending your workflow, see the configuration docs: https://circleci.com/docs/2.0/configuration-reference/#workflows
   build_and_test_project: 
     jobs:
-      - test-frontend
-      - deploy-frontend-develop:
-          requires:
-            - test-frontend
-          filters:
-            branches:
-              only:
-                - develop
+      # - test-frontend
+      # - deploy-frontend-develop:
+      #     requires:
+      #       - test-frontend
+      #     filters:
+      #       branches:
+      #         only:
+      #           - develop
 
       # - build-and-test-microservices
 
@@ -168,29 +168,29 @@ workflows:
       #         only:
       #           - develop
 
-      # - aws-ecr/build-and-push-image:
-      #     name: book-ms-build-and-push-image
-      #     repo: sep-mon-g4
-      #     create-repo: true
-      #     tag: "book_ms_${CIRCLE_BRANCH}_${CIRCLE_SHA1},book_ms_${CIRCLE_BRANCH}_latest"
-      #     attach-workspace: true
-      #     path: BackEnd/bookmicroservices
-      #     requires:
-      #       - build-and-test-microservices
-      #     filters:
-      #       branches:
-      #         only:
-      #           - main
-      #           - develop
-      # - aws-ecs/deploy-service-update:
-      #     name: book-ms-update-deploy-development
-      #     requires:
-      #       - book-ms-build-and-push-image
-      #     family: "book_ms_develop"
-      #     cluster-name: "CICDcluster"
-      #     service-name: "book_ms_develop_service"
-      #     container-image-name-updates: "container=DevelopmentBookMicroservice,tag=book_ms_${CIRCLE_BRANCH}_latest"
-      #     filters:
-      #       branches:
-      #         only:
-      #           - develop
+      - aws-ecr/build-and-push-image:
+          name: book-ms-build-and-push-image
+          repo: sep-mon-g4
+          create-repo: true
+          tag: "book_ms_${CIRCLE_BRANCH}_${CIRCLE_SHA1},book_ms_${CIRCLE_BRANCH}_latest"
+          attach-workspace: true
+          path: BackEnd/bookmicroservices
+          requires:
+            - build-and-test-microservices
+          filters:
+            branches:
+              only:
+                - main
+                - develop
+      - aws-ecs/deploy-service-update:
+          name: book-ms-update-deploy-development
+          requires:
+            - book-ms-build-and-push-image
+          family: "book_ms_develop"
+          cluster-name: "CICDcluster"
+          service-name: "book_ms_develop_service"
+          container-image-name-updates: "container=DevelopmentBookMicroservice,tag=book_ms_${CIRCLE_BRANCH}_latest"
+          filters:
+            branches:
+              only:
+                - develop
