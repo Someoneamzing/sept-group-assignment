@@ -101,7 +101,7 @@ jobs:
           name: Test frontend
       - store_test_results:
           path: ~/project/FrontEnd/bookeroo/junit.xml
-      - persist-to-workspace:
+      - persist_to_workspace:
           root: .
           paths:
             - FrontEnd/bookeroo/
