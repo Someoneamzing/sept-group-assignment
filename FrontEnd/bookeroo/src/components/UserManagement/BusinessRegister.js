@@ -8,9 +8,8 @@ import CloseIcon from '@material-ui/icons/Close';
 import Box from '@material-ui/core/Box';
 import { Redirect } from 'react-router';
 import { postUserApi } from '../../state/user/authentication';
-import { Link } from "react-router-dom";
 
-export default function Register() {
+export default function BusinessRegister() {
     const [username, setUsername] = useState('');
     const [fullName, setFullName] = useState('');
     const [password, setPassword] = useState('');
@@ -18,21 +17,25 @@ export default function Register() {
     const [alertOpen, setAlertOpen] = useState(true);
     const [errorMessages, setErrorMessages] = useState({});
     const [result, setResult] = useState(false);
+    const [abn, setAbn] = useState('');
 
     const onSubmit = (e) => {
         e.preventDefault();
 
-        // new user attributes
         const newUser = {
-            username,
-            fullName,
-            password,
-            confirmPassword,
+            'user': {
+                username,
+                fullName,
+                password,
+                confirmPassword,
+            }, 'businessInfo':
+                { abn }
         };
+
         setErrorMessages({});
 
         // make a post request
-        postUserApi(newUser, 'register')
+        postUserApi(newUser, 'businessRegister')
             .then((data) => {
                 setResult(data);
             })
@@ -47,10 +50,10 @@ export default function Register() {
             {/* redirect to login page if user registered */}
             {result && <Redirect to="/login" />}
             {result && 'Redirecting'}
-            <h1>Bookeroo Registration</h1>
+            <h1>Business Registration</h1>
             <form onSubmit={onSubmit}>
                 <TextField
-                    error={!!errorMessages['username']}
+                    error={!!errorMessages['user.username']}
                     variant="outlined"
                     margin="normal"
                     fullWidth
@@ -58,24 +61,25 @@ export default function Register() {
                     label="User Name"
                     name="username"
                     autoFocus
-                    helperText={errorMessages['username']}
+                    helperText={errorMessages['user.username']}
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
                 />
                 <TextField
-                    error={!!errorMessages['fullName']}
+                    error={!!errorMessages['user.fullName']}
                     variant="outlined"
                     margin="normal"
                     fullWidth
                     id="fullName"
                     label="Full Name"
                     name="fullName"
+                    autoFocus
                     value={fullName}
-                    helperText={errorMessages['fullName']}
+                    helperText={errorMessages['user.fullName']}
                     onChange={(e) => setFullName(e.target.value)}
                 />
                 <TextField
-                    error={!!errorMessages['password']}
+                    error={!!errorMessages['user.password']}
                     variant="outlined"
                     margin="normal"
                     fullWidth
@@ -84,11 +88,11 @@ export default function Register() {
                     type="password"
                     id="password"
                     value={password}
-                    helperText={errorMessages['password']}
+                    helperText={errorMessages['user.password']}
                     onChange={(e) => setPassword(e.target.value)}
                 />
                 <TextField
-                    error={!!errorMessages['confirmPassword']}
+                    error={!!errorMessages['user.confirmPassword']}
                     variant="outlined"
                     margin="normal"
                     fullWidth
@@ -97,10 +101,22 @@ export default function Register() {
                     type="password"
                     name="confirmPassword"
                     value={confirmPassword}
-                    helperText={errorMessages['confirmPassword']}
+                    helperText={errorMessages['user.confirmPassword']}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                 />
-                <Link to="/businessRegister">Business Register</Link>
+                <TextField
+                    error={!!errorMessages['businessInfo.ABN']}
+                    variant="outlined"
+                    margin="normal"
+                    fullWidth
+                    id="ABN"
+                    label="ABN"
+                    name="ABN"
+                    autoFocus
+                    value={abn}
+                    helperText={errorMessages['businessInfo.ABN']}
+                    onChange={(e) => setAbn(e.target.value)}
+                />
                 <Box mt={1}>
                     <Button
                         type="submit"

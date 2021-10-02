@@ -1,5 +1,5 @@
 import Grid from '@material-ui/core/Grid';
-import {makeStyles, useTheme} from '@material-ui/core/styles';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
 import BooksPic from '../assets/BooksPicHome.jpg';
 import BusinessPic from '../assets/BusinessPicHome.jpg';
 import Typography from '@material-ui/core/Typography';
@@ -48,7 +48,7 @@ const useStyles = makeStyles((theme) => ({
 
 function Home(props) {
     const classes = useStyles();
-    const {history} = props;
+    const { history } = props;
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('xs'));
 
@@ -101,7 +101,7 @@ function Home(props) {
                 <Button
                     variant="contained"
                     color="primary"
-                    onClick={() => handleButtonClick('/register')}
+                    onClick={() => handleButtonClick('/businessRegister')}
                     className={classes.gridButton}
                 >
                     Register as a Business
