@@ -106,6 +106,7 @@ public class UserController {
         User user = userInfo.getUser();
         BusinessInfo businessInfo = userInfo.getBusinessInfo();
         user.setBusinessInfo(businessInfo);
+        user.setEnabled(false);
 
         // Validate passwords match
         userValidator.validate(user, result);

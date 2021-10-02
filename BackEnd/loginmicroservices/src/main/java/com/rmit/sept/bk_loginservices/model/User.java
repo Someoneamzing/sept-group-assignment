@@ -49,7 +49,11 @@ public class User implements UserDetails {
     @ElementCollection
     @UniqueElements
     private Collection<String> authorities = new HashSet<>();
-    private boolean locked = true;
+    private boolean active = true;
+    private boolean enabled = true;
+
+    public User() {
+    }
 
     public BusinessInfo getBusinessInfo() {
         return businessInfo;
@@ -57,9 +61,6 @@ public class User implements UserDetails {
 
     public void setBusinessInfo(BusinessInfo businessInfo) {
         this.businessInfo = businessInfo;
-    }
-
-    public User() {
     }
 
     public Long getId() {
@@ -169,11 +170,11 @@ public class User implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return this.locked;
+        return this.active;
     }
 
     public void setLocked(boolean locked) {
-        this.locked = locked;
+        this.active = locked;
     }
 
     @Override
@@ -183,8 +184,9 @@ public class User implements UserDetails {
     }
 
     @Override
-    @JsonIgnore
     public boolean isEnabled() {
         return true;
     }
+
+    public void setEnabled(boolean enabled) { this.enabled = enabled; }
 }
