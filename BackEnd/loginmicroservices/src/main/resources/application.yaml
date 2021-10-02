@@ -9,10 +9,11 @@ spring:
       path: /h2-console
       enabled: true
   jpa:
+<<<<<<< HEAD
 #    defer-datasource-initialization: true
-    show-sql: false
+    show-sql: true
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
     database-platform: org.hibernate.dialect.H2Dialect
 #  sql:
 #    init:
@@ -20,6 +21,7 @@ spring:
   devtools:
     livereload:
       port: 35730
+
 server:
 #  error:
 #    include-stacktrace: always
@@ -28,4 +30,4 @@ server:
     include-message: always
     include-binding-errors: always
 #    set this to never in production
-    include-stacktrace: on_param
+    include-stacktrace: always

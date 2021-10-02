@@ -2,7 +2,9 @@ package com.rmit.sept.bk_loginservices.web;
 
 
 import com.rmit.sept.bk_loginservices.Repositories.UserRepository;
+import com.rmit.sept.bk_loginservices.model.BusinessInfo;
 import com.rmit.sept.bk_loginservices.model.User;
+import com.rmit.sept.bk_loginservices.model.UserWrapper;
 import com.rmit.sept.bk_loginservices.payload.JWTLoginSuccessResponse;
 import com.rmit.sept.bk_loginservices.payload.LoginRequest;
 import com.rmit.sept.bk_loginservices.security.JwtTokenProvider;
@@ -29,7 +31,7 @@ import java.util.stream.Collectors;
 
 import static com.rmit.sept.bk_loginservices.security.SecurityConstant.TOKEN_PREFIX;
 
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
@@ -79,6 +81,11 @@ public class UserController {
         userService.updateUser(userid, user);
         return new ResponseEntity<>(userService.getUserById(userid), HttpStatus.OK);
     }
+    
+    @GetMapping("/version")
+    public String version() {
+        return "v5";
+    }
 
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@Valid @RequestBody User user, BindingResult result){
@@ -91,6 +98,24 @@ public class UserController {
         User newUser = userService.saveNewUser(user);
 
         return  new ResponseEntity<>(newUser, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/businessRegister")
+    public ResponseEntity<?> registerBusinessUser(@Valid @RequestBody UserWrapper userInfo, BindingResult result){
+        // save business info for user
+        User user = userInfo.getUser();
+        BusinessInfo businessInfo = userInfo.getBusinessInfo();
+        user.setBusinessInfo(businessInfo);
+
+        // Validate passwords match
+        userValidator.validate(user, result);
+
+        ResponseEntity<?> errorMap = mapValidationErrorService.MapValidationService(result);
+        if(errorMap != null)return errorMap;
+
+        User newUser = userService.saveNewUser(user);
+
+        return new ResponseEntity<>(newUser, HttpStatus.ACCEPTED);
     }
 
     @GetMapping("/my_authorities")

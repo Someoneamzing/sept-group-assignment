@@ -28,18 +28,22 @@ public class UserValidator implements Validator {
 
         User user = (User) object;
 
+        // use this prefix string to separate public and business user field errors
+        String prefix = errors.getObjectName().equals("userWrapper") ? "user." : "";
+
+        // password length check
         if(user.getPassword().length() < 6){
-            errors.rejectValue("password","Length", "Password must be at least 6 characters");
+            errors.rejectValue(prefix + "password","Length", "Password must be at least 6 characters");
         }
 
         //confirmPassword
         if(!user.getPassword().equals(user.getConfirmPassword())){
-            errors.rejectValue("confirmPassword","Match", "Passwords must match");
+            errors.rejectValue(prefix + "confirmPassword","Match", "Passwords must match");
         }
 
 //        confirm unique username
         if (userRepository.existsByUsername(user.getUsername())) {
-            errors.rejectValue("username", "Unique", "Username must be unique");
+            errors.rejectValue(prefix + "username", "Unique", "Username must be unique");
         }
     }
 }

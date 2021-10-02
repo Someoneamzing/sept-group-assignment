@@ -1,0 +1,20 @@
+spring:
+  datasource:
+    driverClassName: com.mysql.cj.jdbc.Driver
+    url: jdbc:${RDS_HOSTNAME}
+    username: ${RDS_USERNAME}
+    password: ${RDS_PASSWORD}
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    database-platform: org.hibernate.dialect.MySQL55Dialect
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL55Dialect
+#    data.rest.base-path: api/ is added as an externalized config in bookmicroservices/Dockerfile
+server:
+  port: ${SERVER_PORT}
+  error:
+    # set this to `never` in production
+    include-stacktrace: never
