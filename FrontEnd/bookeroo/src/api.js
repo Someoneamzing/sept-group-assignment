@@ -1,8 +1,5 @@
 import axios from 'axios';
 
-export async function createOrderItem(data) {
-    const url = new URL(`/api/orders`);
-}
 /**
  * Makes a request to the API to create a book with the given data.
  * @param {Object} data

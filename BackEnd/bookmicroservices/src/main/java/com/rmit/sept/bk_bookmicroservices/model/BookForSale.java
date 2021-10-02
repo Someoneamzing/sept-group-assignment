@@ -1,5 +1,6 @@
 package com.rmit.sept.bk_bookmicroservices.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
@@ -20,6 +21,7 @@ public class BookForSale extends ServiceEntity {
     @JoinColumn(nullable = false)
     @ManyToOne(optional = false)
     @NotNull
+    @JsonBackReference(value = "book_id")
     // The book that is for sale
     private Book book;
 

@@ -1,4 +1,6 @@
 import React from 'react';
+import {useRecoilValue} from 'recoil';
+import {bookAtomFamily} from '../../state/books/books';
 import './BookThumbnail.css';
 
 /**
@@ -6,7 +8,8 @@ import './BookThumbnail.css';
  * @param {Object} props The props for the component
  * @returns a BookThumbnail component
  */
-export default function BookThumbnail({book, ...props}) {
+export default function BookThumbnail({bookId, ...props}) {
+    const book = useRecoilValue(bookAtomFamily(bookId));
     return (
         <div className="BookThumbnail">
             <img

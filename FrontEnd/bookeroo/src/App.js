@@ -14,6 +14,8 @@ import AddToOrderForm from './components/OrderManagement/AddToOrderForm';
 import Login from './components/UserManagement/Login';
 import {useResetRecoilState} from 'recoil';
 import {userAtom} from './state/user/authentication';
+import OrderList from './components/OrderManagement/OrderList';
+import OrderView from './components/OrderManagement/OrderView';
 
 function Logout({history}) {
     const resetUser = useResetRecoilState(userAtom);
@@ -37,6 +39,12 @@ function App() {
                     <Route exact path="/logout" component={Logout} />
                     <Route exact path="/contact" component={Contact} />
                     <Route exact path="/order" component={AddToOrderForm} />
+                    <Route exact path="/orders" component={OrderList} />
+                    <Route
+                        exact
+                        path="/orders/:orderId"
+                        component={OrderView}
+                    />
                     <Route
                         exact
                         path="/book/new"

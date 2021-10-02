@@ -1,5 +1,6 @@
 package com.rmit.sept.bk_bookmicroservices.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 import org.hibernate.validator.constraints.URL;
