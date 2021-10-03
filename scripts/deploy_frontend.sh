@@ -1,5 +1,4 @@
 BUCKET_NAME=$1
-DISTRIBUTION=$2
 
 # CRA endpoint env-vars
 # https://create-react-app.dev/docs/adding-custom-environment-variables/
