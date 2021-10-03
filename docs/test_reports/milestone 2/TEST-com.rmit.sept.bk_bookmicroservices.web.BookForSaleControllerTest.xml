@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="com.rmit.sept.bk_bookmicroservices.web.BookForSaleControllerTest" time="0.323" tests="5" errors="0" skipped="0" failures="0">
+  <properties/>
+  <testcase name="createEndpointSuccessfullyResponds" classname="com.rmit.sept.bk_bookmicroservices.web.BookForSaleControllerTest" time="0.099"/>
+  <testcase name="getOneEndpointSuccessfullyResponds" classname="com.rmit.sept.bk_bookmicroservices.web.BookForSaleControllerTest" time="0.067"/>
+  <testcase name="listEndpointSuccessfullyResponds" classname="com.rmit.sept.bk_bookmicroservices.web.BookForSaleControllerTest" time="0.06"/>
+  <testcase name="createEndpointRespondsWithErrorOnInvalidData" classname="com.rmit.sept.bk_bookmicroservices.web.BookForSaleControllerTest" time="0.049"/>
+  <testcase name="getOneEndpointRespondsWithErrorOnUnknownId" classname="com.rmit.sept.bk_bookmicroservices.web.BookForSaleControllerTest" time="0.037"/>
+</testsuite>
