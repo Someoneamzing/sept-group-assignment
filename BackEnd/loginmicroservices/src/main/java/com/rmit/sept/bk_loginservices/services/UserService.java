@@ -87,7 +87,8 @@ public class UserService {
     public User updateUser(Long id, User userUpdate) throws UsernameNotFoundException, ConstraintViolationException {
         try {
             User user = userRepository.findById(id).get();
-            user.setLocked(userUpdate.isAccountNonLocked());
+            user.setActive(userUpdate.isAccountNonLocked());
+            user.setEnabled(userUpdate.isEnabled());
             user.setFullName(userUpdate.getFullName());
             user.setUsername(userUpdate.getUsername());
             user.setPassword(bCryptPasswordEncoder.encode(userUpdate.getPassword()));

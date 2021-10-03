@@ -26,8 +26,7 @@ public class UserInitializer implements CommandLineRunner {
         admin.setFullName("admin");
         admin.setUsername("admin@gmail.com");
         admin.setPassword("admin");
-        admin.setEnabled(true);
-        admin.setLocked(false);
+        admin.setActive(true);
         userService.saveNewAdmin(admin);
     }
 }

@@ -173,8 +173,8 @@ public class User implements UserDetails {
         return this.active;
     }
 
-    public void setLocked(boolean locked) {
-        this.active = locked;
+    public void setActive(boolean active) {
+        this.active = active;
     }
 
     @Override
@@ -185,7 +185,7 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return this.enabled;
     }
 
     public void setEnabled(boolean enabled) { this.enabled = enabled; }
