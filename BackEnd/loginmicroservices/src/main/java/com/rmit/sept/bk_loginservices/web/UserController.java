@@ -10,6 +10,7 @@ import com.rmit.sept.bk_loginservices.services.MapValidationErrorService;
 import com.rmit.sept.bk_loginservices.services.UserService;
 import com.rmit.sept.bk_loginservices.validator.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -52,6 +53,14 @@ public class UserController {
         this.userValidator = userValidator;
         this.tokenProvider = tokenProvider;
         this.authenticationManager = authenticationManager;
+    }
+
+    @SuppressWarnings("SpringElInspection")
+    @Value("#{environment.CIRCLE_BRANCH_SHA1}")
+    private String branchSha1;
+    @GetMapping("/version")
+    public String version() {
+        return branchSha1;
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
