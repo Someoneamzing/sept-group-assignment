@@ -105,7 +105,10 @@ jobs:
           paths:
             - FrontEnd/bookeroo/
 
-  deploy-frontend-develop:
+  deploy-frontend-s3:
+    parameters:
+      s3bucket:
+        type: string
       # Use container with node and npm installed
     docker:
       - image: cimg/node:lts
@@ -120,29 +123,45 @@ jobs:
     # run build and deploy to aws
       - run:
           command: |
-            bash ./scripts/deploy_frontend.sh "${DEVELOP_S3_BUCKET}" "${DEVELOP_CF_DISTRIBUTION_ID}"
+            bash ./scripts/deploy_frontend.sh "<<parameters.s3bucket>>"
 
 workflows:
   test_build_deploy_frontend:
     jobs:
       - test-frontend
-      - deploy-frontend-develop:
+      - deploy-frontend-s3:
+          name: deploy-develop-frontend
+          s3bucket: "${DEVELOP_S3_BUCKET}"
           requires:
             - test-frontend
           filters:
             branches:
               only:
                 - develop
+      - deploy-frontend-s3:
+          name: deploy-main-frontend
+          s3bucket: "${MAIN_S3_BUCKET}"
+          requires:
+            - test-frontend
+          filters:
+            branches:
+              only:
+                - main
+
 
 
   test_build_deploy_microservices:
     jobs:
+
       - build-and-test-microservices
 
+      # LOGIN_MS
+      # build image (for main and develop) deploy (on develop infrastructure)
       - aws-ecr/build-and-push-image:
           name: login-ms-build-and-push-image
           repo: sep-mon-g4
           create-repo: true
+          extra-build-args: '--build-arg CIRCLE_BRANCH=${CIRCLE_BRANCH} --build-arg CIRCLE_SHA1=${CIRCLE_SHA1}'
           tag: "login_ms_${CIRCLE_BRANCH}_${CIRCLE_SHA1},login_ms_${CIRCLE_BRANCH}_latest"
           attach-workspace: true
           path: BackEnd/loginmicroservices
@@ -165,11 +184,36 @@ workflows:
             branches:
               only:
                 - develop
+      # require approval (for main) then deploy (on main infrastructure)
+      - approve-deploy:
+          name: approve-login-ms-main-deploy
+          type: approval
+          requires:
+            - login-ms-build-and-push-image
+          filters:
+            branches:
+              only:
+                - main
+      - aws-ecs/deploy-service-update:
+          name: login-ms-update-deploy-main
+          requires:
+            - approve-login-ms-main-deploy
+          family: "login_ms_main"
+          cluster-name: "CICDcluster"
+          service-name: "login_ms_main_LB"
+          container-image-name-updates: "container=MainLoginMicroservice,tag=login_ms_${CIRCLE_BRANCH}_latest"
+          filters:
+            branches:
+              only:
+                - main
 
+      # BOOK_MS
+      # build image (for main and develop) deploy (on develop infrastructure)
       - aws-ecr/build-and-push-image:
           name: book-ms-build-and-push-image
           repo: sep-mon-g4
           create-repo: true
+          extra-build-args: '--build-arg CIRCLE_BRANCH=${CIRCLE_BRANCH} --build-arg CIRCLE_SHA1=${CIRCLE_SHA1}'
           tag: "book_ms_${CIRCLE_BRANCH}_${CIRCLE_SHA1},book_ms_${CIRCLE_BRANCH}_latest"
           attach-workspace: true
           path: BackEnd/bookmicroservices
@@ -192,3 +236,25 @@ workflows:
             branches:
               only:
                 - develop
+      # require approval (for main) then deploy (on main infrastructure)
+      - approve-deploy:
+          name: approve-book-ms-main-deploy
+          type: approval
+          requires:
+            - book-ms-build-and-push-image
+          filters:
+            branches:
+              only:
+                - main
+      - aws-ecs/deploy-service-update:
+          name: book-ms-update-deploy-main
+          requires:
+            - approve-book-ms-main-deploy
+          family: "book_ms_main"
+          cluster-name: "CICDcluster"
+          service-name: "book_ms_main_LB"
+          container-image-name-updates: "container=MainBookMicroservice,tag=book_ms_${CIRCLE_BRANCH}_latest"
+          filters:
+            branches:
+              only:
+                - main
