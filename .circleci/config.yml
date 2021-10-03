@@ -161,7 +161,7 @@ workflows:
           name: login-ms-build-and-push-image
           repo: sep-mon-g4
           create-repo: true
-          extra-build-args: '--build-args CIRCLE_BRANCH=${CIRCLE_BRANCH} --build-args CIRCLE_SHA1=${CIRCLE_SHA1}'
+          extra-build-args: '--build-arg CIRCLE_BRANCH=${CIRCLE_BRANCH} --build-arg CIRCLE_SHA1=${CIRCLE_SHA1}'
           tag: "login_ms_${CIRCLE_BRANCH}_${CIRCLE_SHA1},login_ms_${CIRCLE_BRANCH}_latest"
           attach-workspace: true
           path: BackEnd/loginmicroservices
@@ -213,7 +213,7 @@ workflows:
           name: book-ms-build-and-push-image
           repo: sep-mon-g4
           create-repo: true
-          extra-build-args: '--build-args CIRCLE_BRANCH=${CIRCLE_BRANCH} --build-args CIRCLE_SHA1=${CIRCLE_SHA1}'
+          extra-build-args: '--build-arg CIRCLE_BRANCH=${CIRCLE_BRANCH} --build-arg CIRCLE_SHA1=${CIRCLE_SHA1}'
           tag: "book_ms_${CIRCLE_BRANCH}_${CIRCLE_SHA1},book_ms_${CIRCLE_BRANCH}_latest"
           attach-workspace: true
           path: BackEnd/bookmicroservices
