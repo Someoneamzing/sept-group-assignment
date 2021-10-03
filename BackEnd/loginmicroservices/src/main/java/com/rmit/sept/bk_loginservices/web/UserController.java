@@ -71,11 +71,6 @@ public class UserController {
         return this.userRepository.findAll();
     }
 
-    @GetMapping("/version")
-    public String version() {
-        return "v5";
-    }
-
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@Valid @RequestBody User user, BindingResult result){
         // Validate passwords match
