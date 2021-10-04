@@ -86,15 +86,12 @@ public class UserService {
         return user;
 
     }
-
-    //TODO: implement in case null value in userUpdate
+    
     public User updateUser(Long id, User userUpdate) throws UsernameNotFoundException, ConstraintViolationException {
         try {
             User user = userRepository.findById(id).get();
 
-            if(userUpdate.isAccountNonLockedBool() != null) {
-                user.setAccountNonLocked(userUpdate.isAccountNonLocked());
-            }
+            if(userUpdate.isAccountNonLockedBool() != null) {user.setAccountNonLocked(userUpdate.isAccountNonLocked());}
 
             if(userUpdate.isEnabledBool() != null) {user.setEnabled(userUpdate.isEnabled());}
 
@@ -104,9 +101,7 @@ public class UserService {
 
             if(userUpdate.getPassword() != null) {user.setPassword(bCryptPasswordEncoder.encode(userUpdate.getPassword()));}
 
-            if(userUpdate.getAuthoritiesSet().size() != 0) {
-                user.setAuthorities(userUpdate.getAuthoritiesSet());
-            }
+            if(userUpdate.getAuthoritiesSet().size() != 0) {user.setAuthorities(userUpdate.getAuthoritiesSet());}
 
             return userRepository.save(user);
         } catch (NoSuchElementException noSuchElementException){
