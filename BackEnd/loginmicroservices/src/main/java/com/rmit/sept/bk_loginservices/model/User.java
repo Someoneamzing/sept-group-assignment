@@ -49,8 +49,8 @@ public class User implements UserDetails {
     @ElementCollection
     @UniqueElements
     private Collection<String> authorities = new HashSet<>();
-    private boolean active = true;
-    private boolean enabled = true;
+    private Boolean AccountNonLocked = null;
+    private Boolean enabled = null;
 
     public User() {
     }
@@ -168,13 +168,18 @@ public class User implements UserDetails {
         return true;
     }
 
-    @Override
-    public boolean isAccountNonLocked() {
-        return this.active;
+    @JsonIgnore
+    public Boolean isAccountNonLockedBool() {
+        return this.AccountNonLocked;
     }
 
-    public void setActive(boolean active) {
-        this.active = active;
+    public void setAccountNonLocked(boolean AccountNonLocked) {
+        this.AccountNonLocked = AccountNonLocked;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return this.AccountNonLocked;
     }
 
     @Override
@@ -185,6 +190,11 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
+        return this.enabled;
+    }
+
+    @JsonIgnore
+    public Boolean isEnabledBool() {
         return this.enabled;
     }
 

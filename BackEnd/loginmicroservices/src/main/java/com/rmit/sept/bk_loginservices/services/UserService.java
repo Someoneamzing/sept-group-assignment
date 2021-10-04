@@ -46,6 +46,10 @@ public class UserService {
 
         // We don't persist or show the confirmPassword
         newUser.setConfirmPassword("");
+
+        newUser.setAccountNonLocked(true);
+        newUser.setEnabled(true);
+
         try {
             return userRepository.save(newUser);
         } catch (javax.validation.ConstraintViolationException e) {
@@ -87,12 +91,23 @@ public class UserService {
     public User updateUser(Long id, User userUpdate) throws UsernameNotFoundException, ConstraintViolationException {
         try {
             User user = userRepository.findById(id).get();
-            user.setActive(userUpdate.isAccountNonLocked());
-            user.setEnabled(userUpdate.isEnabled());
-            user.setFullName(userUpdate.getFullName());
-            user.setUsername(userUpdate.getUsername());
-            user.setPassword(bCryptPasswordEncoder.encode(userUpdate.getPassword()));
-            user.setAuthorities(userUpdate.getAuthoritiesSet());
+
+            if(userUpdate.isAccountNonLockedBool() != null) {
+                user.setAccountNonLocked(userUpdate.isAccountNonLocked());
+            }
+
+            if(userUpdate.isEnabledBool() != null) {user.setEnabled(userUpdate.isEnabled());}
+
+            if(userUpdate.getFullName() != null) {user.setFullName(userUpdate.getFullName());}
+
+            if(userUpdate.getUsername() != null) {user.setUsername(userUpdate.getUsername());}
+
+            if(userUpdate.getPassword() != null) {user.setPassword(bCryptPasswordEncoder.encode(userUpdate.getPassword()));}
+
+            if(userUpdate.getAuthoritiesSet().size() != 0) {
+                user.setAuthorities(userUpdate.getAuthoritiesSet());
+            }
+
             return userRepository.save(user);
         } catch (NoSuchElementException noSuchElementException){
             logger.error(noSuchElementException);

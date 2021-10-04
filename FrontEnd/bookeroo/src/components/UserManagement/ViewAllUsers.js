@@ -16,6 +16,10 @@ function UserListItem({userId}) {
         <Box width="100%">
             <Link to={`/user/${userId}`}>
                 {userData.username}
+                · {userData.fullName}
+                · {userData.accountNonLocked.toString()}
+                · {userData.enabled.toString()} 
+                · {userData.authorities.map(a => a.authority)} 
             </Link>
         </Box>
     );
