@@ -1,0 +1,260 @@
+# Use the latest 2.1 version of CircleCI pipeline process engine. 
+# See: https://circleci.com/docs/2.0/configuration-reference
+version: 2.1
+
+orbs:
+  aws-ecr: circleci/aws-ecr@7.2.0
+  aws-ecs: circleci/aws-ecs@2.2.1
+  aws-cli: circleci/aws-cli@2.0.3
+
+jobs:
+  # based on https://discuss.circleci.com/t/maven-multi-module-project-reactor-install-goal-does-not-see-dependencies-that-have-been-built-a-while-ago/29051/2
+  # based on https://gist.github.com/dartov/149a1680a50c636b418119ba653a6ebb
+  build-and-test-microservices:
+    # These next lines define a Docker executor: https://circleci.com/docs/2.0/executor-types/
+    # You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
+    # Be sure to update the Docker image tag below to openjdk version of your application.
+    # A list of available CircleCI Docker Convenience Images are available here: https://circleci.com/developer/images/image/cimg/openjdk
+    docker:
+      - image: cimg/openjdk:11.0
+    steps:
+      # Checkout the code as the first step.
+      - checkout
+      # Then run your tests!
+      - run:
+          name: Generate cumulative pom.xml checksum
+          command: |
+            cd BackEnd
+            find . -type f -name "pom.xml" -exec sh -c "sha256sum {} >> ~/pom-checksum.tmp" \;
+            sort -o ~/pom-checksum ~/pom-checksum.tmp
+          when: always
+      - restore_cache:
+          keys: 
+            - BackEnd-{{ checksum "~/pom-checksum" }}
+            - BackEnd-
+      - run:
+          name: Resolve submodule maven dependencies
+          command: |
+            cd BackEnd
+            mvn de.qaware.maven:go-offline-maven-plugin:resolve-dependencies
+      - save_cache:
+          paths:
+            - "~/.m2"
+          key: BackEnd-{{ checksum "~/pom-checksum" }}
+      - run:
+          name: Test microservices
+          command: |
+            cd BackEnd
+            # replace application.yaml with test_application.yaml
+            find . -type f -regex ".*/src/main/resources/application.yaml" -exec cp test_application.yaml {} \;
+            # run tests
+            mvn test
+      - run:
+          name: Save test results
+          command: |
+            mkdir -p ~/test-results/junit/
+            find . -type f -regex ".*/target/surefire-reports/.*xml" -exec cp {} ~/test-results/junit/ \;
+      - store_test_results:
+          path: ~/test-results
+      - run:
+          name: Build repackaged jars
+          command: |
+            cd BackEnd
+            # replace application.yaml with mysql_application.yaml
+            find . -type f -regex ".*/src/main/resources/application.yaml" -exec cp mysql_application.yaml {} \;
+            # build packages using spring-boot
+            mvn package spring-boot:repackage -Dmaven.test.skip
+            mkdir -p ~/build_results/
+            find . -type f -regex ".*/target/.*jar" -exec cp {} ~/build_results/ \;
+      # - store_artifacts:
+      #     path: ~/build_results/
+      - persist_to_workspace:
+          root: .
+          paths:
+            - BackEnd/bookmicroservices/target
+            - BackEnd/loginmicroservices/target
+
+  test-frontend:
+    # Use container with node and npm installed
+    docker:
+      - image: cimg/node:lts
+    steps:
+    # checkout the code
+      - checkout
+      - restore_cache:
+          key: dependency-cache-{{ checksum "~/project/FrontEnd/bookeroo/package.json" }}
+    # installs dependencies
+      - run:
+          name: Resolve FrontEnd node dependencies
+          command: |
+            cd FrontEnd/bookeroo
+            npm install --no-optional
+    # save node_modules
+      - save_cache:
+          key: dependency-cache-{{ checksum "~/project/FrontEnd/bookeroo/package.json" }}
+          paths:
+            - ~/project/FrontEnd/bookeroo/node_modules
+    # run tests
+      - run:
+          command: cd ~/project/FrontEnd/bookeroo && CI=true && npm run test:ci
+          name: Test frontend
+      - store_test_results:
+          path: ~/project/FrontEnd/bookeroo/junit.xml
+      - persist_to_workspace:
+          root: .
+          paths:
+            - FrontEnd/bookeroo/
+
+  deploy-frontend-s3:
+    parameters:
+      s3bucket:
+        type: string
+      # Use container with node and npm installed
+    docker:
+      - image: cimg/node:lts
+    steps:
+    # checkout the code
+      - checkout
+    # cli for updating s3/cloudfront
+      - aws-cli/install
+    # restore npm install from test-frontend job
+      - attach_workspace:
+          at: .
+    # run build and deploy to aws
+      - run:
+          command: |
+            bash ./scripts/deploy_frontend.sh "<<parameters.s3bucket>>"
+
+workflows:
+  test_build_deploy_frontend:
+    jobs:
+      - test-frontend
+      - deploy-frontend-s3:
+          name: deploy-develop-frontend
+          s3bucket: "${DEVELOP_S3_BUCKET}"
+          requires:
+            - test-frontend
+          filters:
+            branches:
+              only:
+                - develop
+      - deploy-frontend-s3:
+          name: deploy-main-frontend
+          s3bucket: "${MAIN_S3_BUCKET}"
+          requires:
+            - test-frontend
+          filters:
+            branches:
+              only:
+                - main
+
+
+
+  test_build_deploy_microservices:
+    jobs:
+
+      - build-and-test-microservices
+
+      # LOGIN_MS
+      # build image (for main and develop) deploy (on develop infrastructure)
+      - aws-ecr/build-and-push-image:
+          name: login-ms-build-and-push-image
+          repo: sep-mon-g4
+          create-repo: true
+          extra-build-args: '--build-arg CIRCLE_BRANCH=${CIRCLE_BRANCH} --build-arg CIRCLE_SHA1=${CIRCLE_SHA1}'
+          tag: "login_ms_${CIRCLE_BRANCH}_${CIRCLE_SHA1},login_ms_${CIRCLE_BRANCH}_latest"
+          attach-workspace: true
+          path: BackEnd/loginmicroservices
+          requires:
+            - build-and-test-microservices
+          filters:
+            branches:
+              only:
+                - main
+                - develop
+      - aws-ecs/deploy-service-update:
+          name: login-ms-update-deploy-development
+          requires:
+            - login-ms-build-and-push-image
+          family: "login_ms_develop"
+          cluster-name: "CICDcluster"
+          service-name: "login_ms_develop_LB"
+          container-image-name-updates: "container=DevelopmentLoginMicroservice,tag=login_ms_${CIRCLE_BRANCH}_latest"
+          filters:
+            branches:
+              only:
+                - develop
+      # require approval (for main) then deploy (on main infrastructure)
+      - approve-deploy:
+          name: approve-login-ms-main-deploy
+          type: approval
+          requires:
+            - login-ms-build-and-push-image
+          filters:
+            branches:
+              only:
+                - main
+      - aws-ecs/deploy-service-update:
+          name: login-ms-update-deploy-main
+          requires:
+            - approve-login-ms-main-deploy
+          family: "login_ms_main"
+          cluster-name: "CICDcluster"
+          service-name: "login_ms_main_LB"
+          container-image-name-updates: "container=MainLoginMicroservice,tag=login_ms_${CIRCLE_BRANCH}_latest"
+          filters:
+            branches:
+              only:
+                - main
+
+      # BOOK_MS
+      # build image (for main and develop) deploy (on develop infrastructure)
+      - aws-ecr/build-and-push-image:
+          name: book-ms-build-and-push-image
+          repo: sep-mon-g4
+          create-repo: true
+          extra-build-args: '--build-arg CIRCLE_BRANCH=${CIRCLE_BRANCH} --build-arg CIRCLE_SHA1=${CIRCLE_SHA1}'
+          tag: "book_ms_${CIRCLE_BRANCH}_${CIRCLE_SHA1},book_ms_${CIRCLE_BRANCH}_latest"
+          attach-workspace: true
+          path: BackEnd/bookmicroservices
+          requires:
+            - build-and-test-microservices
+          filters:
+            branches:
+              only:
+                - main
+                - develop
+      - aws-ecs/deploy-service-update:
+          name: book-ms-update-deploy-development
+          requires:
+            - book-ms-build-and-push-image
+          family: "book_ms_develop"
+          cluster-name: "CICDcluster"
+          service-name: "book_ms_develop_LB"
+          container-image-name-updates: "container=DevelopmentBookMicroservice,tag=book_ms_${CIRCLE_BRANCH}_latest"
+          filters:
+            branches:
+              only:
+                - develop
+      # require approval (for main) then deploy (on main infrastructure)
+      - approve-deploy:
+          name: approve-book-ms-main-deploy
+          type: approval
+          requires:
+            - book-ms-build-and-push-image
+          filters:
+            branches:
+              only:
+                - main
+      - aws-ecs/deploy-service-update:
+          name: book-ms-update-deploy-main
+          requires:
+            - approve-book-ms-main-deploy
+          family: "book_ms_main"
+          cluster-name: "CICDcluster"
+          service-name: "book_ms_main_LB"
+          container-image-name-updates: "container=MainBookMicroservice,tag=book_ms_${CIRCLE_BRANCH}_latest"
+          filters:
+            branches:
+              only:
+                - main
