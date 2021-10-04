@@ -138,7 +138,7 @@ public class UserController {
         );
 
 //        is this required? JwtAuthenticationFilter already does this on secured routes
-//        SecurityContextHolder.getContext().setAuthentication(authentication);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = TOKEN_PREFIX +  tokenProvider.generateToken(authentication);
 
         return ResponseEntity.ok(new JWTLoginSuccessResponse(true, jwt, authentication.getAuthorities().stream().map(GrantedAuthority::toString).collect(Collectors.toSet())));

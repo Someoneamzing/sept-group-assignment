@@ -75,21 +75,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/**/*.js"
                 ).permitAll()
                 .antMatchers(SecurityConstant.SIGN_UP_URLS).permitAll()
-                .and().authorizeRequests().antMatchers("/api/users/**").permitAll()
+//                .and().authorizeRequests().antMatchers("/api/users/**").permitAll()
                 .antMatchers(SecurityConstant.H2_URL).permitAll()
 //                require all other requests to be authenticated
-//                .and().authorizeRequests().anyRequest().fullyAuthenticated().and()
+//                .and().authorizeRequests().anyRequest().fullyAuthenticated()
                 .and().addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
     }
-
-//    @Bean
-//    CorsConfigurationSource corsConfigurationSource()
-//    {
-//        CorsConfiguration configuration = new CorsConfiguration();
-//        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000", "http://localhost:8080"));
-//        configuration.setAllowedMethods(Arrays.asList("GET","POST"));
-//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-//        source.registerCorsConfiguration("/**", configuration);
-//        return source;
-//    }
 }
