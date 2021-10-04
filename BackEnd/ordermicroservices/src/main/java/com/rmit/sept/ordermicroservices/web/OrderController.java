@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.HashMap;
+import java.util.Map;
 
 @RepositoryRestController()
 @RequestMapping("/api/orders")
@@ -36,9 +38,10 @@ public class OrderController {
         Order order = orderService.getCurrentOrderForUser(userDetails.getUserId());
         EntityModel<Order> model = EntityModel.of(order);
         // Add the links to match the REST response.
-        model.add(Link.of(new URI("http:", host,"/api/orders/{id}",       null).toString()).withRel(LinkRelation.of("self" )).expand(order.getId()));
-        model.add(Link.of(new URI("http:", host,"/api/orders/{id}",       null).toString()).withRel(LinkRelation.of("order")).expand(order.getId()));
-        model.add(Link.of(new URI("http:", host,"/api/orders/{id}/items", null).toString()).withRel(LinkRelation.of("items")).expand(order.getId()));
+        String itemPath = String.format("http://%s/api/orders/%s", host, order.getId());
+        model.add(Link.of(itemPath).withRel(LinkRelation.of("self" )));
+        model.add(Link.of(itemPath).withRel(LinkRelation.of("order")));
+        model.add(Link.of(itemPath + "/items").withRel(LinkRelation.of("items")));
 
         return ResponseEntity.ok(model);
     }

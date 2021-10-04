@@ -1,6 +1,7 @@
 import React from 'react';
 import List from '@material-ui/core/List';
 import OrderItemListItem from './OrderItemListItem';
+import {idFromURL} from '../../state/utils';
 
 /**
  * Renders a list of order items with selection capabilities.
@@ -9,17 +10,23 @@ import OrderItemListItem from './OrderItemListItem';
  */
 export default function OrderItemList({items, selected, onChange, ...props}) {
     function handleListItemCheck(i) {
+        console.log(`Click on: ${i}`);
         const toggle = selected.indexOf(i) < 0;
         onChange(toggle ? [...selected, i] : selected.filter((n) => n !== i));
     }
     return (
         <List>
-            {items.map((item, i) => (
+            {items.map((item) => (
                 <OrderItemListItem
                     key={item._links.self}
                     item={item}
-                    checked={selected?.indexOf(i) > -1}
-                    onClick={() => handleListItemCheck(i)}
+                    checked={
+                        (selected?.indexOf(idFromURL(item._links.self.href)) ??
+                            -1) > -1
+                    }
+                    onClick={() =>
+                        handleListItemCheck(idFromURL(item._links.self.href))
+                    }
                 />
             ))}
         </List>

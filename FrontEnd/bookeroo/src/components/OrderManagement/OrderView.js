@@ -1,4 +1,4 @@
-import React, {Suspense} from 'react';
+import React, {Suspense, useState} from 'react';
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
@@ -22,20 +22,28 @@ export default function OrderView({...props}) {
 
 function OrderViewContent({...props}) {
     const {orderId} = useParams();
+    const [selected, setSelected] = useState([]);
     const order = useRecoilValue(orderAtomFamily(orderId));
     const orderItems = useOrderItems(orderId);
     return (
         <Box>
-            <Grid container spacing={2}>
-                <Grid item xs={8}>
-                    <OrderItemList items={orderItems} />
+            <Grid container spacing={2} justifyContent="flex-start">
+                <Grid item md={8} xs={12}>
+                    <OrderItemList
+                        items={orderItems}
+                        selected={selected}
+                        onChange={setSelected}
+                    />
                 </Grid>
-                <Grid item xs={4}>
-                    <Typography variant="h2">Order</Typography>
+                <Grid item md={4} xs={12}>
+                    <Typography variant="h3">Order</Typography>
                     <Typography variant="overline">Status:</Typography>
-                    <Chip variant="default" color="primary">
-                        {order.status}
-                    </Chip>
+                    <Chip
+                        variant="default"
+                        color="primary"
+                        size="small"
+                        label={order.status}
+                    />
                 </Grid>
             </Grid>
         </Box>
