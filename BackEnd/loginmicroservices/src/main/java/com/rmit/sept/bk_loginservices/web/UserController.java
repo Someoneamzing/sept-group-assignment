@@ -21,7 +21,9 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -76,10 +78,24 @@ public class UserController {
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @PutMapping("/{userid}")
-    public ResponseEntity<?> updateUser(@PathVariable("userid") long userid ,@RequestBody User user)
-    {
-        userService.updateUser(userid, user);
+    public ResponseEntity<?> updateUser(@PathVariable("userid") long userid ,@RequestBody User user) throws IllegalAccessException {
+        userService.updateUser(userid, user, true);
         return new ResponseEntity<>(userService.getUserById(userid), HttpStatus.OK);
+    }
+
+    @GetMapping("/userProfile")
+    public ResponseEntity<?> currentUser(@RequestBody User user) throws IllegalAccessException {
+        User loggedInUser = ((User)SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+
+        return new ResponseEntity<>(userService.getUserById(loggedInUser.getId()), HttpStatus.OK);
+    }
+
+    @PutMapping("/userProfile")
+    public ResponseEntity<?> editCurrentUser(@RequestBody User user) throws IllegalAccessException {
+        User loggedInUser = ((User)SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+
+        userService.updateUser(loggedInUser.getId(), user, false);
+        return new ResponseEntity<>(userService.getUserById(loggedInUser.getId()), HttpStatus.OK);
     }
     
     @GetMapping("/version")

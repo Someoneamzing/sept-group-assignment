@@ -86,14 +86,14 @@ public class UserService {
         return user;
 
     }
-    
-    public User updateUser(Long id, User userUpdate) throws UsernameNotFoundException, ConstraintViolationException {
+
+    public User updateUser(Long id, User userUpdate, boolean admin) throws UsernameNotFoundException, ConstraintViolationException {
         try {
             User user = userRepository.findById(id).get();
 
-            if(userUpdate.isAccountNonLockedBool() != null) {user.setAccountNonLocked(userUpdate.isAccountNonLocked());}
+            if(userUpdate.isAccountNonLockedBool() != null && admin) {user.setAccountNonLocked(userUpdate.isAccountNonLocked());}
 
-            if(userUpdate.isEnabledBool() != null) {user.setEnabled(userUpdate.isEnabled());}
+            if(userUpdate.isEnabledBool() != null && admin) {user.setEnabled(userUpdate.isEnabled());}
 
             if(userUpdate.getFullName() != null) {user.setFullName(userUpdate.getFullName());}
 
@@ -101,7 +101,7 @@ public class UserService {
 
             if(userUpdate.getPassword() != null) {user.setPassword(bCryptPasswordEncoder.encode(userUpdate.getPassword()));}
 
-            if(userUpdate.getAuthoritiesSet().size() != 0) {user.setAuthorities(userUpdate.getAuthoritiesSet());}
+            if(userUpdate.getAuthoritiesSet().size() != 0 && admin) {user.setAuthorities(userUpdate.getAuthoritiesSet());}
 
             return userRepository.save(user);
         } catch (NoSuchElementException noSuchElementException){
