@@ -26,13 +26,45 @@ const fetchUser = async (userId, token) => {
     }
 };
 
+const fetchCurrentUser = async (token) => {
+    const config = {
+        config: 'GET',
+        url: `http://localhost:8080/api/users/userProfile`,
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': token,
+        },
+    };
+    try {
+        const res = await axios(config);
+        return res.data;
+    } catch (e) {
+        return null;
+    }
+};
+
 export const userAtomFamily = atomFamily({
     key: 'users_info_v1',
     default: selectorFamily({
         key: 'users_info_v1/default',
         get: (userId) => async ({get}) => {
+            try {
+                const user = await fetchUser(userId, get(userAtom).token);
+                return user;
+            } catch (e) {
+                return null;
+            }        
+        },
+    }),
+});
+
+export const currentUserAtomFamily = atomFamily({
+    key: 'users_info_current',
+    default: selectorFamily({
+        key: 'users_info_current/default',
+        get: () => async ({get}) => {
 			try {
-				const user = await fetchUser(userId, get(userAtom).token);
+				const user = await fetchCurrentUser(get(userAtom).token);
 				return user;
 			} catch (e) {
 				return null;
@@ -82,7 +114,7 @@ export function useAllUsersQuery() {
 		}
 			
     }, []);
-    // (refetches books each time calling component is newly mounted)
+    // (refetches users each time calling component is newly mounted)
 	useEffect(() => {
         loadUsers();
     }, [loadUsers]);

@@ -14,6 +14,7 @@ import ViewAllBooksPage from './components/BookManagement/ViewAllBooks';
 import ViewAllUsers from './components/UserManagement/ViewAllUsers';
 import ViewUser from './components/UserManagement/ViewUser.js';
 import Login from './components/UserManagement/Login';
+import Profile from './components/UserManagement/Profile'
 import { useResetRecoilState } from 'recoil';
 import { userAtom } from './state/user/authentication';
 
@@ -52,6 +53,7 @@ function App() {
                     />
                     <Route exact path="/users" component={ViewAllUsers} />
                     <Route path="/user/:userId" component={ViewUser} />
+                    <Route exact path="/profile" component={Profile} />
 
                     {/*!!!!!!!!!!!!! THIS MUST GO AFTER EVERYTHING ELSE !!!!!!!!!!!!!!*/}
                     <Route

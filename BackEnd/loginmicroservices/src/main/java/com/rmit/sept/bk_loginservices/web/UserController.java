@@ -84,7 +84,7 @@ public class UserController {
     }
 
     @GetMapping("/userProfile")
-    public ResponseEntity<?> currentUser(@RequestBody User user) throws IllegalAccessException {
+    public ResponseEntity<?> currentUser() throws IllegalAccessException {
         User loggedInUser = ((User)SecurityContextHolder.getContext().getAuthentication().getPrincipal());
 
         return new ResponseEntity<>(userService.getUserById(loggedInUser.getId()), HttpStatus.OK);
