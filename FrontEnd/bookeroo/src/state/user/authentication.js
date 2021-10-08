@@ -1,7 +1,8 @@
 import axios from 'axios';
-import {atom} from 'recoil';
+import {atom, useRecoilValue} from 'recoil';
 import {LOGIN_MS_ENDPOINT} from '../../env-vars';
 import {recoilPersist} from 'recoil-persist';
+import currentUserAtomFamily from './users';
 
 const {persistAtom} = recoilPersist();
 

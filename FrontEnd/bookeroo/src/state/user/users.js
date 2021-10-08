@@ -5,8 +5,10 @@ import {
     atom,
     atomFamily,
     selectorFamily,
+    selector,
     useRecoilCallback,
     useRecoilValue,
+    useRecoilState,
 } from 'recoil';
 
 const fetchUser = async (userId, token) => {
@@ -42,6 +44,41 @@ const fetchCurrentUser = async (token) => {
         return null;
     }
 };
+
+export const PutUserApi = async (data) => {
+    // if (!endpoint) throw Error('endpoint not supplied');
+    // const user = useRecoilValue(userAtom);
+   
+    try {
+        const token = await userAtom.token;
+        // const token = selector({
+        //     key: 'users_info_v1/default',
+        //     get: () => async ({get}) => {
+        //         try {
+        //             return axios( { method: 'put',data, url: 'http://localhost:8080/api/users/userProfile', headers: { 'Authorization': 'Bearer ' + await get(userAtom).token } })
+        //         } catch (e) {
+        //             return null;
+        //         }        
+        //     },
+        // });
+
+        const config = {
+            headers: { 
+                'Content-Type': 'application/json',
+                'Authorization': token,
+            },
+        };       
+        const res = await axios.put(`http://localhost:8080/api/users/userProfile`, data, config);
+        return res.data
+    } catch (e) {
+        if (e.response) {
+            throw e.response.data;
+        } else {
+            // eslint-disable-next-line no-throw-literal
+            throw {message: 'Could not connect to auth service'};
+        }
+    }
+}
 
 export const userAtomFamily = atomFamily({
     key: 'users_info_v1',

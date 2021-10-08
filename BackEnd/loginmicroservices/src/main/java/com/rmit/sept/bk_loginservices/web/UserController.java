@@ -92,7 +92,7 @@ public class UserController {
 
     @PutMapping("/userProfile")
     public ResponseEntity<?> editCurrentUser(@RequestBody User user) throws IllegalAccessException {
-        User loggedInUser = ((User)SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+        User loggedInUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         userService.updateUser(loggedInUser.getId(), user, false);
         return new ResponseEntity<>(userService.getUserById(loggedInUser.getId()), HttpStatus.OK);
