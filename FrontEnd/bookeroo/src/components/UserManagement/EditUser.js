@@ -2,11 +2,10 @@ import { Fragment, useState } from "react";
 import React, {Suspense} from 'react';
 import { Container, IconButton, Tooltip, Dialog, DialogTitle, DialogContent, TextField, DialogActions, Button} from "@material-ui/core";
 import EditIcon from '@material-ui/icons/Edit';
-import { PutUserApi } from '../../state/user/users';
+import { PutUserApi, useUser } from '../../state/user/users';
 
-export default function EditUser (props) {
-	const [user, setUser] = useState(props);
-	const token = useState(props).token;
+export default function EditUser () {
+	const user = useUser();
 	const [open, setOpen] = useState(false);
 	const [result, setResult] = useState(false);
 	const [errorMessages, setErrorMessages] = useState({});
@@ -20,20 +19,20 @@ export default function EditUser (props) {
 	}
 
 	function handleChange(e) {
-		setUser({
+		user({
 			[e.target.name]: e.target.value
 		});
 	}
 
 	// const handleChange = e => {
-    //     const {name, value} = e.target;
-    //     setUser([name], value);
-    // }
+  //       const {name, value} = e.target;
+  //       user([name], value);
+  // }
 
 	const handleSubmit = e => {
 		e.preventDefault();
 		setErrorMessages({});
-		PutUserApi(user, token)
+		PutUserApi(user, user.token)
             .then((data) => {
                 setResult(data);
             })
@@ -52,7 +51,7 @@ export default function EditUser (props) {
 			onClose={handleClose}
 			fullWidth
 			maxWidth="sm">
-				<DialogTitle>Edit details</DialogTitle>
+				<DialogTitle>Edit details {user.token.toString()} </DialogTitle>
 					<DialogContent>
 						<form>
 							<TextField

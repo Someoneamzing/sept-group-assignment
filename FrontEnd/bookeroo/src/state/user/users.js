@@ -9,6 +9,7 @@ import {
     useRecoilCallback,
     useRecoilValue,
     useRecoilState,
+    useSetRecoilState,
 } from 'recoil';
 
 const fetchUser = async (userId, token) => {
@@ -45,12 +46,12 @@ const fetchCurrentUser = async (token) => {
     }
 };
 
-export const PutUserApi = async (data) => {
+export const PutUserApi = async (data, token) => {
     // if (!endpoint) throw Error('endpoint not supplied');
     // const user = useRecoilValue(userAtom);
    
     try {
-        const token = await userAtom.token;
+        // const token = await userAtom.token;
         // const token = selector({
         //     key: 'users_info_v1/default',
         //     get: () => async ({get}) => {
@@ -80,6 +81,36 @@ export const PutUserApi = async (data) => {
     }
 }
 
+const userCacheKeyAtom = atom({
+    key: 'userCache_v1',
+    default: 1,
+});
+
+const userSelectorFamily = selectorFamily({
+    key: 'user_info_v1',
+    get:
+        () =>
+        async ({get}) => {
+            const user = await fetchCurrentUser(get(userAtom).token);
+            return user;
+        },
+});
+
+export function useUser() {
+    const cacheKey = useRecoilValue(userCacheKeyAtom);
+    const user = useRecoilValue(
+        userSelectorFamily({cacheKey})
+    );
+    return user;
+}
+
+export function useRefreshUser() {
+    const setToken = useSetRecoilState(userCacheKeyAtom);
+    return () => {
+        setToken((n) => n + 1);
+    };
+}
+
 export const userAtomFamily = atomFamily({
     key: 'users_info_v1',
     default: selectorFamily({
@@ -95,20 +126,18 @@ export const userAtomFamily = atomFamily({
     }),
 });
 
-export const currentUserAtomFamily = atomFamily({
-    key: 'users_info_current',
-    default: selectorFamily({
-        key: 'users_info_current/default',
-        get: () => async ({get}) => {
-			try {
-				const user = await fetchCurrentUser(get(userAtom).token);
-				return user;
-			} catch (e) {
-				return null;
-			}        
-        },
-    }),
-});
+// export const currentUserAtomFamily = selectorFamily({
+//         key: 'users_info_current/default',
+//         get: () => async ({get}) => {
+// 			try {
+// 				const user = await fetchCurrentUser(get(userAtom).token);
+// 				return user;
+// 			} catch (e) {
+// 				return null;
+// 			}        
+//         },
+//     }),
+// });
 
 const fetchAllUsers = async (token) => {
     const config = {

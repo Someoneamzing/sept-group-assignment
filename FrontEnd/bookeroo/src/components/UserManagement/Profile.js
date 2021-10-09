@@ -18,7 +18,7 @@ import {
 } from 'recoil';
 
 function UserPofile() {
-    const userData = useRecoilValue(currentUserAtomFamily());
+    const userData = useRecoilValue(userAtom);
     const isBuisness = userData.businessInfo == null ? false : true;
 
     if (userData == null) {
