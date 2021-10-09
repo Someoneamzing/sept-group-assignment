@@ -2,10 +2,14 @@ import { Fragment, useState } from "react";
 import React, {Suspense} from 'react';
 import { Container, IconButton, Tooltip, Dialog, DialogTitle, DialogContent, TextField, DialogActions, Button} from "@material-ui/core";
 import EditIcon from '@material-ui/icons/Edit';
-import { PutUserApi, useUser } from '../../state/user/users';
+import { putUserApi, useUser, useRefreshUser } from '../../state/user/users';
+import { useAuthUser } from "../../state/user/authentication";
 
 export default function EditUser () {
 	const user = useUser();
+	const refreshUser = useRefreshUser();
+	const authUser = useAuthUser();
+	const [text, setText] = useState(user);
 	const [open, setOpen] = useState(false);
 	const [result, setResult] = useState(false);
 	const [errorMessages, setErrorMessages] = useState({});
@@ -19,7 +23,7 @@ export default function EditUser () {
 	}
 
 	function handleChange(e) {
-		user({
+		setText({
 			[e.target.name]: e.target.value
 		});
 	}
@@ -32,9 +36,11 @@ export default function EditUser () {
 	const handleSubmit = e => {
 		e.preventDefault();
 		setErrorMessages({});
-		PutUserApi(user, user.token)
+		putUserApi(text, authUser.token)
             .then((data) => {
                 setResult(data);
+								handleClose();
+								refreshUser();
             })
             .catch(setErrorMessages);
 	}
@@ -51,7 +57,7 @@ export default function EditUser () {
 			onClose={handleClose}
 			fullWidth
 			maxWidth="sm">
-				<DialogTitle>Edit details {user.token.toString()} </DialogTitle>
+				<DialogTitle>Edit details {"" + authUser.token} </DialogTitle>
 					<DialogContent>
 						<form>
 							<TextField
@@ -59,7 +65,7 @@ export default function EditUser () {
 								type="text"
 								label="name"
 								placeholder="name"
-								value={user.fullName}
+								value={text.fullName}
 								onChange={handleChange}
 								InputLabelProps={{ shrink: true }}  
 							/>

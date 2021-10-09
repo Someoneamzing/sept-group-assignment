@@ -43,3 +43,7 @@ export const userAtom = atom({
     default: null,
     effects_UNSTABLE: [persistAtom],
 });
+
+export function useAuthUser() {
+    return useRecoilValue(userAtom);
+}

@@ -46,7 +46,7 @@ const fetchCurrentUser = async (token) => {
     }
 };
 
-export const PutUserApi = async (data, token) => {
+export const putUserApi = async (data, token) => {
     // if (!endpoint) throw Error('endpoint not supplied');
     // const user = useRecoilValue(userAtom);
    
@@ -92,6 +92,7 @@ const userSelectorFamily = selectorFamily({
         () =>
         async ({get}) => {
             const user = await fetchCurrentUser(get(userAtom).token);
+            delete user.authorities;
             return user;
         },
 });
