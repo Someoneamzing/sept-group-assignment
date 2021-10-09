@@ -1,20 +1,38 @@
 package com.rmit.sept.bk_bookmicroservices.web;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.rmit.sept.bk_bookmicroservices.repositories.BookRepository;
+import com.rmit.sept.bk_bookmicroservices.services.BookService;
+import net.minidev.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
+
+/**
+ * Unused controller used as a placeholder for future behaviour.
+ */
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api/books")
 public class BookController {
 
-    @SuppressWarnings("SpringElInspection")
-    @Value("#{environment.CIRCLE_BRANCH_SHA1}")
-    private String branchSha1;
-    @GetMapping("/version")
-    public String version() {
-        return branchSha1;
+    @Autowired
+    private BookService bookService;
+
+    @Autowired
+    private BookRepository bookRepository;
+
+    @RequestMapping("/filterPage")
+    public ResponseEntity<?> filterPage(){
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("Genres", bookService.getAllCategories());
+        jsonObject.put("Books", bookService.getAllBooks());
+        return new ResponseEntity<>(jsonObject, HttpStatus.OK);
+    }
+
+    @RequestMapping("/deleteAll")
+    public void deleteAll(){
+        bookRepository.deleteAll();
     }
 }

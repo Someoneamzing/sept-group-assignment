@@ -43,34 +43,34 @@ public class BookForSaleControllerTest {
     private List<Book> test_books;
     private List<BookForSale> test_book_for_sales;
 
-    @BeforeEach
-    void beforeEach() {
-        bookForSaleRepository.deleteAll();
-        bookForSaleRepository.flush();
-        bookRepository.deleteAll();
-        bookRepository.flush();
-
-
-        // Initialise a list of test books.
-        test_books = List.of(new Book []{
-                new Book("book1", "author1", "publisher1", test_date, "1234567", "data:image/png;base64,abcdefghijklmno",  "-Chapter 1\n- Chapter 2"),
-                new Book("book2", "author2", "publisher2", test_date, "1234567", "data:image/png;base64,abcdefghijklmno",  "-Chapter 1\n- Chapter 2"),
-                new Book("book3", "author3", "publisher3", test_date, "1234567", "data:image/png;base64,abcdefghijklmno",  "-Chapter 1\n- Chapter 2")
-        });
-//        test_books.get(0).setId(0L);
-//        test_books.get(1).setId(2L);
-//        test_books.get(2).setId(3L);
-        bookRepository.saveAllAndFlush(test_books);
-        test_book_for_sales = List.of(new BookForSale[]{
-                new BookForSale(test_books.get(0), 0L, 10, 10000),
-                new BookForSale(test_books.get(1), 1L, 20, 20000),
-                new BookForSale(test_books.get(2), 2L, 30, 30000),
-        });
-//        test_book_for_sales.get(0).setId(1L);
-//        test_book_for_sales.get(1).setId(2L);
-//        test_book_for_sales.get(2).setId(3L);
-        bookForSaleRepository.saveAllAndFlush(test_book_for_sales);
-    }
+//    @BeforeEach
+//    void beforeEach() {
+//        bookForSaleRepository.deleteAll();
+//        bookForSaleRepository.flush();
+//        bookRepository.deleteAll();
+//        bookRepository.flush();
+//
+//
+//        // Initialise a list of test books.
+//        test_books = List.of(new Book []{
+//                new Book("book1", "author1", "publisher1", test_date, "1234567", "data:image/png;base64,abcdefghijklmno",  "-Chapter 1\n- Chapter 2"),
+//                new Book("book2", "author2", "publisher2", test_date, "1234567", "data:image/png;base64,abcdefghijklmno",  "-Chapter 1\n- Chapter 2"),
+//                new Book("book3", "author3", "publisher3", test_date, "1234567", "data:image/png;base64,abcdefghijklmno",  "-Chapter 1\n- Chapter 2")
+//        });
+////        test_books.get(0).setId(0L);
+////        test_books.get(1).setId(2L);
+////        test_books.get(2).setId(3L);
+//        bookRepository.saveAllAndFlush(test_books);
+//        test_book_for_sales = List.of(new BookForSale[]{
+//                new BookForSale(test_books.get(0), 0L, 10, 10000),
+//                new BookForSale(test_books.get(1), 1L, 20, 20000),
+//                new BookForSale(test_books.get(2), 2L, 30, 30000),
+//        });
+////        test_book_for_sales.get(0).setId(1L);
+////        test_book_for_sales.get(1).setId(2L);
+////        test_book_for_sales.get(2).setId(3L);
+//        bookForSaleRepository.saveAllAndFlush(test_book_for_sales);
+//    }
 
     @AfterEach
     void afterEach() {
