@@ -45,7 +45,7 @@ function App() {
                     />
                     <Route
                         exact
-                        path="/book/filter"
+                        path="/books/filter"
                         component={FilterBooksPage}
                     />
                     <Route exact path="/books" component={ViewAllBooksPage} />

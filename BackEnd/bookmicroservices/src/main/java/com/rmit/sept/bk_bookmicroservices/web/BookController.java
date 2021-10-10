@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 
 /**
  * Unused controller used as a placeholder for future behaviour.
@@ -23,11 +25,15 @@ public class BookController {
     @Autowired
     private BookRepository bookRepository;
 
-    @RequestMapping("/filterPage")
-    public ResponseEntity<?> filterPage(){
+    @RequestMapping("/filter")
+    public ResponseEntity<?> filteredBooks(@RequestParam(name="genre") String genre){
         JSONObject jsonObject = new JSONObject();
+        if (genre.equals("all")){
+            jsonObject.put("Books", bookService.getAllBooks());
+        } else {
+            jsonObject.put("Books", bookService.getBookByGenre(genre));
+        }
         jsonObject.put("Genres", bookService.getAllCategories());
-        jsonObject.put("Books", bookService.getAllBooks());
         return new ResponseEntity<>(jsonObject, HttpStatus.OK);
     }
 
