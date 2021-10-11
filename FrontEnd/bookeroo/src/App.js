@@ -1,9 +1,9 @@
-import React, { useEffect } from 'react';
+import React, {useEffect} from 'react';
 import Home from './pages/Home';
 import Contact from './pages/Contact';
 import Header from './components/Layout/Header';
 import ViewBook from './components/BookManagement/ViewBook';
-import { Route, Switch } from 'react-router-dom';
+import {Route, Switch} from 'react-router-dom';
 import './App.css';
 import Register from './components/UserManagement/Register';
 import BusinessRegister from './components/UserManagement/BusinessRegister';
@@ -12,10 +12,10 @@ import NoMatch from './components/Layout/NoMatch';
 import ViewBookForSalePage from './components/BookManagement/ViewBookForSale';
 import ViewAllBooksPage from './components/BookManagement/ViewAllBooks';
 import Login from './components/UserManagement/Login';
-import { useResetRecoilState } from 'recoil';
-import { userAtom } from './state/user/authentication';
+import {useResetRecoilState} from 'recoil';
+import {userAtom} from './state/user/authentication';
 
-function Logout({ history }) {
+function Logout({history}) {
     const resetUser = useResetRecoilState(userAtom);
     useEffect(() => {
         resetUser();
@@ -33,7 +33,11 @@ function App() {
                 <Switch>
                     <Route exact path="/" component={Home} />
                     <Route exact path="/register" component={Register} />
-                    <Route exact path="/businessRegister" component={BusinessRegister} />
+                    <Route
+                        exact
+                        path="/businessRegister"
+                        component={BusinessRegister}
+                    />
                     <Route exact path="/login" component={Login} />
                     <Route exact path="/logout" component={Logout} />
                     <Route exact path="/contact" component={Contact} />
@@ -45,12 +49,12 @@ function App() {
                     <Route exact path="/books" component={ViewAllBooksPage} />
                     <Route path="/book/:bookId" component={ViewBook} />
                     <Route
-                        path="/account/:sellerId/book/:bookId"
+                        path="/user/:sellerId/book/:bookId"
                         component={ViewBookForSalePage}
                     />
                     {/* THIS MUST GO AFTER EVERYTHING ELSE */}
                     <Route
-                        path="/:sellerId/book/:bookId"
+                        path="/:sellerId/book/:bookFSId"
                         component={ViewBookForSalePage}
                     />
                     <Route path="*">
