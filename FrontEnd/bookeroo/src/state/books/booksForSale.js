@@ -69,8 +69,8 @@ const bookForSaleIdsByBookIdsSelector = selector({
         const idList = get(allBookForSaleIdsAtom);
         for (let id of idList) {
             const bs = get(bookForSaleAtomFamily(id));
-            if (!bkMap[bs.bookKey]) bkMap[bs.bookKey] = [];
-            bkMap[bs.bookKey].push(bs.id);
+            if (!bkMap[bs.bookId]) bkMap[bs.bookId] = [];
+            bkMap[bs.bookId].push(bs.id);
         }
         return bkMap;
     },
@@ -135,7 +135,7 @@ export const useSearchBookForSalesQuery = (bookId, onLoad = true) => {
 
 /**
  * @typedef {{string}} Date a date string in ISO format i.e new Date(str)
- * @typedef {{createAt: Date, updateAt: Date, id: number, bookKey: number, deleted: boolean, sellerId: number, availableStock: number, sellPriceInCents: number}} BookForSale
+ * @typedef {{createAt: Date, updateAt: Date, id: number, bookId: number, deleted: boolean, sellerId: number, availableStock: number, sellPriceInCents: number}} BookForSale
  * @param {number} bookForSaleId
  * @returns {BookForSale}
  * @returns {null}
