@@ -1,4 +1,6 @@
 import axios from 'axios';
+import {fetchOrderItems} from './state/orders/orderItems';
+import {idFromURL} from './state/utils';
 
 /**
  * Makes a request to the API to create a book with the given data.
@@ -56,4 +58,36 @@ export async function getBooks() {
             return 1;
         } else return 0;
     });
+}
+
+export async function createOrderItem({item, token}) {
+    if (typeof item.bookForSaleId !== 'number')
+        throw new TypeError(
+            `createOrderItem expects item.bookForSaleId to be a number.`
+        );
+    if (typeof item.quantity !== 'number')
+        throw new TypeError(
+            `createOrderItem expects item.quantity to be a number.`
+        );
+    const orderItems = fetchOrderItems({
+        orderId: idFromURL(item._links.order.href),
+        token,
+    });
+    const url = new URL(`/api/orderItems`, document.location);
+    url.port = 8082;
+    //Check if an item in the order is already for this bookForSale
+    const existing = orderItems.find(
+        (oItem) => oItem.bookForSaleId === item.bookForSaleId
+    );
+    if (existing) {
+        // If so update it with an increased quantity
+        const response = await axios.patch(url, {
+            quantity: existing.quantity + item.quantity,
+        });
+        return response.data;
+    } else {
+        // Otherwise create a new one
+        const response = await axios.post(url, item);
+        return response.data;
+    }
 }

@@ -2,7 +2,7 @@ import axios from 'axios';
 import {atom, selectorFamily, useRecoilValue, useSetRecoilState} from 'recoil';
 import {userAtom} from '../user/authentication';
 
-const fetchOrderItems = async ({orderId, token}) => {
+export const fetchOrderItems = async ({orderId, token}) => {
     const config = {
         config: 'GET',
         url: `http://localhost:8082/api/orders/${orderId}/items`,

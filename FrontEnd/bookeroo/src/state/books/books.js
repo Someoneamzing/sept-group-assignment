@@ -59,17 +59,21 @@ const allBookIdsAtom = atom({
 
 export function useAllBooksQuery() {
     const allBooks = useRecoilValue(allBookIdsAtom);
-    const loadBooks = useRecoilCallback(({set}) => async () => {
-        const allBooks = await fetchAllBooks();
-        if (allBooks == null) return;
-        const allBookIds = [];
-        for (const book of allBooks) {
-            const bookId = book._links.self.href.split('/').pop();
-            allBookIds.push(bookId);
-            set(bookAtomFamily(bookId), book);
-        }
-        set(allBookIdsAtom, allBookIds);
-    });
+    const loadBooks = useRecoilCallback(
+        ({set}) =>
+            async () => {
+                const allBooks = await fetchAllBooks();
+                if (allBooks == null) return;
+                const allBookIds = [];
+                for (const book of allBooks) {
+                    const bookId = book._links.self.href.split('/').pop();
+                    allBookIds.push(bookId);
+                    set(bookAtomFamily(bookId), book);
+                }
+                set(allBookIdsAtom, allBookIds);
+            },
+        []
+    );
     // (refetches books each time calling component is newly mounted)
     useEffect(() => {
         loadBooks();
