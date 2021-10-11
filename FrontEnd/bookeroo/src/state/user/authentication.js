@@ -1,7 +1,8 @@
 import axios from 'axios';
 import {atom} from 'recoil';
+import {LOGIN_MS_ENDPOINT} from '../../env-vars';
 
-const PATH = 'http://localhost:8080/api/users/';
+const PATH = `http://${LOGIN_MS_ENDPOINT}/api/users/`;
 
 /**
  * @typedef {{authorities: string[], token: string}} AuthRes

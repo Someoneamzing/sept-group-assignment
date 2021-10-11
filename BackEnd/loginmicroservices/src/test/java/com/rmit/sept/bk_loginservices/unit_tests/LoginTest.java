@@ -43,6 +43,7 @@ public class LoginTest {
 
     @BeforeEach
     void beforeEach(){
+        userRepository.deleteAll();
         request = new LoginRequest();
         user = RegisterTest.createUser();
         userController.registerUser(user, new BeanPropertyBindingResult(user, "login"));

@@ -6,6 +6,7 @@ import ViewBook from './components/BookManagement/ViewBook';
 import {Route, Switch} from 'react-router-dom';
 import './App.css';
 import Register from './components/UserManagement/Register';
+import BusinessRegister from './components/UserManagement/BusinessRegister';
 import AddBookForSaleForm from './components/BookManagement/AddBookForSaleForm';
 import NoMatch from './components/Layout/NoMatch';
 import ViewBookForSalePage from './components/BookManagement/ViewBookForSale';
@@ -35,6 +36,11 @@ function App() {
                 <Switch>
                     <Route exact path="/" component={Home} />
                     <Route exact path="/register" component={Register} />
+                    <Route
+                        exact
+                        path="/businessRegister"
+                        component={BusinessRegister}
+                    />
                     <Route exact path="/login" component={Login} />
                     <Route exact path="/logout" component={Logout} />
                     <Route exact path="/contact" component={Contact} />
@@ -53,12 +59,12 @@ function App() {
                     <Route exact path="/books" component={ViewAllBooksPage} />
                     <Route path="/book/:bookId" component={ViewBook} />
                     <Route
-                        path="/account/:sellerId/book/:bookId"
+                        path="/user/:sellerId/book/:bookId"
                         component={ViewBookForSalePage}
                     />
                     {/* THIS MUST GO AFTER EVERYTHING ELSE */}
                     <Route
-                        path="/:sellerId/book/:bookId"
+                        path="/:sellerId/book/:bookFSId"
                         component={ViewBookForSalePage}
                     />
                     <Route path="*">

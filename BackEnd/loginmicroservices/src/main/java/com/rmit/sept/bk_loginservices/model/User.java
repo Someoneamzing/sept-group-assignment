@@ -46,7 +46,13 @@ public class User implements UserDetails {
     private Collection<String> authorities = new HashSet<>();
 
 
-    //OneToMany with Project
+    public BusinessInfo getBusinessInfo() {
+        return businessInfo;
+    }
+
+    public void setBusinessInfo(BusinessInfo businessInfo) {
+        this.businessInfo = businessInfo;
+    }
 
     public User() {
     }

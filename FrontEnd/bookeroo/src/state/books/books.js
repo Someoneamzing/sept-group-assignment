@@ -1,5 +1,5 @@
 import axios from 'axios';
-import {useEffect} from 'react';
+import {useEffect, useState} from 'react';
 import {
     atom,
     atomFamily,
@@ -7,11 +7,13 @@ import {
     useRecoilCallback,
     useRecoilValue,
 } from 'recoil';
+import {getAllBooks} from '../../api';
+import {BOOK_MS_ENDPOINT} from '../../env-vars';
 
 const fetchBook = async (bookId) => {
     const config = {
         config: 'GET',
-        url: `http://localhost:8081/api/books/${bookId}`,
+        url: `http://${BOOK_MS_ENDPOINT}/api/books/${bookId}`,
         headers: {
             'Content-Type': 'application/json',
         },
@@ -35,38 +37,40 @@ export const bookAtomFamily = atomFamily({
     }),
 });
 
-const fetchAllBooks = async () => {
-    const config = {
-        config: 'GET',
-        url: 'http://localhost:8081/api/books/',
-        headers: {
-            'Content-Type': 'application-json',
-        },
-    };
-    try {
-        const res = await axios(config);
-        return res.data._embedded.books;
-    } catch (e) {
-        console.log(e);
-        return null;
-    }
-};
+// const fetchAllBooks = async () => {
+//     const config = {
+//         config: 'GET',
+//         url: `http://${BOOK_MS_ENDPOINT}/api/books/`,
+//         headers: {
+//             'Content-Type': 'application-json',
+//         },
+//     };
+//     try {
+//         const res = await axios(config);
+//         return res.data._embedded.books;
+//     } catch (e) {
+//         console.log(e);
+//         return null;
+//     }
+// };
 
 const allBookIdsAtom = atom({
     key: 'allBooksIdsAtom_v1',
     default: [],
 });
 
-export function useAllBooksQuery() {
+export const useAllBooksQuery = (onLoad = true) => {
+    const [loaded, setLoaded] = useState(false);
     const allBooks = useRecoilValue(allBookIdsAtom);
     const loadBooks = useRecoilCallback(
         ({set}) =>
             async () => {
-                const allBooks = await fetchAllBooks();
+                const allBooks = await getAllBooks({sort: false});
                 if (allBooks == null) return;
                 const allBookIds = [];
                 for (const book of allBooks) {
-                    const bookId = book._links.self.href.split('/').pop();
+                    // VERY IMPORTANT THAT ALL KEYS ARE STRINGS NOT NUMBERS - numbers will not hit same entries as strings
+                    const bookId = String(book.id);
                     allBookIds.push(bookId);
                     set(bookAtomFamily(bookId), book);
                 }
@@ -74,9 +78,26 @@ export function useAllBooksQuery() {
             },
         []
     );
-    // (refetches books each time calling component is newly mounted)
+    // onLoad refetches books each time calling component is newly mounted
     useEffect(() => {
-        loadBooks();
-    }, [loadBooks]);
+        if ((!allBooks.length || onLoad) && !loaded) {
+            loadBooks();
+            setLoaded(true);
+        }
+    }, [allBooks.length, loaded, loadBooks, onLoad]);
     return {allBooks, loadBooks};
+};
+
+/**
+ * @typedef {{string}} Date a date string in ISO format i.e new Date(str)
+ * @typedef {{createAt: Date, updateAt: Date, id: number, deleted: boolean, bookTitle: string, author: string, publisher: string, publishDate: Date, coverArtURL: URL, tableOfContents: string, isbn: string}} Book
+ * @param {number} bookId
+ * @returns {Book}
+ * @returns {null}
+ * @throws {Error} Error if bookId is not a number
+ */
+export function useBookAtomFamily(bookId) {
+    bookId = String(bookId);
+    const data = useRecoilValue(bookAtomFamily(bookId));
+    return data;
 }

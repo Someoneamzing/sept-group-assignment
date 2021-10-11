@@ -1,8 +1,11 @@
 package com.rmit.sept.bk_loginservices.web;
 
 
+import com.rmit.sept.bk_loginservices.payload.BusinessUser;
 import com.rmit.sept.bk_loginservices.Repositories.UserRepository;
+import com.rmit.sept.bk_loginservices.model.BusinessInfo;
 import com.rmit.sept.bk_loginservices.model.User;
+import com.rmit.sept.bk_loginservices.model.UserWrapper;
 import com.rmit.sept.bk_loginservices.payload.JWTLoginSuccessResponse;
 import com.rmit.sept.bk_loginservices.payload.LoginRequest;
 import com.rmit.sept.bk_loginservices.security.JwtTokenProvider;
@@ -10,6 +13,7 @@ import com.rmit.sept.bk_loginservices.services.MapValidationErrorService;
 import com.rmit.sept.bk_loginservices.services.UserService;
 import com.rmit.sept.bk_loginservices.validator.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -23,11 +27,12 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.rmit.sept.bk_loginservices.security.SecurityConstant.TOKEN_PREFIX;
 
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
@@ -44,6 +49,8 @@ public class UserController {
 
     private final AuthenticationManager authenticationManager;
 
+
+
     @Autowired
     public UserController(MapValidationErrorService mapValidationErrorService, UserService userService, UserRepository userRepository, UserValidator userValidator, JwtTokenProvider tokenProvider, AuthenticationManager authenticationManager) {
         this.mapValidationErrorService = mapValidationErrorService;
@@ -54,11 +61,26 @@ public class UserController {
         this.authenticationManager = authenticationManager;
     }
 
+    @SuppressWarnings("SpringElInspection")
+    @Value("#{environment.CIRCLE_BRANCH_SHA1}")
+    private String branchSha1;
+    @GetMapping("/version")
+    public String version() {
+        return branchSha1;
+    }
+
     @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/")
     public Iterable<User> allUsers(){
         return this.userRepository.findAll();
     }
+
+    @GetMapping("/search/findAllByIdIn")
+    public Iterable<BusinessUser> findAllByIdIn(@RequestParam List<Long> id){
+        return userRepository.findAllByIdIn(id);
+    }
+
+
 
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@Valid @RequestBody User user, BindingResult result){
@@ -71,6 +93,24 @@ public class UserController {
         User newUser = userService.saveNewUser(user);
 
         return  new ResponseEntity<>(newUser, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/businessRegister")
+    public ResponseEntity<?> registerBusinessUser(@Valid @RequestBody UserWrapper userInfo, BindingResult result){
+        // save business info for user
+        User user = userInfo.getUser();
+        BusinessInfo businessInfo = userInfo.getBusinessInfo();
+        user.setBusinessInfo(businessInfo);
+
+        // Validate passwords match
+        userValidator.validate(user, result);
+
+        ResponseEntity<?> errorMap = mapValidationErrorService.MapValidationService(result);
+        if(errorMap != null)return errorMap;
+
+        User newUser = userService.saveNewUser(user);
+
+        return new ResponseEntity<>(newUser, HttpStatus.ACCEPTED);
     }
 
     @GetMapping("/my_authorities")

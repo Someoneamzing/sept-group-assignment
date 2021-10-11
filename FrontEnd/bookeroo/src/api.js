@@ -1,6 +1,9 @@
 import axios from 'axios';
 import {fetchOrderItems} from './state/orders/orderItems';
 import {idFromURL} from './state/utils';
+import {BOOK_MS_ENDPOINT} from './env-vars';
+
+const PATH = `http://${BOOK_MS_ENDPOINT}`;
 
 /**
  * Makes a request to the API to create a book with the given data.
@@ -8,8 +11,7 @@ import {idFromURL} from './state/utils';
  * @returns {Promise<Object>} Promise that resolves with the server's response.
  */
 export async function createBook(data) {
-    const url = new URL(`/api/books`, document.location);
-    url.port = 8081;
+    const url = new URL(`/api/books`, PATH);
     const response = await axios.post(url, data);
     return response.data;
 }
@@ -20,13 +22,11 @@ export async function createBook(data) {
  * @returns {Promise<Object>} Promise that resolves with the server's response.
  */
 export async function createBookForSale(data) {
-    console.log(data);
     data.book = new URL(
         data.book._links?.self?.href ||
             (await createBook(data.book))._links.self.href
     ).pathname;
-    const url = new URL(`/api/bookForSales`, document.location);
-    url.port = 8081;
+    const url = new URL(`/api/bookForSales`, PATH);
     const response = await axios.post(url, data);
     return response.data;
 }
@@ -35,9 +35,8 @@ export async function createBookForSale(data) {
  * Retrieves the list of all books in the system, sorted by title. Resolves pagination
  * @returns The list of all books in the system.
  */
-export async function getBooks() {
-    const url = new URL(`/api/books`, document.location);
-    url.port = 8081;
+export async function getAllBooks({sort = true} = {}) {
+    const url = new URL(`/api/books`, PATH);
     url.searchParams.set('size', 100);
     let response = await axios.get(url);
     const result = [...response.data._embedded.books];
@@ -51,6 +50,7 @@ export async function getBooks() {
             }
         )
     );
+    if (!sort) return result;
     return result.sort((a, b) => {
         if (a.bookTitle < b.bookTitle) {
             return -1;
@@ -90,4 +90,36 @@ export async function createOrderItem({item, token}) {
         const response = await axios.post(url, item);
         return response.data;
     }
+}
+/**
+ * Retrieves the list of all bookForSales in the system, sorted by title. Resolves pagination
+ * @returns The list of all bookForSales in the system.
+ */
+export async function getAllBookForSales() {
+    const url = new URL(`/api/bookForSales`, PATH);
+    url.searchParams.set('size', 100);
+    let response = await axios.get(url);
+    const result = [...response.data._embedded.bookForSales];
+    await Promise.all(
+        Array.from(
+            {length: response.data.page.totalPages - 1},
+            async (_, i) => {
+                url.searchParams.set('page', i + 1);
+                const res = await axios.get(url);
+                result.push(...res.data._embedded.bookForSales);
+            }
+        )
+    );
+    return result;
+}
+
+/**
+ * Retrieves the list of bookForSales belonging to a specific book by Id
+ * @returns the list of bookForSales
+ */
+export async function getBookForSalesSearchBookId(bookId) {
+    const url = new URL(`/api/bookForSales/search/findAllByBook_Id`, PATH);
+    url.searchParams.set('bookId', bookId);
+    let response = await axios.get(url);
+    return [...response.data._embedded.bookForSales];
 }
