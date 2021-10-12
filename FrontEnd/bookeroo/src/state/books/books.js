@@ -119,7 +119,7 @@ export function FilterPageQuery(genre) {
         set(allBookIdsAtom, allBookIds);
 
     }, [genre]);
-    // (refetches books each time calling component is newly mounted)
+    // (refetches books when genre is changed)
     useEffect(() => {
         loadBooks();
     }, [loadBooks]);

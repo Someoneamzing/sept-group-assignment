@@ -30,7 +30,7 @@ function displayBooks(allBooks) {
     ))
 }
 
-function FilterBooksLayout() {
+export function FilterBooksLayout() {
     const [word, setWord] = useState("all")
     const { allBooks, genres } = FilterPageQuery(word);
 
@@ -45,7 +45,7 @@ function FilterBooksLayout() {
                         color="primary"
                         onClick={() => setWord("all")}
                     >
-                        all
+                        All
                     </Button>
                 </Grid>
                 {genres.map((n) => (
@@ -55,6 +55,7 @@ function FilterBooksLayout() {
                                 type="submit"
                                 variant="contained"
                                 color="primary"
+                                role={n + "Button"}
                                 onClick={() => setWord(n)}
                             >
                                 {n}
