@@ -63,8 +63,7 @@ const fetchFilteredBooks = async (genre) => {
     };
     try {
         const res = await axios(config);
-        let data = [res.data['Genres'], res.data['Books']];
-        return data;
+        return [res.data['Genres'], res.data['Books']];
     } catch (e) {
         console.log(e);
         return null;

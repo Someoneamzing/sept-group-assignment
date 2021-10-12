@@ -14,10 +14,10 @@ const BookMsServer = setupServer(
         const query = req.url.searchParams
         const genre = query.get("genre")
 
+        // mock repsonse for different genres
         if (genre === "all") {
             return res(ctx.json(FILTER_PAGE));
         } else if (genre === "Horror") {
-            console.log("here");
             return res(ctx.json(HORROR_BOOKS));
         }
     }),
