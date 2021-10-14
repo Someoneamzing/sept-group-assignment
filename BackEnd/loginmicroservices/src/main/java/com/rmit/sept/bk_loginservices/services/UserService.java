@@ -101,6 +101,8 @@ public class UserService {
 
             if(userUpdate.getPassword() != null) {user.setPassword(bCryptPasswordEncoder.encode(userUpdate.getPassword()));}
 
+//            if(userUpdate.getConfirmPassword() != null) {user.setConfirmPassword("");}
+
             if(userUpdate.getAuthoritiesSet().size() != 0 && admin) {user.setAuthorities(userUpdate.getAuthoritiesSet());}
 
             return userRepository.save(user);

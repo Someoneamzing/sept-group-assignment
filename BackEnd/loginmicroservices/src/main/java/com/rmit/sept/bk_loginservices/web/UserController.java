@@ -91,7 +91,11 @@ public class UserController {
     }
 
     @PutMapping("/userProfile")
-    public ResponseEntity<?> editCurrentUser(@RequestBody User user) throws IllegalAccessException {
+    public ResponseEntity<?> editCurrentUser(@RequestBody User user, BindingResult result) throws IllegalAccessException {
+        userValidator.validateUpdate(user,result);
+        ResponseEntity<?> errorMap = mapValidationErrorService.MapValidationService(result);
+        if(errorMap != null)return errorMap;
+
         User loggedInUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         userService.updateUser(loggedInUser.getId(), user, false);

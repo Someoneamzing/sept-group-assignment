@@ -30,7 +30,7 @@ function UserPofile() {
             <Paper variant="outlined" >
                 <Box padding="3vh">
                     <Typography variant="h3"> Profile </Typography>
-                    <Box padding="1vh">
+                    <Box padding="1vh" >
                         <Typography variant="h6"> Name: {userData.fullName} </Typography>
                         <Typography variant="h6"> Username: {userData.username} </Typography>
                         {/* <Typography variant="h6"> Account type: {userData.authorities.map((a) => a.authority)} </Typography> */}
@@ -38,10 +38,12 @@ function UserPofile() {
                             <Typography variant="h6"> ABN: {userData.businessInfo} </Typography>
                         ) : (
                             null
-                        )}
-                        <EditUser/>
-                    </Box>          
+                        )}      
+                    </Box>            
                 </Box>
+                <Box align="right" marginBottom="1vh" marginRight="1vh">
+                    <EditUser/>
+                </Box> 
             </Paper>
         </Container>
     );

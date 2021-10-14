@@ -15,11 +15,13 @@ function UserHeader(props) {
 }
 
 function UserInfo(props) {
-    const {username, userId} = props;
+    const {username, userId, fullName, authorities} = props;
     return (
         <Box textAlign="left" padding="1rem">
             <h1> {userId} </h1>
 			<h1> {username} </h1>
+            <h1> {fullName} </h1>
+            <h1>Account type: {authorities.map((a) => a.authority)}</h1>
         </Box>
     );
 }
