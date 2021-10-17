@@ -4,6 +4,7 @@ import com.rmit.sept.bk_bookmicroservices.repositories.BookRepository;
 import com.rmit.sept.bk_bookmicroservices.services.BookService;
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +19,14 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/books")
 public class BookController {
+
+    @SuppressWarnings("SpringElInspection")
+    @Value("#{environment.CIRCLE_BRANCH_SHA1}")
+    private String branchSha1;
+    @GetMapping("/version")
+    public String version() {
+        return branchSha1;
+    }
 
     @Autowired
     private BookService bookService;
