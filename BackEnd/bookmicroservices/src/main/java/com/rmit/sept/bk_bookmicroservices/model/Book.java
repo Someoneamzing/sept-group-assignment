@@ -38,9 +38,11 @@ public class Book extends ServiceEntity {
     @NotBlank(message = "Table of contents must be provided")
     private String tableOfContents;
 
+    private String genre;
+
     public Book(){}
 
-    public Book(String bookTitle, String author, String publisher, Date publishDate, String ISBN, String coverArtURL, String tableOfContents) {
+    public Book(String bookTitle, String author, String publisher, Date publishDate, String ISBN, String coverArtURL, String tableOfContents, String genre) {
         this.bookTitle = bookTitle;
         this.author = author;
         this.publisher = publisher;
@@ -48,6 +50,15 @@ public class Book extends ServiceEntity {
         this.ISBN = ISBN;
         this.coverArtURL = coverArtURL;
         this.tableOfContents = tableOfContents;
+        this.genre = genre;
+    }
+
+    public String getGenre() {
+        return genre;
+    }
+
+    public void setGenre(String genre) {
+        this.genre = genre;
     }
 
     public String getBookTitle() {
