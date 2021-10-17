@@ -56,6 +56,11 @@ public class OrdermicroservicesApplication {
     }
 
     @Bean
+    /**
+     * Configures CORS to allow all paths over CORS
+     *
+     * @return
+     */
     public WebMvcConfigurer corsConfigurer() {
         return new WebMvcConfigurer() {
             @Override

@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 
 @RestController()
-@RequestMapping("/api/items")
+@RequestMapping("/items")
 
 public class OrderItemController {
     OrderService orderService;

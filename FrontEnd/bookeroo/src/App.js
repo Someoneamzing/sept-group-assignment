@@ -11,7 +11,6 @@ import AddBookForSaleForm from './components/BookManagement/AddBookForSaleForm';
 import NoMatch from './components/Layout/NoMatch';
 import ViewBookForSalePage from './components/BookManagement/ViewBookForSale';
 import ViewAllBooksPage from './components/BookManagement/ViewAllBooks';
-import AddToOrderForm from './components/OrderManagement/AddToOrderForm';
 import Login from './components/UserManagement/Login';
 import {useResetRecoilState} from 'recoil';
 import {userAtom} from './state/user/authentication';
@@ -44,7 +43,6 @@ function App() {
                     <Route exact path="/login" component={Login} />
                     <Route exact path="/logout" component={Logout} />
                     <Route exact path="/contact" component={Contact} />
-                    <Route exact path="/order" component={AddToOrderForm} />
                     <Route exact path="/orders" component={OrderList} />
                     <Route
                         exact

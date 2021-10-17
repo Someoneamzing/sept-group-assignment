@@ -1,7 +1,7 @@
 {
-    "conventionalCommits.scopes": [
-        "frontend",
-        "backend_books",
-        "project_meta"
-    ]
+  "conventionalCommits.scopes": [
+    "frontend",
+    "backend_books",
+    "project_meta"
+  ]
 }

@@ -9,7 +9,7 @@ import {
 import Root from '../Root';
 import MockRoot from '../testing_utils/MockRoot';
 // mock api server for loginmicroservices endpoint
-import '../testing_utils/login_microservice/mockServer';
+import '../testing_utils/mockServer';
 import {createMemoryHistory} from 'history';
 import App from '../App';
 import Login from '../components/UserManagement/Login';

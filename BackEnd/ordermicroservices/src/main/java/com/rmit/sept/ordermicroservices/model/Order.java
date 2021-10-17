@@ -25,8 +25,12 @@ public class Order extends ServiceEntity {
     public Order() {}
 
     public Order(long userId) {
+        new Order(userId, OrderStatus.CURRENT);
+    }
+
+    public Order(long userId, OrderStatus status) {
         this.userId = userId;
-        this.status = OrderStatus.CURRENT;
+        this.status = status;
     }
 
     public List<OrderItem> getItems() {

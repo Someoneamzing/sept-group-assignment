@@ -1,6 +1,6 @@
 // COPIED FROM RESPONSE IN DEV TOOLS NETWORK TAB
 
-const GET_API_BOOKS_RES = {
+export const GET_API_BOOKS_RES = {
     _embedded: {
         books: [
             {
@@ -126,4 +126,257 @@ const GET_API_BOOKS_RES = {
     },
 };
 
-export default GET_API_BOOKS_RES;
+export const GET_BOOK_FOR_SALES_RES = {
+    _embedded: {
+        bookForSales: [
+            {
+                id: 1,
+                createAt: '2021-09-20T08:08:05.821+00:00',
+                updateAt: '2021-09-20T08:08:05.821+00:00',
+                deleted: false,
+                sellerId: 0,
+                availableStock: 10,
+                sellPriceInCents: 100,
+                bookId: 1,
+                _links: {
+                    self: {
+                        href: 'http://localhost:8081/api/bookForSales/1',
+                    },
+                    bookForSale: {
+                        href: 'http://localhost:8081/api/bookForSales/1',
+                    },
+                    book: {
+                        href: 'http://localhost:8081/api/bookForSales/1/book',
+                    },
+                },
+            },
+            {
+                id: 2,
+                createAt: '2021-09-20T08:12:44.118+00:00',
+                updateAt: '2021-09-20T08:12:44.118+00:00',
+                deleted: false,
+                sellerId: 0,
+                availableStock: 123,
+                sellPriceInCents: 10000,
+                bookId: 2,
+                _links: {
+                    self: {
+                        href: 'http://localhost:8081/api/bookForSales/2',
+                    },
+                    bookForSale: {
+                        href: 'http://localhost:8081/api/bookForSales/2',
+                    },
+                    book: {
+                        href: 'http://localhost:8081/api/bookForSales/2/book',
+                    },
+                },
+            },
+            {
+                id: 3,
+                createAt: '2021-09-20T08:14:03.511+00:00',
+                updateAt: '2021-09-20T08:14:03.511+00:00',
+                deleted: false,
+                sellerId: 5,
+                availableStock: 5,
+                sellPriceInCents: 55555,
+                bookId: 3,
+                _links: {
+                    self: {
+                        href: 'http://localhost:8081/api/bookForSales/3',
+                    },
+                    bookForSale: {
+                        href: 'http://localhost:8081/api/bookForSales/3',
+                    },
+                    book: {
+                        href: 'http://localhost:8081/api/bookForSales/3/book',
+                    },
+                },
+            },
+            {
+                id: 4,
+                createAt: '2021-09-20T08:18:53.908+00:00',
+                updateAt: '2021-09-20T08:18:53.908+00:00',
+                deleted: false,
+                sellerId: 0,
+                availableStock: 10,
+                sellPriceInCents: 1000,
+                bookId: 4,
+                _links: {
+                    self: {
+                        href: 'http://localhost:8081/api/bookForSales/4',
+                    },
+                    bookForSale: {
+                        href: 'http://localhost:8081/api/bookForSales/4',
+                    },
+                    book: {
+                        href: 'http://localhost:8081/api/bookForSales/4/book',
+                    },
+                },
+            },
+            {
+                id: 5,
+                createAt: '2021-10-11T09:41:59.299+00:00',
+                updateAt: '2021-10-11T09:41:59.299+00:00',
+                deleted: false,
+                sellerId: 36,
+                availableStock: 53,
+                sellPriceInCents: 38289,
+                bookId: 5,
+                _links: {
+                    self: {
+                        href: 'http://localhost:8081/api/bookForSales/5',
+                    },
+                    bookForSale: {
+                        href: 'http://localhost:8081/api/bookForSales/5',
+                    },
+                    book: {
+                        href: 'http://localhost:8081/api/bookForSales/5/book',
+                    },
+                },
+            },
+            {
+                id: 6,
+                createAt: '2021-10-11T09:41:59.322+00:00',
+                updateAt: '2021-10-11T09:41:59.322+00:00',
+                deleted: false,
+                sellerId: 30,
+                availableStock: 54,
+                sellPriceInCents: 3307,
+                bookId: 5,
+                _links: {
+                    self: {
+                        href: 'http://localhost:8081/api/bookForSales/6',
+                    },
+                    bookForSale: {
+                        href: 'http://localhost:8081/api/bookForSales/6',
+                    },
+                    book: {
+                        href: 'http://localhost:8081/api/bookForSales/6/book',
+                    },
+                },
+            },
+            {
+                id: 7,
+                createAt: '2021-10-11T09:41:59.343+00:00',
+                updateAt: '2021-10-11T09:41:59.343+00:00',
+                deleted: false,
+                sellerId: 33,
+                availableStock: 51,
+                sellPriceInCents: 705,
+                bookId: 5,
+                _links: {
+                    self: {
+                        href: 'http://localhost:8081/api/bookForSales/7',
+                    },
+                    bookForSale: {
+                        href: 'http://localhost:8081/api/bookForSales/7',
+                    },
+                    book: {
+                        href: 'http://localhost:8081/api/bookForSales/7/book',
+                    },
+                },
+            },
+            {
+                id: 8,
+                createAt: '2021-10-11T09:41:59.375+00:00',
+                updateAt: '2021-10-11T09:41:59.375+00:00',
+                deleted: false,
+                sellerId: 34,
+                availableStock: 57,
+                sellPriceInCents: 28267,
+                bookId: 5,
+                _links: {
+                    self: {
+                        href: 'http://localhost:8081/api/bookForSales/8',
+                    },
+                    bookForSale: {
+                        href: 'http://localhost:8081/api/bookForSales/8',
+                    },
+                    book: {
+                        href: 'http://localhost:8081/api/bookForSales/8/book',
+                    },
+                },
+            },
+            {
+                id: 9,
+                createAt: '2021-10-11T09:42:44.348+00:00',
+                updateAt: '2021-10-11T09:42:44.348+00:00',
+                deleted: false,
+                sellerId: 4,
+                availableStock: 74,
+                sellPriceInCents: 18416,
+                bookId: 2,
+                _links: {
+                    self: {
+                        href: 'http://localhost:8081/api/bookForSales/9',
+                    },
+                    bookForSale: {
+                        href: 'http://localhost:8081/api/bookForSales/9',
+                    },
+                    book: {
+                        href: 'http://localhost:8081/api/bookForSales/9/book',
+                    },
+                },
+            },
+            {
+                id: 10,
+                createAt: '2021-10-11T09:42:44.373+00:00',
+                updateAt: '2021-10-11T09:42:44.373+00:00',
+                deleted: false,
+                sellerId: 1,
+                availableStock: 8,
+                sellPriceInCents: 56763,
+                bookId: 4,
+                _links: {
+                    self: {
+                        href: 'http://localhost:8081/api/bookForSales/10',
+                    },
+                    bookForSale: {
+                        href: 'http://localhost:8081/api/bookForSales/10',
+                    },
+                    book: {
+                        href: 'http://localhost:8081/api/bookForSales/10/book',
+                    },
+                },
+            },
+            {
+                id: 11,
+                createAt: '2021-10-11T09:42:44.391+00:00',
+                updateAt: '2021-10-11T09:42:44.391+00:00',
+                deleted: false,
+                sellerId: 3,
+                availableStock: 58,
+                sellPriceInCents: 16997,
+                bookId: 2,
+                _links: {
+                    self: {
+                        href: 'http://localhost:8081/api/bookForSales/11',
+                    },
+                    bookForSale: {
+                        href: 'http://localhost:8081/api/bookForSales/11',
+                    },
+                    book: {
+                        href: 'http://localhost:8081/api/bookForSales/11/book',
+                    },
+                },
+            },
+        ],
+    },
+    _links: {
+        self: {
+            href: 'http://localhost:8081/api/bookForSales',
+        },
+        profile: {
+            href: 'http://localhost:8081/api/profile/bookForSales',
+        },
+        search: {
+            href: 'http://localhost:8081/api/bookForSales/search',
+        },
+    },
+    page: {
+        size: 20,
+        totalElements: 11,
+        totalPages: 1,
+        number: 0,
+    },
+};

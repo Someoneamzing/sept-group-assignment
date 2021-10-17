@@ -29,6 +29,10 @@ public class OrderItem extends ServiceEntity {
         return order;
     }
 
+    public Long getOrderId() {
+        return order.getId();
+    }
+
     public void setOrder(Order order) {
         this.order = order;
     }

@@ -1,12 +1,11 @@
 import {rest} from 'msw';
-import {setupServer} from 'msw/node';
-import GET_API_BOOKS_RES from './api.books';
+import {GET_API_BOOKS_RES, GET_BOOK_FOR_SALES_RES} from './api.books';
 
 const EP = 'http://localhost:8081/api';
 
 // based on https://testing-library.com/docs/react-testing-library/example-intro/
 
-const BookMsServer = setupServer(
+const handlers = [
     rest.get(EP + '/books/', (req, res, ctx) => {
         return res(ctx.json(GET_API_BOOKS_RES));
     }),
@@ -18,11 +17,18 @@ const BookMsServer = setupServer(
         } else {
             return res(ctx.status(404, 'not found'));
         }
-    })
-);
+    }),
+    rest.get(EP + '/bookForSales/:bookForSaleId', (req, res, ctx) => {
+        const index = req.params.bookForSaleId;
+        const data = GET_BOOK_FOR_SALES_RES._embedded.bookForSales.find(
+            (bfs) => bfs.id + '' === index + ''
+        );
+        if (data) {
+            return res(ctx.json(data));
+        } else {
+            return res(ctx.status(404, 'not found'));
+        }
+    }),
+];
 
-beforeAll(() => BookMsServer.listen());
-afterEach(() => BookMsServer.resetHandlers());
-afterAll(() => BookMsServer.close());
-
-export default BookMsServer;
+export default handlers;

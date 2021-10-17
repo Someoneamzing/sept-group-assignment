@@ -1,13 +1,12 @@
 import deepEqual from 'deep-equal';
 import {rest} from 'msw';
-import {setupServer} from 'msw/node';
 import POST_API_LOGIN from './api.login';
 
 const EP = 'http://localhost:8080/api';
 
 // based on https://testing-library.com/docs/react-testing-library/example-intro/
 
-const loginMsService = setupServer(
+const handlers = [
     rest.post(EP + '/users/login', (req, res, ctx) => {
         try {
             const badRes = {};
@@ -40,11 +39,7 @@ const loginMsService = setupServer(
         } catch (e) {
             console.log(e);
         }
-    })
-);
+    }),
+];
 
-beforeAll(() => loginMsService.listen());
-afterEach(() => loginMsService.resetHandlers());
-afterAll(() => loginMsService.close());
-
-export default loginMsService;
+export default handlers;

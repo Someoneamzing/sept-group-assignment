@@ -6,9 +6,9 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import Chip from '@material-ui/core/Chip';
 import OrderItemList from './OrderItemList';
 import {useOrderItems} from '../../state/orders/orderItems';
-import {useRecoilValue} from 'recoil';
+import {useRecoilValue, useRecoilValueLoadable} from 'recoil';
 import {orderAtomFamily} from '../../state/orders/orders';
-import {useParams} from 'react-router';
+import {useParams} from 'react-router-dom';
 
 const statusColours = {};
 
@@ -21,7 +21,8 @@ export default function OrderView({...props}) {
 }
 
 function OrderViewContent({...props}) {
-    const {orderId} = useParams();
+    const params = useParams();
+    const {orderId} = params;
     const [selected, setSelected] = useState([]);
     const order = useRecoilValue(orderAtomFamily(orderId));
     const orderItems = useOrderItems(orderId);

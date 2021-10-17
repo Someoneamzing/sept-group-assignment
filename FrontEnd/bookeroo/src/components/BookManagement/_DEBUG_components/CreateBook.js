@@ -29,7 +29,7 @@ if (process.env.NODE_END === 'production') {
         style: 'capital',
     };
 
-    const sellerIds = [30, 33, 34, 35, 36, 37, 38];
+    const sellerIds = [1, 2, 3, 4];
 
     const uniqueDate = () => {
         const dt = new Date(Math.random() * Date.now());

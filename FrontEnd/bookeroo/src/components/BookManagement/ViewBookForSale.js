@@ -9,17 +9,15 @@ import DoneIcon from '@material-ui/icons/Done';
 import NoMatch from '../Layout/NoMatch';
 import {useParams} from 'react-router';
 import Reviews from './Reviews';
-import {idFromURL} from '../../state/utils';
 import {createOrderItem} from '../../api';
 import {userAtom} from '../../state/user/authentication';
 import {useBusinessUserAtomFamily} from '../../state/user/search/businessUser';
 
-function PurchaseLayout({sellPriceInCents, availableStock, _links}) {
+function PurchaseLayout({sellPriceInCents, availableStock, id}) {
     const [loading, setLoading] = useState();
     const [success, setSuccess] = useState();
     const [quantity, setQuantity] = useState(1);
     const user = useRecoilValue(userAtom);
-    const bookForSaleId = idFromURL(_links.self.href);
     // Reset success to false after 5 seconds.
     useEffect(() => {
         let timer = null;
@@ -36,7 +34,7 @@ function PurchaseLayout({sellPriceInCents, availableStock, _links}) {
         setSuccess(false);
         setLoading(true);
         await createOrderItem({
-            item: {costInCents: sellPriceInCents, bookForSaleId, quantity},
+            item: {costInCents: sellPriceInCents, bookForSaleId: id, quantity},
             token: user.token,
         });
     }
@@ -72,7 +70,7 @@ function PurchaseLayout({sellPriceInCents, availableStock, _links}) {
                     onClick={handleAddButtonClick}
                 >
                     {loading ? (
-                        <CircularProgress />
+                        <CircularProgress color="primary" />
                     ) : success ? (
                         <>
                             Successfully

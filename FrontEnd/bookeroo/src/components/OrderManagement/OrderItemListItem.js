@@ -7,7 +7,7 @@ import Typography from '@material-ui/core/Typography';
 import Checkbox from '@material-ui/core/Checkbox';
 import React from 'react';
 
-import {useBookForSale} from '../../state/books/booksForSale';
+import {useBookForSaleAtomFamily} from '../../state/books/booksForSale';
 import BookThumbnail from '../BookManagement/BookThumbnail';
 import {Grid} from '@material-ui/core';
 
@@ -23,8 +23,7 @@ export default function OrderItemListItem({
     onClick,
     ...props
 }) {
-    console.log(`Checked: ${checked}`);
-    const bookForSale = useBookForSale(item.bookForSaleId);
+    const bookForSale = useBookForSaleAtomFamily(item.bookForSaleId);
     return (
         <ListItem button selected={selected} onClick={onClick} dense>
             <ListItemIcon>

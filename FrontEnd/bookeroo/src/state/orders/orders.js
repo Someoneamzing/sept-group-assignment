@@ -8,7 +8,6 @@ import {
     useRecoilValue,
 } from 'recoil';
 import {userAtom} from '../user/authentication';
-import {idFromURL} from '../utils';
 
 const fetchOrder = async ({orderId, token}) => {
     const config = {
@@ -32,7 +31,7 @@ const fetchAllOrders = async ({token}) => {
         config: 'GET',
         url: 'http://localhost:8082/api/orders/',
         headers: {
-            'Content-Type': 'application-json',
+            'Content-Type': 'application/json',
             Authorization: token,
         },
     };
@@ -73,7 +72,7 @@ export function useAllOrdersQuery() {
                 if (allOrders == null) return;
                 const allOrderIds = [];
                 for (const order of allOrders) {
-                    const orderId = idFromURL(order._links.self.href);
+                    const orderId = order.id;
                     allOrderIds.push(orderId);
                     set(orderAtomFamily(orderId), order);
                 }

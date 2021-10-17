@@ -11,9 +11,10 @@ import {
 
 import {getBooks} from '../api';
 import {Formik} from 'formik';
-import TEST_BOOKS from '../testingUtils/books_microservice/api.books';
+import TEST_BOOKS from '../testing_utils/books_microservice/api.books';
 import BookField from '../components/BookManagement/BookField';
-import '../testingUtils/books_microservice/mockServer';
+import '../testing_utils/mockServer';
+import MockRoot from '../testing_utils/MockRoot';
 process.on('unhandledRejection', (err) => {
     console.error(err);
 });
@@ -35,15 +36,17 @@ describe('BookField', () => {
         getBooks.mockResolvedValue(TEST_BOOKS._embedded.books.slice(0, 3));
         await act(async () => {
             render(
-                <Formik initialValues={{book: null}}>
-                    {(formik) => (
-                        <BookField
-                            name="book"
-                            label="Book"
-                            allowCreate={true}
-                        />
-                    )}
-                </Formik>
+                <MockRoot>
+                    <Formik initialValues={{book: null}}>
+                        {(formik) => (
+                            <BookField
+                                name="book"
+                                label="Book"
+                                allowCreate={true}
+                            />
+                        )}
+                    </Formik>
+                </MockRoot>
             );
             await promise;
         });
@@ -62,15 +65,17 @@ describe('BookField', () => {
         getBooks.mockResolvedValue(TEST_BOOKS._embedded.books.slice(0, 3));
         await act(async () => {
             render(
-                <Formik initialValues={{book: null}}>
-                    {(formik) => (
-                        <BookField
-                            name="book"
-                            label="Book"
-                            allowCreate={true}
-                        />
-                    )}
-                </Formik>
+                <MockRoot>
+                    <Formik initialValues={{book: null}}>
+                        {(formik) => (
+                            <BookField
+                                name="book"
+                                label="Book"
+                                allowCreate={true}
+                            />
+                        )}
+                    </Formik>
+                </MockRoot>
             );
             await promise;
         });

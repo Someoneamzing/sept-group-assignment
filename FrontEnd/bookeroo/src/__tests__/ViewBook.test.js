@@ -5,7 +5,7 @@ import MockRoot from '../testing_utils/MockRoot';
 import {ViewBookSuspense} from '../components/BookManagement/ViewBook';
 
 // add mock book microservice to testing context
-import '../testing_utils/books_microservice/mockServer';
+import '../testing_utils/mockServer';
 import {createMemoryHistory} from 'history';
 
 /*

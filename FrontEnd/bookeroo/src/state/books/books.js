@@ -42,7 +42,7 @@ export const bookAtomFamily = atomFamily({
 //         config: 'GET',
 //         url: `http://${BOOK_MS_ENDPOINT}/api/books/`,
 //         headers: {
-//             'Content-Type': 'application-json',
+//             'Content-Type': 'application/json',
 //         },
 //     };
 //     try {
