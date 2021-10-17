@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * Unused controller used as a placeholder for future behaviour.
  */
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/books")
 public class BookController {
