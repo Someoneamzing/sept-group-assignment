@@ -28,7 +28,7 @@ const businessUsersAtomFamily = atomFamily({
         key: 'businessUsersAtomFamily/default',
         get: (sellerId) => async () => {
             const res = await fetchBusinessUsers(sellerId);
-            if (res != null && !res.length) return null;
+            if (res == null || !res.length) return null;
             return res[0];
         },
     }),

@@ -24,7 +24,11 @@ export function SellerBookTable({bookId}) {
     const styles = useTableStyles();
     return (
         <TableContainer component={Paper} className={styles.table}>
-            <Table size="small" aria-label="a dense table">
+            <Table
+                size="small"
+                aria-label="Store books for sale"
+                data-testid="bookforsaletable"
+            >
                 {bookForSaleIds ? (
                     <>
                         <TableHead>

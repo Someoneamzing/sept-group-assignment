@@ -82,8 +82,9 @@ export default function BookListItem({bookId, expandAll}) {
     );
 
     return (
-        <Card className={classes.card}>
+        <Card className={classes.card} data-testid="booklistitem">
             <CardMedia
+                data-testid="bookcover"
                 className={clsx(classes.media, {
                     [classes.mediaExpand]: expanded,
                 })}
@@ -94,23 +95,31 @@ export default function BookListItem({bookId, expandAll}) {
                 <div className={classes.root}>
                     <CardContent className={classes.content} align="left">
                         <div>
-                            <Link to={`/book/${bookId}`}>
+                            <Link
+                                to={`/book/${bookId}`}
+                                data-testid="booktitle"
+                            >
                                 <Typography component="h6" variant="body1">
                                     {bookData.bookTitle}
                                 </Typography>
                             </Link>
                             <div
-                                style={{display: 'flex', flexDirection: 'row'}}
+                                style={{
+                                    display: 'flex',
+                                    flexDirection: 'row',
+                                    marginBottom: '5px',
+                                }}
                             >
                                 <Typography
                                     variant="body2"
                                     color="textPrimary"
-                                    // style={{marginRight: '10px'}}
+                                    data-testid="bookauthor"
                                 >
                                     {bookData.author}
                                 </Typography>
                                 <span style={{margin: '0 5px'}}>•</span>
                                 <Typography
+                                    data-testid="bookyear"
                                     variant="body2"
                                     color="textSecondary"
                                     component="p"
@@ -119,8 +128,11 @@ export default function BookListItem({bookId, expandAll}) {
                                 </Typography>
                             </div>
                             <Button
-                                style={{textTransform: 'none'}}
+                                style={{textTransform: 'none', width: '100px'}}
                                 onClick={setExpandLocal}
+                                variant="outlined"
+                                size="small"
+                                disableElevation
                             >
                                 <BookForSaleStoreCount bookId={bookId} />
                             </Button>
@@ -152,6 +164,7 @@ function BookForSaleStoreCount({bookId}) {
     const fsIds = useBookIdForBookForSaleIds(bookId);
     return (
         <Typography
+            data-testid="storecount"
             variant="body2"
             color={fsIds.length ? 'textPrimary' : 'textSecondary'}
             component="p"

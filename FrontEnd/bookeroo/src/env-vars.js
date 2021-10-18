@@ -1,11 +1,11 @@
 // https://create-react-app.dev/docs/adding-custom-environment-variables/
 const API_ENDPOINT_ENV_VAR = process.env.REACT_APP_API_ENDPOINT;
 if (!API_ENDPOINT_ENV_VAR) {
-    console.warn(
+    console.log(
         'No ENV-VAR for REACT_APP_API_ENDPOINT - falling back to localhost'
     );
 } else {
-    console.warn('LOADED ENV-VAR ENDPOINT: ' + API_ENDPOINT_ENV_VAR);
+    console.log('LOADED ENV-VAR ENDPOINT: ' + API_ENDPOINT_ENV_VAR);
 }
 
 const API_ENDPOINT = API_ENDPOINT_ENV_VAR || 'localhost';
