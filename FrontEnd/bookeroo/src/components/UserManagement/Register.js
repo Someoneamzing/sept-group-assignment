@@ -47,7 +47,7 @@ export default function Register() {
             {/* redirect to login page if user registered */}
             {result && <Redirect to="/login" />}
             {result && 'Redirecting'}
-            <h1>Business Registration</h1>
+            <h1>Bookeroo Registration</h1>
             <form onSubmit={onSubmit}>
                 <TextField
                     error={!!errorMessages['username']}

@@ -1,6 +1,7 @@
 package com.rmit.sept.bk_loginservices.web;
 
 
+import com.rmit.sept.bk_loginservices.payload.BusinessUser;
 import com.rmit.sept.bk_loginservices.Repositories.UserRepository;
 import com.rmit.sept.bk_loginservices.model.BusinessInfo;
 import com.rmit.sept.bk_loginservices.model.User;
@@ -12,6 +13,7 @@ import com.rmit.sept.bk_loginservices.services.MapValidationErrorService;
 import com.rmit.sept.bk_loginservices.services.UserService;
 import com.rmit.sept.bk_loginservices.validator.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -25,6 +27,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.rmit.sept.bk_loginservices.security.SecurityConstant.TOKEN_PREFIX;
@@ -46,6 +49,8 @@ public class UserController {
 
     private final AuthenticationManager authenticationManager;
 
+
+
     @Autowired
     public UserController(MapValidationErrorService mapValidationErrorService, UserService userService, UserRepository userRepository, UserValidator userValidator, JwtTokenProvider tokenProvider, AuthenticationManager authenticationManager) {
         this.mapValidationErrorService = mapValidationErrorService;
@@ -56,16 +61,26 @@ public class UserController {
         this.authenticationManager = authenticationManager;
     }
 
+    @SuppressWarnings("SpringElInspection")
+    @Value("#{environment.CIRCLE_BRANCH_SHA1}")
+    private String branchSha1;
+    @GetMapping("/version")
+    public String version() {
+        return branchSha1;
+    }
+
     @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/")
     public Iterable<User> allUsers(){
         return this.userRepository.findAll();
     }
 
-    @GetMapping("/version")
-    public String version() {
-        return "v5";
+    @GetMapping("/search/findAllByIdIn")
+    public Iterable<BusinessUser> findAllByIdIn(@RequestParam List<Long> id){
+        return userRepository.findAllByIdIn(id);
     }
+
+
 
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@Valid @RequestBody User user, BindingResult result){
