@@ -49,8 +49,8 @@ public class User implements UserDetails {
     @ElementCollection
     @UniqueElements
     private Collection<String> authorities = new HashSet<>();
-    private Boolean AccountNonLocked = null;
-    private Boolean enabled = null;
+    private Boolean AccountNonLocked = true;
+    private Boolean enabled = true;
 
     public User() {
     }

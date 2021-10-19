@@ -53,7 +53,7 @@ function App() {
                     />
                     <Route exact path="/users" component={ViewAllUsers} />
                     <Route path="/user/:userId" component={ViewUser} />
-                    <Route exact path="/profile" component={Profile} />
+                    <Route exact path="/users/Profile" component={Profile} />
 
                     {/*!!!!!!!!!!!!! THIS MUST GO AFTER EVERYTHING ELSE !!!!!!!!!!!!!!*/}
                     <Route

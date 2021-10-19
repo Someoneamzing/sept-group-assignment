@@ -1,21 +1,19 @@
 import { Fragment, useState } from "react";
-import React, {Suspense, useEffect, setAlertOpen, setState} from 'react';
-import { Container, IconButton, Tooltip, Dialog, DialogTitle, DialogContent, TextField, DialogActions, Button} from "@material-ui/core";
+import { React, useEffect } from 'react';
+import { IconButton, Tooltip, Dialog, DialogTitle, DialogContent, TextField, DialogActions, Button} from "@material-ui/core";
 import EditIcon from '@material-ui/icons/Edit';
-import { putUserApi, useUser, useRefreshUser } from '../../state/user/users';
+import { putUserApi, useRefreshUser } from '../../state/user/users';
 import { useAuthUser } from "../../state/user/authentication";
 import Alert from '@material-ui/lab/Alert';
 import CloseIcon from '@material-ui/icons/Close';
 import { Collapse } from '@material-ui/core';
 
-export default function EditUser () {
-	const user = useUser();
+export default function EditUser (user) {
 	const refreshUser = useRefreshUser();
 	const authUser = useAuthUser();
 	const [placeholder, setPlaceholder] = useState(user);
 	const [form, setForm] = useState({});
 	const [open, setOpen] = useState(false);
-	// const [result, setResult] = useState(false);
 	const [errorMessages, setErrorMessages] = useState({});
 	const [alertOpen, setAlertOpen] = useState(true);
 
@@ -30,37 +28,30 @@ export default function EditUser () {
 		setOpen(!open);
 	}
 
-	// function handleChange(e) {
-	// 	debugger
-	// 	setErrorMessages({});
-	// 	setText({
-	// 		[e.target.name]: e.target.value
-	// 	});
-
-	// }
-
 	const handleChange = e => {
-		setPlaceholder({
-			...placeholder,
-			[e.target.name]: e.target.value
-		})
-    setForm({
-      ...form,
-      [e.target.name]: e.target.value
-    });
+		if(e.target.name === 'authorities') {
+            var value = e.target.value.split(', ');
+			setForm({
+				...form,
+					authorities : value
+			});
+		} else {
+			setPlaceholder({
+				...placeholder,
+				[e.target.name]: e.target.value
+			})
+			setForm({
+				...form,
+					[e.target.name]: e.target.value
+			});
+		}
   };
-
-	// const handleChange = e => {
-  //       const {name, value} = e.target;
-  //       user([name], value);
-  // }
 
 	const handleSubmit = e => {
 		e.preventDefault();
 		setErrorMessages({});
-		putUserApi(form, authUser.token)
-            .then((data) => {
-                // setResult(data);
+		putUserApi(user.id, form, authUser.token)
+            .then(() => {
 								handleClose();
 								refreshUser();
             })
@@ -139,26 +130,39 @@ export default function EditUser () {
 								style={{ paddingBottom: '2vh' }}
 								helperText={errorMessages['confirmPassword']}
 							/>
+							<TextField
+								error={!!errorMessages['authorities']}
+								name="authorities"
+								type="array"
+								label="authorities"
+								placeholder="PUBLIC, BUISNESS, ADMIN"
+								value={null}
+								onChange={handleChange}
+								InputLabelProps={{ shrink: true }}  
+								fullWidth
+								style={{ paddingBottom: '2vh' }}
+								helperText={errorMessages['authorities']}
+							/>
 							{errorMessages['message'] && (
-									<Collapse in={alertOpen}>
-											<Alert
-													severity="warning"
-													action={
-															<IconButton
-																	aria-label="close"
-																	color="inherit"
-																	size="small"
-																	onClick={() => {
-																			setAlertOpen(false);
-																	}}
-															>
-																	<CloseIcon fontSize="inherit" />
-															</IconButton>
-													}
-											>
-													{errorMessages['message']}
-											</Alert>
-									</Collapse>
+                                <Collapse in={alertOpen}>
+                                    <Alert
+                                        severity="warning"
+                                        action={
+                                            <IconButton
+                                                aria-label="close"
+                                                color="inherit"
+                                                size="small"
+                                                onClick={() => {
+                                                        setAlertOpen(false);
+                                                }}
+                                            >
+                                                <CloseIcon fontSize="inherit" />
+                                            </IconButton>
+                                        }
+                                    >
+                                            {errorMessages['message']}
+                                    </Alert>
+                                </Collapse>
 							)}
 						</form>
 					</DialogContent>
@@ -169,8 +173,7 @@ export default function EditUser () {
 						<Button onClick={handleSubmit} color="primary">
 							Save
 						</Button>
-					</DialogActions>
-				
+					</DialogActions>	
 				</Dialog>
 		</Fragment>
 	);

@@ -1,28 +1,29 @@
-import {useParams} from 'react-router-dom';
-import React, {Suspense} from 'react';
-import {useRecoilValue} from 'recoil';
-import {userAtomFamily} from '../../state/user/users';
+import { useParams } from 'react-router-dom';
+import { React, Suspense } from 'react';
+import { useUser } from '../../state/user/users';
 import NoMatch from '../Layout/NoMatch';
 import {Container, Paper, Box} from '@material-ui/core';
+import { UserPofile } from './Profile';
+import { AccountActions } from './AccountActions';
 
 function UserHeader(props) {
     const {userId} = props;
     return (
         <Box textAlign="left" padding="1rem">
-            <h1> Edit User {userId} </h1>
+            <h1> Edit User #{userId} </h1>
         </Box>
     );
 }
 
 function UserInfo(props) {
-    const {username, userId, fullName, authorities} = props;
     return (
-        <Box textAlign="left" padding="1rem">
-            <h1> {userId} </h1>
-			<h1> {username} </h1>
-            <h1> {fullName} </h1>
-            <h1>Account type: {authorities.map((a) => a.authority)}</h1>
-        </Box>
+        <UserPofile{...props}/>
+    );
+}
+
+function AccountInfo(props) {
+    return (
+        <AccountActions{...props}/>
     );
 }
 
@@ -43,31 +44,30 @@ export function ViewUserLayout(props) {
                         flexDirection="row"
                     >
                         <UserHeader {...props} />
+                    </Box>	
+                    <Box
+                        maxWidth="sm"
+                        display="flex"
+                        flex= "0 0 60%"
+                        flexWrap="wrap"
+                        flexDirection="row"
+                        justifyContent="space-around"
+                        paddingBottom="2vh"
+                    >
+                        <UserInfo {...props} />
                     </Box>
-
-					<Paper variant="outlined">
-						<Box
-							maxWidth="sm"
-							display="flex"
-							flexWrap="wrap"
-							flexDirection="row"
-							justifyContent="space-around"
-						>
-							<UserInfo {...props} />
-						</Box>
-					</Paper>
-
-                    <Paper variant="outlined">
-                        <Box
-                            display="flex"
-                            flexDirection="column"
-                            justifyContent="space-around"
-                            margin="2rem"
-                            height="85%"
-                        >
-                            {props.RightBox}
+                    <Box
+                        display="flex"
+                        flexDirection="row"
+                        flex= "0 0 30%"
+                        justifyContent="space-around"
+                    >
+                        <Box width="100%">
+                            <Paper variant="outlined">
+                                <AccountInfo {...props} />
+                            </Paper>
                         </Box>
-                    </Paper>
+                    </Box>
                 </Box>
             </Container>
         </div>
@@ -75,16 +75,17 @@ export function ViewUserLayout(props) {
 }
 
 function ViewUserContainer({userId}) {
-	const userData = useRecoilValue(userAtomFamily(userId));
+	const userData = useUser(userId);
 
 	if (userData == null) {
 		return <NoMatch />;
 	}
+
 	return (
 		<>
 			<ViewUserLayout
 				{...{...userData, userId}}
-				RightBox={<>User Status</>}
+				RightBox={<><h1>User Status</h1></>}
 			/>
 		</>
 	);
@@ -98,11 +99,11 @@ export function ViewUserSuspense({userId}) {
   );
 }
 
-export default function ViewBookPage() {
+export default function ViewUserPage() {
   const {userId} = useParams();
 
   return (
-      <>
+        <>
           <ViewUserSuspense userId={userId} />
       </>
   );

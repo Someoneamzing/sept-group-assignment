@@ -65,7 +65,7 @@ const defaultLinks = {
 const authedLinks = {
     Logout: '/logout',
     Users: '/users',
-    Profile: '/profile',
+    Profile: '/users/profile',
 };
 
 const businessLinks = {Store: '/store'};

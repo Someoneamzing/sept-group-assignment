@@ -10,6 +10,7 @@ import com.rmit.sept.bk_loginservices.model.UserType;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -35,20 +36,22 @@ public class UserService {
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
-    public User saveNewUser(User newUser){
+    public User saveNewUser(User newUser, Boolean buisness){
 
         //Username has to be unique (exception)
         newUser.setPassword(bCryptPasswordEncoder.encode(newUser.getPassword()));
 
         newUser.setUsername(newUser.getUsername());
         // User authorities are by default Public
-        newUser.setAuthorities(Set.of(UserType.PUBLIC));
+        if(buisness){
+            newUser.setAuthorities(Set.of(UserType.BUSINESS));
+            newUser.setEnabled(false);
+        } else {
+            newUser.setAuthorities(Set.of(UserType.PUBLIC));
+        }
 
         // We don't persist or show the confirmPassword
         newUser.setConfirmPassword("");
-
-        newUser.setAccountNonLocked(true);
-        newUser.setEnabled(true);
 
         try {
             return userRepository.save(newUser);
@@ -87,7 +90,18 @@ public class UserService {
 
     }
 
-    public User updateUser(Long id, User userUpdate, boolean admin) throws UsernameNotFoundException, ConstraintViolationException {
+    public User updateUser(Long id, User userUpdate) throws UsernameNotFoundException, ConstraintViolationException {
+        User loggedInUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        boolean admin = false;
+
+        if(loggedInUser.getAuthoritiesSet().contains("ADMIN")) {
+            admin = true;
+        } else {
+            if(id != loggedInUser.getId()){
+                throw new ConstraintViolationException("Unauthorized");
+            }
+        }
+
         try {
             User user = userRepository.findById(id).get();
 

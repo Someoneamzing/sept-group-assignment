@@ -76,10 +76,13 @@ public class UserController {
         return new ResponseEntity<>(userService.getUserById(userid), HttpStatus.OK);
     }
 
-    @PreAuthorize("hasAuthority('ADMIN')")
     @PutMapping("/{userid}")
-    public ResponseEntity<?> updateUser(@PathVariable("userid") long userid ,@RequestBody User user) throws IllegalAccessException {
-        userService.updateUser(userid, user, true);
+    public ResponseEntity<?> updateUser(@PathVariable("userid") long userid ,@RequestBody User user, BindingResult result) throws IllegalAccessException {
+        userValidator.validateUpdate(user,result);
+        ResponseEntity<?> errorMap = mapValidationErrorService.MapValidationService(result);
+        if(errorMap != null)return errorMap;
+
+        userService.updateUser(userid, user);
         return new ResponseEntity<>(userService.getUserById(userid), HttpStatus.OK);
     }
 
@@ -90,18 +93,18 @@ public class UserController {
         return new ResponseEntity<>(userService.getUserById(loggedInUser.getId()), HttpStatus.OK);
     }
 
-    @PutMapping("/userProfile")
-    public ResponseEntity<?> editCurrentUser(@RequestBody User user, BindingResult result) throws IllegalAccessException {
-        userValidator.validateUpdate(user,result);
-        ResponseEntity<?> errorMap = mapValidationErrorService.MapValidationService(result);
-        if(errorMap != null)return errorMap;
-
-        User loggedInUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        userService.updateUser(loggedInUser.getId(), user, false);
-        return new ResponseEntity<>(userService.getUserById(loggedInUser.getId()), HttpStatus.OK);
-    }
-    
+//    @PutMapping("/userProfile")
+//    public ResponseEntity<?> editCurrentUser(@RequestBody User user, BindingResult result) throws IllegalAccessException {
+//        userValidator.validateUpdate(user,result);
+//        ResponseEntity<?> errorMap = mapValidationErrorService.MapValidationService(result);
+//        if(errorMap != null)return errorMap;
+//
+//
+//
+////        userService.updateUser(user, false);
+//        return new ResponseEntity<>(userService.getUserById(loggedInUser.getId()), HttpStatus.OK);
+//    }
+//
     @GetMapping("/version")
     public String version() {
         return "v5";
@@ -115,7 +118,7 @@ public class UserController {
         ResponseEntity<?> errorMap = mapValidationErrorService.MapValidationService(result);
         if(errorMap != null)return errorMap;
 
-        User newUser = userService.saveNewUser(user);
+        User newUser = userService.saveNewUser(user, false);
 
         return  new ResponseEntity<>(newUser, HttpStatus.CREATED);
     }
@@ -126,7 +129,6 @@ public class UserController {
         User user = userInfo.getUser();
         BusinessInfo businessInfo = userInfo.getBusinessInfo();
         user.setBusinessInfo(businessInfo);
-        user.setEnabled(false);
 
         // Validate passwords match
         userValidator.validate(user, result);
@@ -134,7 +136,7 @@ public class UserController {
         ResponseEntity<?> errorMap = mapValidationErrorService.MapValidationService(result);
         if(errorMap != null)return errorMap;
 
-        User newUser = userService.saveNewUser(user);
+        User newUser = userService.saveNewUser(user, true);
 
         return new ResponseEntity<>(newUser, HttpStatus.ACCEPTED);
     }
