@@ -46,7 +46,6 @@ export function UserPofile(userData) {
 
 function ViewProfile() {
     const userData = useUser(null);
-    debugger;
     return (
         <>
             <Container maxWidth="sm">

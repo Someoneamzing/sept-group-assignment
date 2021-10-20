@@ -24,7 +24,6 @@ const fetchUser = async (userId, token) => {
             },
         };
     } else {
-        debugger;
         config = {
             config: 'GET',
             url: `http://${LOGIN_MS_ENDPOINT}/api/users/${userId}`,
