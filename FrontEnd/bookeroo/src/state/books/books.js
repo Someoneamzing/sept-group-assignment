@@ -1,5 +1,5 @@
 import axios from 'axios';
-import {useEffect} from 'react';
+import { useEffect, useState } from 'react';
 import {
     atom,
     atomFamily,
@@ -7,7 +7,7 @@ import {
     useRecoilCallback,
     useRecoilValue,
 } from 'recoil';
-import {BOOK_MS_ENDPOINT} from '../../env-vars';
+import { BOOK_MS_ENDPOINT } from '../../env-vars';
 
 const fetchBook = async (bookId) => {
     const config = {
@@ -53,6 +53,23 @@ const fetchAllBooks = async () => {
     }
 };
 
+const fetchFilteredBooks = async (genre) => {
+    const config = {
+        config: 'GET',
+        url: `http://${BOOK_MS_ENDPOINT}/api/books/filter?genre=${genre}`,
+        headers: {
+            'Content-Type': 'application-json',
+        },
+    };
+    try {
+        const res = await axios(config);
+        return [res.data['Genres'], res.data['Books']];
+    } catch (e) {
+        console.log(e);
+        return null;
+    }
+};
+
 const allBookIdsAtom = atom({
     key: 'allBooksIdsAtom_v1',
     default: [],
@@ -61,7 +78,7 @@ const allBookIdsAtom = atom({
 export function useAllBooksQuery() {
     const allBooks = useRecoilValue(allBookIdsAtom);
     const loadBooks = useRecoilCallback(
-        ({set}) =>
+        ({ set }) =>
             async () => {
                 const allBooks = await fetchAllBooks();
                 if (allBooks == null) return;
@@ -79,5 +96,32 @@ export function useAllBooksQuery() {
     useEffect(() => {
         loadBooks();
     }, [loadBooks]);
-    return {allBooks, loadBooks};
+    return { allBooks, loadBooks };
 }
+
+export function FilterPageQuery(genre) {
+    const allBooks = useRecoilValue(allBookIdsAtom);
+    const [genres, setGenres] = useState([]);
+    const loadBooks = useRecoilCallback(({ set }) => async () => {
+        const allBooksInfo = await fetchFilteredBooks(genre);
+
+        if (allBooksInfo == null) return;
+
+        setGenres(allBooksInfo[0]);
+
+        const allBookIds = [];
+        for (const book of allBooksInfo[1]) {
+            const bookId = book['id']
+            allBookIds.push(bookId);
+            set(bookAtomFamily(bookId), book);
+        }
+        set(allBookIdsAtom, allBookIds);
+
+    }, [genre]);
+    // (refetches books when genre is changed)
+    useEffect(() => {
+        loadBooks();
+    }, [loadBooks]);
+    return { allBooks, loadBooks, genres };
+}
+

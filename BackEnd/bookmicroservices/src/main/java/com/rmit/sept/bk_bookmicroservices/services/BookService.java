@@ -6,6 +6,8 @@ import com.rmit.sept.bk_bookmicroservices.repositories.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 /**
  * The service for implementing the business logic of Books.
@@ -22,5 +24,16 @@ public class BookService {
         this.bookForSaleRepository = bookForSaleRepository;
     }
 
+    public List<Book> getAllBooks(){
+        return bookRepository.findAll();
+    }
+
+    public List<String> getAllCategories(){
+        return bookRepository.findAllCategories();
+    }
+
+    public List<Book> getBookByGenre(String genre){
+        return bookRepository.findAllByGenre(genre);
+    }
 
 }

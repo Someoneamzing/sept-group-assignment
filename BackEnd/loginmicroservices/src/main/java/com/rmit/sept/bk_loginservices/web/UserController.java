@@ -13,6 +13,7 @@ import com.rmit.sept.bk_loginservices.services.MapValidationErrorService;
 import com.rmit.sept.bk_loginservices.services.UserService;
 import com.rmit.sept.bk_loginservices.validator.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -63,6 +64,14 @@ public class UserController {
         this.customUserDetailsService = customUserDetailsService;
     }
 
+    @SuppressWarnings("SpringElInspection")
+    @Value("#{environment.CIRCLE_BRANCH_SHA1}")
+    private String branchSha1;
+    @GetMapping("/version")
+    public String version() {
+        return branchSha1;
+    }
+
     @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/")
     public Iterable<User> allUsers(){
@@ -91,23 +100,6 @@ public class UserController {
         User loggedInUser = ((User)SecurityContextHolder.getContext().getAuthentication().getPrincipal());
 
         return new ResponseEntity<>(userService.getUserById(loggedInUser.getId()), HttpStatus.OK);
-    }
-
-//    @PutMapping("/userProfile")
-//    public ResponseEntity<?> editCurrentUser(@RequestBody User user, BindingResult result) throws IllegalAccessException {
-//        userValidator.validateUpdate(user,result);
-//        ResponseEntity<?> errorMap = mapValidationErrorService.MapValidationService(result);
-//        if(errorMap != null)return errorMap;
-//
-//
-//
-////        userService.updateUser(user, false);
-//        return new ResponseEntity<>(userService.getUserById(loggedInUser.getId()), HttpStatus.OK);
-//    }
-//
-    @GetMapping("/version")
-    public String version() {
-        return "v5";
     }
 
     @PostMapping("/register")
