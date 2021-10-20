@@ -1,41 +1,40 @@
 import axios from 'axios';
 import {useEffect} from 'react';
 import {userAtom} from '../../state/user/authentication';
+import {LOGIN_MS_ENDPOINT} from '../../env-vars';
 import {
     atom,
     atomFamily,
     selectorFamily,
-    selector,
     useRecoilCallback,
     useRecoilValue,
-    useRecoilState,
     useSetRecoilState,
 } from 'recoil';
 
 const fetchUser = async (userId, token) => {
     var config = null;
 
-    if(userId === null) {
+    if (userId === null) {
         config = {
             config: 'GET',
-            url: `http://localhost:8080/api/users/userProfile`,
+            url: `http://${LOGIN_MS_ENDPOINT}/api/users/userProfile`,
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': token,
+                Authorization: token,
             },
         };
     } else {
-        debugger
+        debugger;
         config = {
             config: 'GET',
-            url: `http://localhost:8080/api/users/${userId}`,
+            url: `http://${LOGIN_MS_ENDPOINT}/api/users/${userId}`,
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': token,
+                Authorization: token,
             },
         };
     }
-    
+
     try {
         const res = await axios(config);
         return res.data;
@@ -44,49 +43,21 @@ const fetchUser = async (userId, token) => {
     }
 };
 
-// const fetchCurrentUser = async (token) => {
-//     const config = {
-//         config: 'GET',
-//         url: `http://localhost:8080/api/users/userProfile`,
-//         headers: {
-//             'Content-Type': 'application/json',
-//             'Authorization': token,
-//         },
-//     };
-//     try {
-//         const res = await axios(config);
-//         return res.data;
-//     } catch (e) {
-//         return null;
-//     }
-// };
-
 export const putUserApi = async (userId, data, token) => {
-    // if (!endpoint) throw Error('endpoint not supplied');
-    // const user = useRecoilValue(userAtom);
-    
-    var config = null;
+    let config = null;
     try {
-        // const token = await userAtom.token;
-        // const token = selector({
-        //     key: 'users_info_v1/default',
-        //     get: () => async ({get}) => {
-        //         try {
-        //             return axios( { method: 'put',data, url: 'http://localhost:8080/api/users/userProfile', headers: { 'Authorization': 'Bearer ' + await get(userAtom).token } })
-        //         } catch (e) {
-        //             return null;
-        //         }        
-        //     },
-        // });
-       
         config = {
-            headers: { 
+            headers: {
                 'Content-Type': 'application/json',
-                'Authorization': token,
+                Authorization: token,
             },
-        };       
-        const res = await axios.put(`http://localhost:8080/api/users/${userId}`, data, config);
-        return res.data
+        };
+        const res = await axios.put(
+            `http://${LOGIN_MS_ENDPOINT}/api/users/${userId}`,
+            data,
+            config
+        );
+        return res.data;
     } catch (e) {
         if (e.response) {
             throw e.response.data;
@@ -95,7 +66,7 @@ export const putUserApi = async (userId, data, token) => {
             throw {message: 'Could not connect to auth service'};
         }
     }
-}
+};
 
 const userCacheKeyAtom = atom({
     key: 'userCache_v1',
@@ -108,16 +79,13 @@ const userSelectorFamily = selectorFamily({
         ({userId}) =>
         async ({get}) => {
             const user = await fetchUser(userId, get(userAtom).token);
-            // delete user.authorities;
             return user;
         },
 });
 
 export function useUser(userId) {
     const cacheKey = useRecoilValue(userCacheKeyAtom);
-    const user = useRecoilValue(
-        userSelectorFamily({userId, cacheKey})
-    );
+    const user = useRecoilValue(userSelectorFamily({userId, cacheKey}));
     return user;
 }
 
@@ -132,37 +100,26 @@ export const userAtomFamily = atomFamily({
     key: 'users_info_v1',
     default: selectorFamily({
         key: 'users_info_v1/default',
-        get: (userId) => async ({get}) => {
-            try {
-                const user = await fetchUser(userId, get(userAtom).token);
-                return user;
-            } catch (e) {
-                return null;
-            }        
-        },
+        get:
+            (userId) =>
+            async ({get}) => {
+                try {
+                    const user = await fetchUser(userId, get(userAtom).token);
+                    return user;
+                } catch (e) {
+                    return null;
+                }
+            },
     }),
 });
-
-// export const currentUserAtomFamily = selectorFamily({
-//         key: 'users_info_current/default',
-//         get: () => async ({get}) => {
-// 			try {
-// 				const user = await fetchCurrentUser(get(userAtom).token);
-// 				return user;
-// 			} catch (e) {
-// 				return null;
-// 			}        
-//         },
-//     }),
-// });
 
 export const fetchAllUsers = async (token) => {
     const config = {
         config: 'GET',
-        url: 'http://localhost:8080/api/users/',
+        url: `http://${LOGIN_MS_ENDPOINT}/api/users/`,
         headers: {
             'Content-Type': 'application-json',
-            'Authorization': token,
+            Authorization: token,
         },
     };
     try {
@@ -186,24 +143,27 @@ const allUsersAtom = atom({
 
 export function useAllUsersQuery() {
     const allUsers = useRecoilValue(allUserIdsAtom);
-    const loadUsers = useRecoilCallback(({set, snapshot}) => async () => {
-		try {
-			const user = await snapshot.getPromise(userAtom);
-			const allUsers = await fetchAllUsers(user.token);
-			const allUserIds = [];
-			for (const user of allUsers) {
-				const userId = user.id;
-				allUserIds.push(userId);
-				set(userAtomFamily(userId), user);
-			}
-			set(allUserIdsAtom, allUserIds);
-		} catch (e) {
-			return null;
-		}
-			
-    }, []);
+    const loadUsers = useRecoilCallback(
+        ({set, snapshot}) =>
+            async () => {
+                try {
+                    const user = await snapshot.getPromise(userAtom);
+                    const allUsers = await fetchAllUsers(user.token);
+                    const allUserIds = [];
+                    for (const user of allUsers) {
+                        const userId = user.id;
+                        allUserIds.push(userId);
+                        set(userAtomFamily(userId), user);
+                    }
+                    set(allUserIdsAtom, allUserIds);
+                } catch (e) {
+                    return null;
+                }
+            },
+        []
+    );
     // (refetches users each time calling component is newly mounted)
-	useEffect(() => {
+    useEffect(() => {
         loadUsers();
     }, [loadUsers]);
 
@@ -212,19 +172,22 @@ export function useAllUsersQuery() {
 
 export function useAllUsersQueryDetails() {
     const allUsers = useRecoilValue(allUsersAtom);
-    const loadUsers = useRecoilCallback(({set, snapshot}) => async () => {
-		try {
-			const user = await snapshot.getPromise(userAtom);
-			const allUsers = await fetchAllUsers(user.token);
-			
-			set(allUsersAtom, allUsers);
-		} catch (e) {
-			return null;
-		}
-			
-    }, []);
+    const loadUsers = useRecoilCallback(
+        ({set, snapshot}) =>
+            async () => {
+                try {
+                    const user = await snapshot.getPromise(userAtom);
+                    const allUsers = await fetchAllUsers(user.token);
+
+                    set(allUsersAtom, allUsers);
+                } catch (e) {
+                    return null;
+                }
+            },
+        []
+    );
     // (refetches users each time calling component is newly mounted)
-	useEffect(() => {
+    useEffect(() => {
         loadUsers();
     }, [loadUsers]);
 

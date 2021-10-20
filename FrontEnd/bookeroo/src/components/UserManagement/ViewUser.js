@@ -1,10 +1,10 @@
-import { useParams } from 'react-router-dom';
-import { React, Suspense } from 'react';
-import { useUser } from '../../state/user/users';
+import {useParams} from 'react-router-dom';
+import {React, Suspense} from 'react';
+import {useUser} from '../../state/user/users';
 import NoMatch from '../Layout/NoMatch';
 import {Container, Paper, Box} from '@material-ui/core';
-import { UserPofile } from './Profile';
-import { AccountActions } from './AccountActions';
+import {UserPofile} from './Profile';
+import {AccountActions} from './AccountActions';
 
 function UserHeader(props) {
     const {userId} = props;
@@ -16,15 +16,11 @@ function UserHeader(props) {
 }
 
 function UserInfo(props) {
-    return (
-        <UserPofile{...props}/>
-    );
+    return <UserPofile {...props} />;
 }
 
 function AccountInfo(props) {
-    return (
-        <AccountActions{...props}/>
-    );
+    return <AccountActions {...props} />;
 }
 
 export function ViewUserLayout(props) {
@@ -37,18 +33,14 @@ export function ViewUserLayout(props) {
                     flexWrap="wrap"
                     flexDirection="row"
                     justifyContent="space-between"
-                >	
-					<Box
-                        display="flex"
-						flex= "0 0 100%"
-                        flexDirection="row"
-                    >
+                >
+                    <Box display="flex" flex="0 0 100%" flexDirection="row">
                         <UserHeader {...props} />
-                    </Box>	
+                    </Box>
                     <Box
                         maxWidth="sm"
                         display="flex"
-                        flex= "0 0 60%"
+                        flex="0 0 60%"
                         flexWrap="wrap"
                         flexDirection="row"
                         justifyContent="space-around"
@@ -59,7 +51,7 @@ export function ViewUserLayout(props) {
                     <Box
                         display="flex"
                         flexDirection="row"
-                        flex= "0 0 30%"
+                        flex="0 0 30%"
                         justifyContent="space-around"
                     >
                         <Box width="100%">
@@ -75,36 +67,33 @@ export function ViewUserLayout(props) {
 }
 
 function ViewUserContainer({userId}) {
-	const userData = useUser(userId);
+    const userData = useUser(userId);
 
-	if (userData == null) {
-		return <NoMatch />;
-	}
+    if (userData == null) {
+        return <NoMatch />;
+    }
 
-	return (
-		<>
-			<ViewUserLayout
-				{...{...userData, userId}}
-				RightBox={<><h1>User Status</h1></>}
-			/>
-		</>
-	);
+    return (
+        <>
+            <ViewUserLayout {...{...userData, userId}}/>
+        </>
+    );
 }
 
 export function ViewUserSuspense({userId}) {
-  return (
-      <Suspense fallback="loading user">
-          <ViewUserContainer userId={userId} />
-      </Suspense>
-  );
+    return (
+        <Suspense fallback="loading user">
+            <ViewUserContainer userId={userId} />
+        </Suspense>
+    );
 }
 
 export default function ViewUserPage() {
-  const {userId} = useParams();
+    const {userId} = useParams();
 
-  return (
+    return (
         <>
-          <ViewUserSuspense userId={userId} />
-      </>
-  );
+            <ViewUserSuspense userId={userId} />
+        </>
+    );
 }

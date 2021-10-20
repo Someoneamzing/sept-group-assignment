@@ -14,14 +14,14 @@ import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
-import { useAllUsersQueryDetails } from '../../state/user/users';
-import { useHistory } from "react-router-dom";
+import {useAllUsersQueryDetails} from '../../state/user/users';
+import {useHistory} from 'react-router-dom';
 import NoMatch from '../../components/Layout/NoMatch';
 
 function descendingComparator(a, b, orderBy) {
-    if(orderBy === 'authorities'){
-        if(b[orderBy][0].authority < a[orderBy][0].authority) {
-            return -1
+    if (orderBy === 'authorities') {
+        if (b[orderBy][0].authority < a[orderBy][0].authority) {
+            return -1;
         }
         if (b[orderBy][0].authority > a[orderBy][0].authority) {
             return 1;
@@ -57,17 +57,22 @@ const headCells = [
     {id: 'username', numeric: true, disablePadding: false, label: 'Username'},
     {id: 'fullName', numeric: true, disablePadding: false, label: 'Name'},
     {id: 'authorities', numeric: true, disablePadding: false, label: 'Type'},
-    {id: 'enabled', numeric: true, disablePadding: false, label: 'Register Approved'},
-    {id: 'accountNonLocked', numeric: true, disablePadding: false, label: 'Active'},
+    {
+        id: 'enabled',
+        numeric: true,
+        disablePadding: false,
+        label: 'Register Approved',
+    },
+    {
+        id: 'accountNonLocked',
+        numeric: true,
+        disablePadding: false,
+        label: 'Active',
+    },
 ];
 
 function CustomTableHead(props) {
-    const {
-        classes,
-        order,
-        orderBy,
-        onRequestSort,
-    } = props;
+    const {classes, order, orderBy, onRequestSort} = props;
     const createSortHandler = (property) => (event) => {
         onRequestSort(event, property);
     };
@@ -81,6 +86,7 @@ function CustomTableHead(props) {
                         align={headCell.numeric ? 'right' : 'left'}
                         padding={headCell.disablePadding ? 'none' : 'normal'}
                         sortDirection={orderBy === headCell.id ? order : false}
+                        // eslint-disable-next-line react/jsx-no-duplicate-props
                         padding={headCell.id === 1 ? 'checkbox' : null}
                     >
                         <TableSortLabel
@@ -117,7 +123,7 @@ CustomTableHead.propTypes = {
 const useStyles = makeStyles((theme) => ({
     root: {
         width: '100%',
-        padding: '3vw'
+        padding: '3vw',
     },
     paper: {
         width: '100%',
@@ -159,7 +165,7 @@ export default function EnhancedTable() {
     };
 
     const handleClick = (event, id) => {
-        let path = `/user/${id}`; 
+        let path = `/user/${id}`;
         history.push(path);
     };
 
@@ -176,24 +182,26 @@ export default function EnhancedTable() {
         setDense(event.target.checked);
     };
 
-    if(allUsers == null) {
-        return <NoMatch/>;
+    if (allUsers == null) {
+        return <NoMatch />;
     }
-    
-    const emptyRows = rowsPerPage - Math.min(rowsPerPage, allUsers.length - page * rowsPerPage);
+
+    const emptyRows =
+        rowsPerPage -
+        Math.min(rowsPerPage, allUsers.length - page * rowsPerPage);
 
     return (
         <div className={classes.root}>
             <Paper className={classes.paper}>
-            <Toolbar className={classes.toolbar}>
-                <Typography
-                    className={classes.title}
-                    variant="h5"
-                    id="tableTitle"
-                >
-                    Users
-                </Typography>
-            </Toolbar>
+                <Toolbar className={classes.toolbar}>
+                    <Typography
+                        className={classes.title}
+                        variant="h5"
+                        id="tableTitle"
+                    >
+                        Users
+                    </Typography>
+                </Toolbar>
                 <TableContainer>
                     <Table
                         className={classes.table}
@@ -222,9 +230,7 @@ export default function EnhancedTable() {
                                             }
                                             key={user.id}
                                         >
-                                            <TableCell>
-                                                {user.id}
-                                            </TableCell>
+                                            <TableCell>{user.id}</TableCell>
                                             <TableCell align="right">
                                                 {user.username}
                                             </TableCell>
@@ -232,7 +238,9 @@ export default function EnhancedTable() {
                                                 {user.fullName}
                                             </TableCell>
                                             <TableCell align="right">
-                                                {user.authorities.map((a) => a.authority)}
+                                                {user.authorities.map(
+                                                    (a) => a.authority
+                                                )}
                                             </TableCell>
                                             <TableCell align="right">
                                                 {user.enabled.toString()}
