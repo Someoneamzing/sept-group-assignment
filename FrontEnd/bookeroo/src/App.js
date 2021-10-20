@@ -14,6 +14,7 @@ import ViewAllBooksPage from './components/BookManagement/ViewAllBooks';
 import Login from './components/UserManagement/Login';
 import {useResetRecoilState} from 'recoil';
 import {userAtom} from './state/user/authentication';
+import FilterBooksPage from './components/BookManagement/FilterBooks';
 
 function Logout({history}) {
     const resetUser = useResetRecoilState(userAtom);
@@ -45,6 +46,11 @@ function App() {
                         exact
                         path="/book/new"
                         component={AddBookForSaleForm}
+                    />
+                    <Route
+                        exact
+                        path="/books/filter"
+                        component={FilterBooksPage}
                     />
                     <Route exact path="/books" component={ViewAllBooksPage} />
                     <Route path="/book/:bookId" component={ViewBook} />

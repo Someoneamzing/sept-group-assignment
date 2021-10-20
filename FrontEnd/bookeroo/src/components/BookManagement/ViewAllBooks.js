@@ -12,6 +12,7 @@ import searchParamsEffect from '../../state/atom_effects/searchParamsEffect';
 import {useAllBooksQuery} from '../../state/books/books';
 import BookListItem from './BookListItem';
 import CreateBook from './_DEBUG_components/CreateBook';
+import {Link} from 'react-router-dom';
 
 const expandAllAtom = atom({
     key: 'expandAllAtom',
@@ -42,6 +43,11 @@ function ViewAllBooksLayout() {
                         {Math.ceil(allBooks.length / PAGE_SIZE)}
                     </span>
                 </h3>
+                <Link to="/books/filter">
+                    <Button color="primary" variant="contained">
+                        Show Books By Categories
+                    </Button>
+                </Link>
                 <div style={{position: 'absolute', right: 0, top: 0}}>
                     <Box display="flex" flexDirection="row">
                         <FormControlLabel

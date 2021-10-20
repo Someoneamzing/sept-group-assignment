@@ -54,6 +54,23 @@ export const bookAtomFamily = atomFamily({
 //     }
 // };
 
+const fetchFilteredBooks = async (genre) => {
+    const config = {
+        config: 'GET',
+        url: `http://${BOOK_MS_ENDPOINT}/api/books/filter?genre=${genre}`,
+        headers: {
+            'Content-Type': 'application-json',
+        },
+    };
+    try {
+        const res = await axios(config);
+        return [res.data['Genres'], res.data['Books']];
+    } catch (e) {
+        console.log(e);
+        return null;
+    }
+};
+
 const allBookIdsAtom = atom({
     key: 'allBooksIdsAtom_v1',
     default: [],
@@ -78,7 +95,7 @@ export const useAllBooksQuery = (onLoad = true) => {
             },
         []
     );
-    // onLoad refetches books each time calling component is newly mounted
+    // onLoad refetches books each time calling component is newly mounted and optionally if no data loaded
     useEffect(() => {
         if ((!allBooks.length || onLoad) && !loaded) {
             loadBooks();
@@ -100,4 +117,33 @@ export function useBookAtomFamily(bookId) {
     bookId = String(bookId);
     const data = useRecoilValue(bookAtomFamily(bookId));
     return data;
+}
+
+export function FilterPageQuery(genre) {
+    const allBooks = useRecoilValue(allBookIdsAtom);
+    const [genres, setGenres] = useState([]);
+    const loadBooks = useRecoilCallback(
+        ({set}) =>
+            async () => {
+                const allBooksInfo = await fetchFilteredBooks(genre);
+
+                if (allBooksInfo == null) return;
+
+                setGenres(allBooksInfo[0]);
+
+                const allBookIds = [];
+                for (const book of allBooksInfo[1]) {
+                    const bookId = book['id'];
+                    allBookIds.push(bookId);
+                    set(bookAtomFamily(bookId), book);
+                }
+                set(allBookIdsAtom, allBookIds);
+            },
+        [genre]
+    );
+    // (refetches books when genre is changed)
+    useEffect(() => {
+        loadBooks();
+    }, [loadBooks]);
+    return {allBooks, loadBooks, genres};
 }

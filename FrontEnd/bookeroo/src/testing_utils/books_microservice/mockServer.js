@@ -2,6 +2,8 @@ import {rest} from 'msw';
 import {setupServer} from 'msw/node';
 import GET_API_BOOKS_RES, {
     GET_API_BOOKS_SEARCH_FIND_ALL_BY_BOOK_ID,
+    FILTER_PAGE,
+    HORROR_BOOKS,
 } from './api.books';
 
 const EP = 'http://localhost:8081/api';
@@ -11,6 +13,17 @@ const EP = 'http://localhost:8081/api';
 const BookMsServer = setupServer(
     rest.get(EP + '/books/', (req, res, ctx) => {
         return res(ctx.json(GET_API_BOOKS_RES));
+    }),
+    rest.get(EP + '/books/filter', (req, res, ctx) => {
+        const query = req.url.searchParams;
+        const genre = query.get('genre');
+
+        // mock repsonse for different genres
+        if (genre === 'all') {
+            return res(ctx.json(FILTER_PAGE));
+        } else if (genre === 'Horror') {
+            return res(ctx.json(HORROR_BOOKS));
+        }
     }),
     rest.get(EP + '/books/:bookId', (req, res, ctx) => {
         const index = req.params.bookId;
