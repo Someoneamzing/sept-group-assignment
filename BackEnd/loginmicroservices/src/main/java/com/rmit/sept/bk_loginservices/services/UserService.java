@@ -43,10 +43,11 @@ public class UserService {
         newUser.setUsername(newUser.getUsername());
         // User authorities are by default Public
         if(buisness){
-            newUser.setAuthorities(Set.of(UserType.BUSINESS));
+            newUser.setAuthorities(Set.of(UserType.BUSINESS, UserType.PUBLIC));
             newUser.setEnabled(false);
+        } else {
+            newUser.setAuthorities(Set.of(UserType.PUBLIC));
         }
-        newUser.setAuthorities(Set.of(UserType.PUBLIC));
 
         // We don't persist or show the confirmPassword
         newUser.setConfirmPassword("");
