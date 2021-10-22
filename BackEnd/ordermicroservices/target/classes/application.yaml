@@ -1,0 +1,20 @@
+spring:
+  datasource:
+    url: jdbc:h2:file:~/order_db;AUTO_SERVER=TRUE
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+    name: db_orders
+  h2:
+    console:
+      path: /h2-console
+      enabled: true
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+  data:
+    rest:
+      base-path: api/
+server:
+  port: 8082
