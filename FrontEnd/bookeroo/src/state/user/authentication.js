@@ -1,6 +1,9 @@
 import axios from 'axios';
-import {atom} from 'recoil';
+import {atom, useRecoilValue} from 'recoil';
 import {LOGIN_MS_ENDPOINT} from '../../env-vars';
+import {recoilPersist} from 'recoil-persist';
+
+const {persistAtom} = recoilPersist();
 
 const PATH = `http://${LOGIN_MS_ENDPOINT}/api/users/`;
 
@@ -37,4 +40,9 @@ export async function postUserApi(data, endpoint) {
 export const userAtom = atom({
     key: 'userAtom',
     default: null,
+    effects_UNSTABLE: [persistAtom],
 });
+
+export function useAuthUser() {
+    return useRecoilValue(userAtom);
+}

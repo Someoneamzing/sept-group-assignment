@@ -11,7 +11,10 @@ import AddBookForSaleForm from './components/BookManagement/AddBookForSaleForm';
 import NoMatch from './components/Layout/NoMatch';
 import ViewBookForSalePage from './components/BookManagement/ViewBookForSale';
 import ViewAllBooksPage from './components/BookManagement/ViewAllBooks';
+import ViewAllUsers from './components/UserManagement/ViewAllUsers';
+import ViewUser from './components/UserManagement/ViewUser.js';
 import Login from './components/UserManagement/Login';
+import Profile from './components/UserManagement/Profile'
 import { useResetRecoilState } from 'recoil';
 import { userAtom } from './state/user/authentication';
 import FilterBooksPage from './components/BookManagement/FilterBooks';
@@ -54,7 +57,11 @@ function App() {
                         path="/account/:sellerId/book/:bookId"
                         component={ViewBookForSalePage}
                     />
-                    {/* THIS MUST GO AFTER EVERYTHING ELSE */}
+                    <Route exact path="/users" component={ViewAllUsers} />
+                    <Route path="/user/:userId" component={ViewUser} />
+                    <Route exact path="/users/Profile" component={Profile} />
+
+                    {/*!!!!!!!!!!!!! THIS MUST GO AFTER EVERYTHING ELSE !!!!!!!!!!!!!!*/}
                     <Route
                         path="/:sellerId/book/:bookId"
                         component={ViewBookForSalePage}
