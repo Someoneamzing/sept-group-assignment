@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.NoSuchElementException;
-import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -46,9 +45,8 @@ public class UserService {
         if(buisness){
             newUser.setAuthorities(Set.of(UserType.BUSINESS));
             newUser.setEnabled(false);
-        } else {
-            newUser.setAuthorities(Set.of(UserType.PUBLIC));
         }
+        newUser.setAuthorities(Set.of(UserType.PUBLIC));
 
         // We don't persist or show the confirmPassword
         newUser.setConfirmPassword("");
