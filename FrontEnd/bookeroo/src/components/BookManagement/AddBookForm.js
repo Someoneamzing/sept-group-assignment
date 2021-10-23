@@ -95,7 +95,7 @@ export default function AddBookForm({
                         type="date"
                         className="AddBookForm-publishDate"
                         inputProps={{placeholder: ''}}
-                        // shrink="yes"
+                        InputLabelProps={{shrink: true}}
                     />
                     <TextField
                         {...inputProps(formik, 'ISBN', 'isbn')}
