@@ -11,12 +11,13 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 
+import static com.rmit.sept.bk_bookmicroservices.MsBooks.LOGGER;
+
 @MappedSuperclass
 /**
  * Base abstract class for all database entities. Ensures consistent structure for IDs, timestamps and deletion behaviour.
  */
 public abstract class ServiceEntity {
-    private static final Logger log = LoggerFactory.getLogger(ServiceEntity.class);
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,7 +42,7 @@ public abstract class ServiceEntity {
      * Updates the createAt timestamp on creation
      */
     protected void onCreate(){
-        log.info(String.format("OnCreate called for id: %s", this));
+        LOGGER.trace(String.format("Created new entity with id: '%s'", this.id));
         this.createAt = new Date();
         this.updateAt = this.createAt;
     }
@@ -51,6 +52,7 @@ public abstract class ServiceEntity {
      * Updates the updateAt timestamp on updates.
      */
     protected void onUpdate(){
+        LOGGER.trace(String.format("Modified entity with id: '%s'", this.id));
         this.updateAt = new Date();
     }
 
