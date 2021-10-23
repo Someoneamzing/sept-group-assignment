@@ -11,7 +11,7 @@ export default function BookThumbnail({book, ...props}) {
         <div className="BookThumbnail">
             <img
                 src={book.coverArtURL}
-                alt={`Cover Art for ${book.bookTitle}.`}
+                // alt={`Cover Art for ${book.bookTitle}.`}
                 className="BookThumbnail-cover-art"
             />
             <p className="BookThumbnail-title">{book.bookTitle}</p>

@@ -4,6 +4,8 @@ import {Formik} from 'formik';
 import React from 'react';
 import {inputProps} from '../../utils';
 import {createBookForSale} from '../../api';
+import {Container} from '@material-ui/core';
+import Box from '@material-ui/core/Box';
 
 /**
  * A form for adding a BookForSale.
@@ -23,61 +25,69 @@ export default function AddBookForSaleForm({onSubmit, ...props}) {
         },
     };
     return (
-        <Formik {...formikProps}>
-            {(formik) => {
-                return (
-                    <form
-                        onSubmit={formik.handleSubmit}
-                        onReset={formik.handleReset}
-                        data-testid="add-book-for-sale-form"
-                    >
-                        <BookField
-                            {...inputProps(formik, 'Book', 'book')}
-                            placeholder="Select a Book"
-                        />
-                        <TextField
-                            {...inputProps(
-                                formik,
-                                'Sale Price',
-                                'sellPriceInCents'
-                            )}
-                            fullWidth
-                            variant="outlined"
-                            type="number"
-                            InputProps={{
-                                startAdornment: (
-                                    <InputAdornment position="start">
-                                        $
-                                    </InputAdornment>
-                                ),
-                            }}
-                            inputProps={{
-                                step: '0.01',
-                            }}
-                        />
-                        <TextField
-                            {...inputProps(
-                                formik,
-                                'Available Stock',
-                                'availableStock'
-                            )}
-                            fullWidth
-                            variant="outlined"
-                            type="number"
-                            inputProps={{
-                                step: '1',
-                            }}
-                        />
-                        <Button
-                            type="submit"
-                            variant="contained"
-                            color="primary"
+        <Container maxWidth="sm">
+            <h1>Add Books For Sale</h1>
+            <Formik {...formikProps}>
+                {(formik) => {
+                    return (
+                        <form
+                            onSubmit={formik.handleSubmit}
+                            onReset={formik.handleReset}
+                            data-testid="add-book-for-sale-form"
                         >
-                            Submit
-                        </Button>
-                    </form>
-                );
-            }}
-        </Formik>
+                            <BookField
+                                {...inputProps(formik, 'Book', 'book')}
+                                placeholder="Select a Book"
+                            />
+                            <TextField
+                                {...inputProps(
+                                    formik,
+                                    'Sale Price',
+                                    'sellPriceInCents'
+                                )}
+                                fullWidth
+                                variant="outlined"
+                                type="number"
+                                margin="normal"
+                                InputProps={{
+                                    startAdornment: (
+                                        <InputAdornment position="start">
+                                            $
+                                        </InputAdornment>
+                                    ),
+                                }}
+                                inputProps={{
+                                    step: '0.01',
+                                }}
+                            />
+                            <TextField
+                                {...inputProps(
+                                    formik,
+                                    'Available Stock',
+                                    'availableStock'
+                                )}
+                                fullWidth
+                                variant="outlined"
+                                type="number"
+                                margin="normal"
+                                inputProps={{
+                                    step: '1',
+                                }}
+                            />
+                            <Box mt={1}>
+                                <Button
+                                    type="submit"
+                                    variant="contained"
+                                    color="primary"
+                                    fullWidth
+                                >
+                                    Submit
+                                </Button>
+                            </Box>
+                        </form>
+                    );
+                }}
+            </Formik>
+        </Container>
     );
 }

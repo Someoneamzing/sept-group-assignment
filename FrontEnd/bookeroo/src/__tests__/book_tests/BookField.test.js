@@ -81,7 +81,9 @@ describe('BookField', () => {
             // input.value = 'Test Book 1';
             fireEvent.change(input, {target: {value: 'Test Book 1'}});
         });
-        const item = await waitFor(() => screen.getByText('Add Test Book 1'));
+        const item = await waitFor(() =>
+            screen.getByText('Add Test Book 1 to Sale')
+        );
         act(() => {
             fireEvent.click(item);
         });
