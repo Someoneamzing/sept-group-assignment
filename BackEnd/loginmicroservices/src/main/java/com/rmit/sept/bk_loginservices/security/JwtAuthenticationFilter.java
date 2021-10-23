@@ -16,6 +16,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Objects;
 
+import static com.rmit.sept.bk_loginservices.MsLogin.LOGGER;
+
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Autowired
@@ -41,11 +43,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(httpServletRequest));
                 SecurityContextHolder.getContext().setAuthentication(authentication);
-                logger.info(userDetails.getAuthorities());
+                LOGGER.info(userDetails.getAuthorities());
             }
 
         }catch (Exception ex){
-            Objects.requireNonNull(logger).error("Could not set user authentication in security context", ex);
+            LOGGER.error("Could not set user authentication in security context", ex);
         }
 
 

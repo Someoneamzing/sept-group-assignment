@@ -54,6 +54,8 @@ public class BookForSale extends ServiceEntity {
         this.book = book;
     }
 
+    public Long getBookKey() { return this.getBook().getId(); }
+
     public Long getSellerId() {
         return sellerId;
     }

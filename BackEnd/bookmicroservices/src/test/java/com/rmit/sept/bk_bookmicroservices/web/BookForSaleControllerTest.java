@@ -53,9 +53,9 @@ public class BookForSaleControllerTest {
 
         // Initialise a list of test books.
         test_books = List.of(new Book []{
-                new Book("book1", "author1", "publisher1", test_date, "1234567", "data:image/png;base64,abcdefghijklmno",  "-Chapter 1\n- Chapter 2"),
-                new Book("book2", "author2", "publisher2", test_date, "1234567", "data:image/png;base64,abcdefghijklmno",  "-Chapter 1\n- Chapter 2"),
-                new Book("book3", "author3", "publisher3", test_date, "1234567", "data:image/png;base64,abcdefghijklmno",  "-Chapter 1\n- Chapter 2")
+                new Book("book1", "author1", "publisher1", test_date, "1234567", "data:image/png;base64,abcdefghijklmno",  "-Chapter 1\n- Chapter 2", "horror"),
+                new Book("book2", "author2", "publisher2", test_date, "1234567", "data:image/png;base64,abcdefghijklmno",  "-Chapter 1\n- Chapter 2", "horror"),
+                new Book("book3", "author3", "publisher3", test_date, "1234567", "data:image/png;base64,abcdefghijklmno",  "-Chapter 1\n- Chapter 2", "fantasy")
         });
 //        test_books.get(0).setId(0L);
 //        test_books.get(1).setId(2L);
