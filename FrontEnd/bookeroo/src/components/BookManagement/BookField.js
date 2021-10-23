@@ -10,7 +10,7 @@ import {
     DialogContent,
 } from '@material-ui/core';
 import BookThumbnail from './BookThumbnail';
-import {getAllBooks} from '../../api';
+import {getBooks} from '../../api';
 
 /**
  * A filed for selecting a book. Displays a list of already available books and can configurably allow creation of new books.
@@ -29,7 +29,7 @@ export default function BookField({allowCreate, ...props}) {
         if (!loading) return undefined;
 
         (async () => {
-            const books = await getAllBooks();
+            const books = await getBooks();
             if (active) setOptions(books);
         })();
 

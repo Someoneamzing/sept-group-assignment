@@ -1,4 +1,4 @@
-import React, {Suspense, useEffect, useState} from 'react';
+import React, {Suspense} from 'react';
 import {Button, Container, Divider, Paper} from '@material-ui/core';
 import Box from '@material-ui/core/Box';
 import {useParams} from 'react-router-dom';
@@ -9,23 +9,19 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import Reviews, {RatingContainer} from './Reviews';
-import {useBookAtomFamily} from '../../state/books/books';
+import {useRecoilValue} from 'recoil';
+import {bookAtomFamily} from '../../state/books/books';
+import CreateBookDebug from './_DEBUG_components/CreateBook';
 import NoMatch from '../Layout/NoMatch';
 import {useTheme} from '@material-ui/core/styles';
-import {SellerBookTable} from './SellerBookTable';
-import {
-    useBookIdForBookForSaleIds,
-    useSearchBookForSalesQuery,
-} from '../../state/books/booksForSale';
 
-export function BookImage({coverArtURL, width = '234px', height = 'auto'}) {
+function BookImage({coverArtURL}) {
     return (
         <img
             src={coverArtURL}
-            width={width}
-            height={height}
+            width="234px"
             alt="book cover"
-            style={{objectFit: 'cover'}}
+            style={{marginBottom: '1rem'}}
         />
     );
 }
@@ -93,7 +89,7 @@ function BookInfo(props) {
 
 export function ViewBookLayout(props) {
     return (
-        <div data-testid="mainbookview">
+        <div>
             <Container maxWidth="lg">
                 <Box
                     maxWidth="sm"
@@ -129,26 +125,8 @@ export function ViewBookLayout(props) {
     );
 }
 
-function StoreSalesContainer({bookId}) {
-    const {loadBookForSales} = useSearchBookForSalesQuery(bookId, false);
-    const [attempted, setAttempt] = useState(false);
-    const ids = useBookIdForBookForSaleIds(bookId);
-    useEffect(() => {
-        if (!attempted && !ids.length) {
-            loadBookForSales();
-            setAttempt(true);
-        }
-    }, [ids, attempted, loadBookForSales]);
-    return (
-        <>
-            <h3>{ids.length ? 'Available' : 'Unavailable'}</h3>
-            <SellerBookTable bookId={bookId} />
-        </>
-    );
-}
-
 function ViewBookContainer({bookId}) {
-    const bookData = useBookAtomFamily(bookId);
+    const bookData = useRecoilValue(bookAtomFamily(bookId));
 
     if (bookData == null) {
         return <NoMatch />;
@@ -157,11 +135,7 @@ function ViewBookContainer({bookId}) {
         <>
             <ViewBookLayout
                 {...{...bookData, bookId}}
-                RightBox={
-                    <Suspense fallback="Loading Stores">
-                        <StoreSalesContainer bookId={bookId} />
-                    </Suspense>
-                }
+                RightBox={<>Pretend there is a list of sellers here</>}
             />
             <Reviews bookId={bookId} />
         </>
@@ -171,6 +145,7 @@ function ViewBookContainer({bookId}) {
 export function ViewBookSuspense({bookId}) {
     return (
         <Suspense fallback="loading book">
+            <CreateBookDebug />
             <ViewBookContainer bookId={bookId} />
         </Suspense>
     );

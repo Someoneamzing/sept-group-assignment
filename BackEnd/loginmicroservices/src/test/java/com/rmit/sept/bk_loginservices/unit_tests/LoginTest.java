@@ -7,8 +7,6 @@ import com.rmit.sept.bk_loginservices.payload.JWTLoginSuccessResponse;
 import com.rmit.sept.bk_loginservices.payload.LoginRequest;
 import com.rmit.sept.bk_loginservices.security.SecurityConstant;
 import com.rmit.sept.bk_loginservices.web.UserController;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -44,7 +42,7 @@ public class LoginTest {
     private final ObjectMapper oMap = new ObjectMapper();
 
     @BeforeEach
-    void beforeEach() throws JSONException {
+    void beforeEach(){
         userRepository.deleteAll();
         request = new LoginRequest();
         user = RegisterTest.createUser();
@@ -151,41 +149,6 @@ public class LoginTest {
                 )
                 .andExpect(status().isUnauthorized())
                 .andExpect(jsonPath("$.message").value("Full authentication is required to access this resource"));
-    }
-
-    @Test void businessAccountIsDisabled() throws Exception {
-        //      without jwt token included
-        JSONObject userWrapper = RegisterTest.getUserWrapper();
-
-        mockMvc.perform(
-                        post("/api/users/businessRegister")
-                                .content(String.valueOf(userWrapper))
-                                .contentType(MediaType.APPLICATION_JSON)
-                )
-                .andExpect(status().isAccepted());
-
-        request.setUsername("test212@gmail.coM");
-        request.setPassword("123456");
-        mockMvc.perform(
-                        post("/api/users/login")
-                                .content(oMap.writeValueAsString(request))
-                                .contentType(MediaType.APPLICATION_JSON)
-                )
-                .andExpect(status().isUnauthorized());
-    }
-
-    @Test void accountIsLocked() throws Exception{
-        user.setAccountNonLocked(false);
-        userRepository.save(user);
-
-        request.setUsername("test@gmail.com");
-        request.setPassword("123456");
-        mockMvc.perform(
-                        post("/api/users/login")
-                                .content(oMap.writeValueAsString(request))
-                                .contentType(MediaType.APPLICATION_JSON)
-                )
-                .andExpect(status().isUnauthorized());
     }
 }
 

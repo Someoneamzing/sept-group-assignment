@@ -12,5 +12,4 @@ import java.util.List;
  */
 public interface BookForSaleRepository extends JpaRepository<BookForSale, Long> {
     List<BookForSale> getBooksForSaleBySellerId(Long sellerId);
-    List<BookForSale> findAllByBook_Id(Long bookId);
 }

@@ -1,138 +1,46 @@
-import {
-    Box,
-    Button,
-    Container,
-    FormControlLabel,
-    makeStyles,
-    Switch,
-} from '@material-ui/core';
+import {Box, Container} from '@material-ui/core';
 import React, {Suspense} from 'react';
-import {atom, useRecoilState} from 'recoil';
-import searchParamsEffect from '../../state/atom_effects/searchParamsEffect';
-import {useAllBooksQuery} from '../../state/books/books';
-import BookListItem from './BookListItem';
-import CreateBook from './_DEBUG_components/CreateBook';
 import {Link} from 'react-router-dom';
+import {useRecoilValue} from 'recoil';
+import {bookAtomFamily, useAllBooksQuery} from '../../state/books/books';
 
-const expandAllAtom = atom({
-    key: 'expandAllAtom',
-    default: false,
-});
-export const PAGE_SIZE = 5;
+function BookListItem({bookId}) {
+    const bookData = useRecoilValue(bookAtomFamily(bookId));
 
-const listOffsetAtom = atom({
-    key: 'listOffsetAtom',
-    default: 0,
-    effects_UNSTABLE: [searchParamsEffect('offset', 0)],
-});
-
-export function ViewAllBooksLayout({useAllBooks, useExpandAll, useListOffset}) {
-    const {allBooks, loadBooks} = useAllBooks();
-    const [expandAll, setExpandAll] = useExpandAll();
-    const [listOffset] = useListOffset();
-    return (
-        <>
-            <div style={{width: '100%', position: 'relative'}}>
-                <h3 style={{width: '100%', textAlign: 'left'}}>
-                    <span data-testid="bookcount">{allBooks.length} Books</span>{' '}
-                    •{' '}
-                    <span data-testid="bookpagecount">
-                        Page {listOffset / PAGE_SIZE + 1} of{' '}
-                        {Math.ceil(allBooks.length / PAGE_SIZE)}
-                    </span>{' '}
-                </h3>
-                <div style={{position: 'absolute', right: 0, top: 0}}>
-                    <Box display="flex" flexDirection="row">
-                        <FormControlLabel
-                            control={
-                                <Switch
-                                    data-testid="expandall"
-                                    checked={expandAll}
-                                    onChange={() => setExpandAll((x) => !x)}
-                                    color="secondary"
-                                    inputProps={{
-                                        'aria-label': 'Show books for sale',
-                                    }}
-                                />
-                            }
-                            label={expandAll ? 'Expanded ' : 'Compact'}
-                        />
-                    </Box>
-                </div>
-            </div>
-            <Box display="flex" flexDirection="column" width="100%">
-                {allBooks.slice(listOffset, listOffset + PAGE_SIZE).map((n) => (
-                    <Suspense fallback="loading book" key={n}>
-                        <BookListItem bookId={n} expandAll={expandAll} />
-                    </Suspense>
-                ))}
-                <PageControls
-                    totalLength={allBooks.length}
-                    useListOffset={useListOffset}
-                />
-            </Box>
-            <CreateBook reload={() => loadBooks()} />
-        </>
-    );
-}
-
-const useStyles = makeStyles((theme) => ({
-    margin: {
-        margin: theme.spacing(1),
-    },
-}));
-
-function PageControls({totalLength, useListOffset}) {
-    const classes = useStyles();
-    const [listOffset, setListLength] = useListOffset();
+    if (bookData == null) {
+        return 'Book Not Found';
+    }
 
     return (
-        <Box>
-            <Button
-                disabled={listOffset <= 0}
-                variant="contained"
-                color="primary"
-                size="medium"
-                onClick={() => setListLength((x) => x - PAGE_SIZE)}
-                className={classes.margin}
-            >
-                Back
-            </Button>
-            <Button
-                data-testid="nextbutton"
-                disabled={listOffset >= totalLength - PAGE_SIZE}
-                variant="contained"
-                color="primary"
-                size="medium"
-                onClick={() => {
-                    setListLength((x) => x + PAGE_SIZE);
-                    window.scrollTo({top: 0, behavior: 'auto'});
-                }}
-                className={classes.margin}
-            >
-                Next
-            </Button>
+        <Box width="100%">
+            <Link to={`/book/${bookId}`}>
+                {bookData.bookTitle} · {bookData.author}
+            </Link>
         </Box>
     );
 }
 
-export default function ViewAllBooksPage() {
-    const useAllBooks = () => useAllBooksQuery(false);
-    const useExpandAll = () => useRecoilState(expandAllAtom);
-    const useListOffset = () => useRecoilState(listOffsetAtom);
+function ViewAllBooksLayout() {
+    const {allBooks} = useAllBooksQuery();
+
     return (
-        <Container maxWidth="sm">
-            <h1 style={{width: '50%', textAlign: 'left'}}>All Books</h1>
-            <Link to="/books/filter">
-                <Button color="primary" variant="outlined" size="small">
-                    Show Books By Categories
-                </Button>
-            </Link>
-            <ViewAllBooksLayout
-                useAllBooks={useAllBooks}
-                useExpandAll={useExpandAll}
-                useListOffset={useListOffset}
-            />
+        <Container maxWidth="lg">
+            <h1>(debug) view all books</h1>
+            <Box display="flex" flexDirection="column" width="100%">
+                {allBooks.map((n) => (
+                    <Suspense fallback="loading book" key={n}>
+                        <BookListItem bookId={n} />
+                    </Suspense>
+                ))}
+            </Box>
         </Container>
+    );
+}
+
+export default function ViewAllBooksPage() {
+    return (
+        <Suspense fallback="loading all books">
+            <ViewAllBooksLayout />
+        </Suspense>
     );
 }

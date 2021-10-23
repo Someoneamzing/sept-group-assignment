@@ -1,10 +1,10 @@
-import React, { useCallback } from 'react';
-import { useFormik } from 'formik';
-import { TextField, Button } from '@material-ui/core';
-import FilePicker, { VALID_IMAGE_TYPES } from '../FilePicker';
+import React, {useCallback} from 'react';
+import {useFormik} from 'formik';
+import {TextField, Button} from '@material-ui/core';
+import FilePicker, {VALID_IMAGE_TYPES} from '../FilePicker';
 import './AddBookForm.css';
-import { createBook } from '../../api';
-import { inputProps } from '../../utils';
+import {createBook} from '../../api';
+import {inputProps} from '../../utils';
 
 /**
  * The default values used when opening a book form
@@ -31,7 +31,7 @@ export default function AddBookForm({
     defaultValue = {},
 }) {
     const formik = useFormik({
-        initialValues: { ...BOOK_DEFAULT, ...defaultValue },
+        initialValues: {...BOOK_DEFAULT, ...defaultValue},
         async onSubmit(values) {
             console.log('Submitting new book...');
             try {
@@ -79,19 +79,13 @@ export default function AddBookForm({
                         variant="outlined"
                         type="date"
                         className="AddBookForm-publishDate"
-                        inputProps={{ placeholder: '' }}
+                        inputProps={{placeholder: ''}}
                     />
                     <TextField
                         {...inputProps(formik, 'ISBN', 'isbn')}
                         fullWidth
                         variant="outlined"
                         className="AddBookForm-isbn"
-                    />
-                    <TextField
-                        {...inputProps(formik, 'Genre', 'genre')}
-                        fullWidth
-                        variant="outlined"
-                        className="AddBookForm-genre"
                     />
                     <TextField
                         {...inputProps(
