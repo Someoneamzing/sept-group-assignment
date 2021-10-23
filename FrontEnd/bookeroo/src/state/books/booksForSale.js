@@ -1,4 +1,3 @@
-import axios from 'axios';
 import {useEffect, useState} from 'react';
 import {
     atom,
@@ -9,18 +8,21 @@ import {
     useRecoilValue,
 } from 'recoil';
 import {getBookForSalesSearchBookId} from '../../api';
-import {BOOK_MS_ENDPOINT} from '../../env-vars';
+import {atom, selectorFamily, useRecoilValue} from 'recoil';
+import BOOK_AXIOS_INSTANCE from './BookAxiosInstance';
 
 const fetchBookForSale = async (bookId) => {
-    const config = {
-        config: 'GET',
-        url: `http://${BOOK_MS_ENDPOINT}/api/bookForSales/${bookId}`,
-        headers: {
-            'Content-Type': 'application/json',
-        },
-    };
+    // const config = {
+    //     config: 'GET',
+    //     url: `http://${BOOK_MS_ENDPOINT}/api/bookForSales/${bookId}`,
+    //     headers: {
+    //         'Content-Type': 'application/json',
+    //     },
+    // };
     try {
-        const res = await axios(config);
+        const res = await BOOK_AXIOS_INSTANCE.get(
+            `/api/bookForSales/${bookId}`
+        );
         return res.data;
     } catch (e) {
         console.log(e);
