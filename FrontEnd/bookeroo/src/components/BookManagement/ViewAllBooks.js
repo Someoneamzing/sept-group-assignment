@@ -35,24 +35,26 @@ function ViewAllBooksLayout() {
         <Container maxWidth="sm">
             <div style={{width: '100%', position: 'relative'}}>
                 <h1 style={{width: '50%', textAlign: 'left'}}>All Books</h1>
-                <h3 style={{width: '50%', textAlign: 'left'}}>
+                <h3 style={{width: '100%', textAlign: 'left'}}>
                     <span data-testid="bookcount">{allBooks.length} Books</span>{' '}
                     •{' '}
                     <span data-testid="bookpagecount">
                         Page {listOffset / PAGE_SIZE + 1} of{' '}
                         {Math.ceil(allBooks.length / PAGE_SIZE)}
-                    </span>
+                    </span>{' '}
+                    •{' '}
+                    <Link to="/books/filter">
+                        <Button color="primary" variant="outlined" size="small">
+                            Show Books By Categories
+                        </Button>
+                    </Link>
                 </h3>
-                <Link to="/books/filter">
-                    <Button color="primary" variant="contained">
-                        Show Books By Categories
-                    </Button>
-                </Link>
                 <div style={{position: 'absolute', right: 0, top: 0}}>
                     <Box display="flex" flexDirection="row">
                         <FormControlLabel
                             control={
                                 <Switch
+                                    data-testid="expandall"
                                     checked={expandAll}
                                     onChange={() => setExpandAll((x) => !x)}
                                     color="secondary"
@@ -120,9 +122,5 @@ function PageControls({totalLength}) {
 }
 
 export default function ViewAllBooksPage() {
-    return (
-        // <Suspense fallback="loading all books">
-        <ViewAllBooksLayout />
-        // </Suspense>
-    );
+    return <ViewAllBooksLayout />;
 }

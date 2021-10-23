@@ -93,7 +93,7 @@ function BookInfo(props) {
 
 export function ViewBookLayout(props) {
     return (
-        <div>
+        <div data-testid="mainbookview">
             <Container maxWidth="lg">
                 <Box
                     maxWidth="sm"

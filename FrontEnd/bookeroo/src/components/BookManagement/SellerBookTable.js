@@ -60,13 +60,27 @@ function BookForSaleRow({bookForSaleId}) {
     if (row == null) return null;
     return (
         <TableRow key={row.id}>
-            <TableCell component="th" scope="row">
+            <TableCell
+                component="th"
+                scope="row"
+                data-testid={'SBTName_bookId_' + row.bookKey}
+            >
                 <Link to={`/${row.sellerId}/book/${bookForSaleId}`}>
-                    {sellerInfo ? sellerInfo.fullName : row.sellerId}
+                    {sellerInfo
+                        ? sellerInfo.fullName + ' ' + row.sellerId
+                        : row.sellerId}
                 </Link>
             </TableCell>
-            <TableCell align="right">{row.availableStock}</TableCell>
-            <TableCell align="right">
+            <TableCell
+                align="right"
+                data-testid={'SBTStock_bookId' + row.bookKey}
+            >
+                {row.availableStock}
+            </TableCell>
+            <TableCell
+                align="right"
+                data-testid={'SBTPrice_bookId_' + row.bookKey}
+            >
                 ${String(row.sellPriceInCents / 100)}
             </TableCell>
         </TableRow>
