@@ -1,17 +1,18 @@
-import axios from 'axios';
 import {atom, selectorFamily, useRecoilValue, useSetRecoilState} from 'recoil';
-import {BOOK_MS_ENDPOINT} from '../../env-vars';
+import BOOK_AXIOS_INSTANCE from './BookAxiosInstance';
 
 const fetchBookForSale = async (bookId) => {
-    const config = {
-        config: 'GET',
-        url: `http://${BOOK_MS_ENDPOINT}/api/bookForSales/${bookId}`,
-        headers: {
-            'Content-Type': 'application/json',
-        },
-    };
+    // const config = {
+    //     config: 'GET',
+    //     url: `http://${BOOK_MS_ENDPOINT}/api/bookForSales/${bookId}`,
+    //     headers: {
+    //         'Content-Type': 'application/json',
+    //     },
+    // };
     try {
-        const res = await axios(config);
+        const res = await BOOK_AXIOS_INSTANCE.get(
+            `/api/bookForSales/${bookId}`
+        );
         return res.data;
     } catch (e) {
         console.log(e);
