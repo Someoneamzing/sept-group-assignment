@@ -37,7 +37,7 @@ public class Book extends ServiceEntity {
     private String coverArtURL;
     @NotBlank(message = "Table of contents must be provided")
     private String tableOfContents;
-
+    @NotBlank(message="Genre must not be blank")
     private String genre;
 
     public Book(){}

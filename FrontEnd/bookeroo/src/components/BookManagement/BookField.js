@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {useField} from 'formik';
 import AddBookForm from './AddBookForm';
 import Autocomplete from '@material-ui/lab/Autocomplete';
+import Magnify from '../../assets/magnify.jpg';
 import {
     TextField,
     Dialog,
@@ -83,8 +84,10 @@ export default function BookField({allowCreate, ...props}) {
                     );
                     if (params.inputValue.trim() !== '') {
                         filtered.push({
-                            bookTitle: 'Add ' + params.inputValue,
+                            bookTitle: 'Add ' + params.inputValue + ' to Sale',
                             inputValue: params.inputValue,
+                            author: 'Book not found',
+                            coverArtURL: Magnify,
                         });
                     }
                     return filtered;
