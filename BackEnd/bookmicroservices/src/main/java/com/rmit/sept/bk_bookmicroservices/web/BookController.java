@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.rmit.sept.bk_bookmicroservices.services.BookService;
-import com.rmit.sept.bk_bookmicroservices.repositories.BookRepository;
 
 @RestController
 @RequestMapping("/api/books")
