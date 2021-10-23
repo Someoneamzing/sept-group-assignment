@@ -3,7 +3,7 @@
     grid-template-columns: repeat(4, minmax(10rem, 1fr)) 1.5fr;
     grid-template-rows: auto auto 1fr;
     grid-template-areas:
-        'bookTitle bookTitle bookTitle bookTitle coverArt'
+        'bookTitle bookTitle bookTitle genre coverArt'
         'author publisher publishDate isbn coverArt'
         'tableOfContents tableOfContents tableOfContents tableOfContents  coverArt';
     gap: 1em;
@@ -18,6 +18,9 @@
 }
 .AddBookForm-author {
     grid-area: author;
+}
+.AddBookFrom-genre {
+    grid-area: genre;
 }
 .AddBookForm-coverArt {
     grid-area: coverArt;

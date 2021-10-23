@@ -42,6 +42,7 @@ public class BookController {
         return new ResponseEntity<>(jsonObject, HttpStatus.OK);
     }
 
+
     @RequestMapping("/deleteAll")
     public void deleteAll(){
         LOGGER.trace("Deleting all books.");
