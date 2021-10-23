@@ -6,11 +6,11 @@ import {RecoilRoot} from 'recoil';
 export default function Root() {
     return (
         <React.StrictMode>
-            <RecoilRoot>
-                <BrowserRouter>
+            <BrowserRouter>
+                <RecoilRoot>
                     <App />
-                </BrowserRouter>
-            </RecoilRoot>
+                </RecoilRoot>
+            </BrowserRouter>
         </React.StrictMode>
     );
 }

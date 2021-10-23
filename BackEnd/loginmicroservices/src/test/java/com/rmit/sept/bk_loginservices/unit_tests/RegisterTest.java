@@ -55,7 +55,7 @@ class RegisterTest {
         return (CustomResponseEntityExceptionHandler.APIError) response.getBody();
     }
 
-    public JSONObject getUserWrapper() throws JSONException {
+    public static JSONObject getUserWrapper() throws JSONException {
         JSONObject userWrapper = new JSONObject();
 
         JSONObject user_attributes = new JSONObject();
@@ -78,6 +78,8 @@ class RegisterTest {
         user.setFullName("test");
         user.setPassword("123456");
         user.setConfirmPassword("123456");
+        user.setEnabled(true);
+        user.setAccountNonLocked(true);
         return user;
     }
 
