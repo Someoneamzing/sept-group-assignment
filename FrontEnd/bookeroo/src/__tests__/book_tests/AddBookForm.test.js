@@ -3,19 +3,16 @@ import {
     fireEvent,
     render,
     screen,
-    cleanup,
-    waitFor,
-    getByTestId,
 } from '@testing-library/react';
-import AddBookForm from '../components/BookManagement/AddBookForm.js';
-import FilePicker from '../components/FilePicker.js';
-import {createBook} from '../api.js';
+import AddBookForm from '../../components/BookManagement/AddBookForm.js';
+import FilePicker from '../../components/FilePicker.js';
+import {createBook} from '../../api.js';
 
 //The contents of this object do not matter, just the identity of it.
 const SAMPLE_BOOK_CREATE_RESPONSE = {data: true, value: 'foo', bar: 1};
 
-jest.mock('../components/FilePicker.js');
-jest.mock('../api.js', () => ({
+jest.mock('../../components/FilePicker.js');
+jest.mock('../../api.js', () => ({
     __esModule: true,
     createBook: jest.fn(),
 }));

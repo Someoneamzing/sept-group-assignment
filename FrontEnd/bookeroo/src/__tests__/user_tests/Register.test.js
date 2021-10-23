@@ -1,10 +1,10 @@
 import React from 'react';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
-import Register from '../components/UserManagement/Register';
-import BusinessRegister from '../components/UserManagement/BusinessRegister';
+import Register from '../../components/UserManagement/Register';
+import BusinessRegister from '../../components/UserManagement/BusinessRegister';
 import { setupServer } from 'msw/node';
 import { rest } from 'msw';
-import MockRoot from '../testing_utils/MockRoot';
+import MockRoot from '../../testing_utils/MockRoot';
 
 // mock responses
 const createdResponse = {

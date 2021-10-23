@@ -3,7 +3,7 @@ import {act, fireEvent, render, screen, cleanup} from '@testing-library/react';
 import FilePicker, {
     getDataURIMimeType,
     getFileDataURL,
-} from '../components/FilePicker';
+} from '../../components/FilePicker';
 
 describe('getFileDataURL()', () => {
     const file = new File([new ArrayBuffer(1)], 'image.png');

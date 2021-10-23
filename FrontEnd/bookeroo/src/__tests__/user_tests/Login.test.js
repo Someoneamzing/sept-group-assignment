@@ -7,12 +7,12 @@ import {
     waitForElementToBeRemoved,
     act,
 } from '@testing-library/react';
-import Root from '../Root';
-import MockRoot from '../testing_utils/MockRoot';
+import Root from '../../Root';
+import MockRoot from '../../testing_utils/MockRoot';
 // mock api server for loginmicroservices endpoint
-import '../testing_utils/login_microservice/mockServer';
+import '../../testing_utils/login_microservice/mockServer';
 import {createMemoryHistory} from 'history';
-import Login from '../components/UserManagement/Login';
+import Login from '../../components/UserManagement/Login';
 
 /**
 GIVEN I am on the bookeroo website,

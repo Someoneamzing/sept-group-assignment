@@ -3,16 +3,13 @@ import {
     fireEvent,
     render,
     screen,
-    cleanup,
-    waitFor,
-    getByTestId,
 } from '@testing-library/react';
-import BookField from '../components/BookManagement/BookField.js';
-import AddBookForSaleForm from '../components/BookManagement/AddBookForSaleForm.js';
-import {createBookForSale} from '../api.js';
+import BookField from '../../components/BookManagement/BookField.js';
+import AddBookForSaleForm from '../../components/BookManagement/AddBookForSaleForm.js';
+import {createBookForSale} from '../../api.js';
 
-jest.mock('../components/BookManagement/BookField.js');
-jest.mock('../api.js');
+jest.mock('../../components/BookManagement/BookField.js');
+jest.mock('../../api.js');
 
 // Simple test data. The actual data does not matter, just the identity.
 const SAMPLE_BOOK_FOR_SALE_RESPONSE = {data: 1, foo: 'bar', value: false};

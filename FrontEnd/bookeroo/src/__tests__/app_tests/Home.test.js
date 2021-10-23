@@ -1,8 +1,8 @@
 import {fireEvent, render, screen} from '@testing-library/react';
-import Home from '../pages/Home';
+import Home from '../../pages/Home';
 import {createMemoryHistory} from 'history';
-import App from '../App';
-import MockRoot from '../testing_utils/MockRoot';
+import App from '../../App';
+import MockRoot from '../../testing_utils/MockRoot';
 
 const renderApp = () => {
     const history = createMemoryHistory();

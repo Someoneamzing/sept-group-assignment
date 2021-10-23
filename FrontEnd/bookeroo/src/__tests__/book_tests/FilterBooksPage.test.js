@@ -1,12 +1,12 @@
 import React from 'react';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
-import MockRoot from '../testing_utils/MockRoot';
-import { FilterBooksPage, FilterBooksLayout } from '../components/BookManagement/FilterBooks';
+import MockRoot from '../../testing_utils/MockRoot';
+import {FilterBooksLayout } from '../../components/BookManagement/FilterBooks';
 // import 
 
 
 // add mock book microservice to testing context
-import '../testing_utils/books_microservice/mockServer';
+import '../../testing_utils/books_microservice/mockServer';
 import { act } from 'react-dom/test-utils';
 
 // GIVEN the user goes to the filter page

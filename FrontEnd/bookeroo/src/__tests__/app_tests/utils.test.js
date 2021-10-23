@@ -1,4 +1,4 @@
-import {inputProps} from '../utils';
+import {inputProps} from '../../utils';
 
 describe('inputProps()', () => {
     const formikMock = {
