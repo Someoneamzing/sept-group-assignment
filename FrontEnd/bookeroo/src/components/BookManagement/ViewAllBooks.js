@@ -18,7 +18,6 @@ const expandAllAtom = atom({
     key: 'expandAllAtom',
     default: false,
 });
-
 export const PAGE_SIZE = 5;
 
 const listOffsetAtom = atom({

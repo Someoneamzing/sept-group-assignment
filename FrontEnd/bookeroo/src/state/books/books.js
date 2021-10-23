@@ -1,5 +1,6 @@
-import axios from 'axios';
 import {useEffect, useState} from 'react';
+import BOOK_AXIOS_INSTANCE from './BookAxiosInstance';
+
 import {
     atom,
     atomFamily,
@@ -7,19 +8,12 @@ import {
     useRecoilCallback,
     useRecoilValue,
 } from 'recoil';
+
 import {getAllBooks} from '../../api';
-import {BOOK_MS_ENDPOINT} from '../../env-vars';
 
 const fetchBook = async (bookId) => {
-    const config = {
-        config: 'GET',
-        url: `http://${BOOK_MS_ENDPOINT}/api/books/${bookId}`,
-        headers: {
-            'Content-Type': 'application/json',
-        },
-    };
     try {
-        const res = await axios(config);
+        const res = await BOOK_AXIOS_INSTANCE.get(`/api/books/${bookId}`);
         return res.data;
     } catch (e) {
         return null;
@@ -37,33 +31,23 @@ export const bookAtomFamily = atomFamily({
     }),
 });
 
-// const fetchAllBooks = async () => {
-//     const config = {
-//         config: 'GET',
-//         url: `http://${BOOK_MS_ENDPOINT}/api/books/`,
-//         headers: {
-//             'Content-Type': 'application-json',
-//         },
-//     };
-//     try {
-//         const res = await axios(config);
-//         return res.data._embedded.books;
-//     } catch (e) {
-//         console.log(e);
-//         return null;
-//     }
-// };
+const fetchAllBooks = async () => {
+    try {
+        const res = await BOOK_AXIOS_INSTANCE.get('/api/books/');
+        return res.data._embedded.books;
+    } catch (e) {
+        console.log(e);
+        return null;
+    }
+};
 
 const fetchFilteredBooks = async (genre) => {
-    const config = {
-        config: 'GET',
-        url: `http://${BOOK_MS_ENDPOINT}/api/books/filter?genre=${genre}`,
-        headers: {
-            'Content-Type': 'application-json',
-        },
-    };
     try {
-        const res = await axios(config);
+        const res = await BOOK_AXIOS_INSTANCE.get(`/api/books/filter`, {
+            params: {
+                genre: `${genre}`,
+            },
+        });
         return [res.data['Genres'], res.data['Books']];
     } catch (e) {
         console.log(e);
