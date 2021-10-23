@@ -1,6 +1,6 @@
-import TEST_BOOKS from '../testingUtils/books_microservice/api.books';
-import '../testingUtils/books_microservice/mockServer';
-import {createBook, getBooks} from '../api';
+import {GET_API_BOOKS_RES} from '../../testing_utils/books_microservice/api.books';
+import '../../testing_utils/books_microservice/mockServer';
+import {createBook, getBooks} from '../../api';
 import axios from 'axios';
 jest.mock('axios', () => {
     const originalAxios = jest.requireActual('axios');
@@ -13,7 +13,7 @@ jest.mock('axios', () => {
 
 describe('getBooks()', () => {
     test('should return the list of books', async () => {
-        expect(await getBooks()).toStrictEqual(TEST_BOOKS._embedded.books);
+        expect(await getBooks()).toStrictEqual(GET_API_BOOKS_RES._embedded.books);
     });
 });
 

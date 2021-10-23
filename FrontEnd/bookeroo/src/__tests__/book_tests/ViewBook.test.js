@@ -1,11 +1,11 @@
 import React from 'react';
 import {fireEvent, render, screen, waitFor} from '@testing-library/react';
-import Root from '../Root';
-import MockRoot from '../testing_utils/MockRoot';
-import {ViewBookSuspense} from '../components/BookManagement/ViewBook';
+import Root from '../../Root';
+import MockRoot from '../../testing_utils/MockRoot';
+import {ViewBookSuspense} from '../../components/BookManagement/ViewBook';
 
 // add mock book microservice to testing context
-import '../testing_utils/books_microservice/mockServer';
+import '../../testing_utils/books_microservice/mockServer';
 import {createMemoryHistory} from 'history';
 
 /*

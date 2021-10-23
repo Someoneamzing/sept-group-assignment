@@ -4,22 +4,20 @@ import {
     fireEvent,
     render,
     screen,
-    cleanup,
     waitFor,
-    getByTestId,
 } from '@testing-library/react';
 
-import {getBooks} from '../api';
+import {getBooks} from '../../api';
 import {Formik} from 'formik';
-import TEST_BOOKS from '../testingUtils/books_microservice/api.books';
-import BookField from '../components/BookManagement/BookField';
-import '../testingUtils/books_microservice/mockServer';
+import {GET_API_BOOKS_RES} from '../../testing_utils/books_microservice/api.books';
+import BookField from '../../components/BookManagement/BookField';
+import '../../testing_utils/books_microservice/mockServer';
 process.on('unhandledRejection', (err) => {
     console.error(err);
 });
 
-jest.mock('../api', () => {
-    const originalAPI = jest.requireActual('../api.js');
+jest.mock('../../api', () => {
+    const originalAPI = jest.requireActual('../../api.js');
     return {
         __esModule: true,
         ...originalAPI,
@@ -32,7 +30,7 @@ describe('BookField', () => {
     const promise = Promise.resolve();
     // getBooks.mockResolvedValue(TEST_BOOKS);
     test('should display all books when user focusses', async () => {
-        getBooks.mockResolvedValue(TEST_BOOKS._embedded.books.slice(0, 3));
+        getBooks.mockResolvedValue(GET_API_BOOKS_RES._embedded.books.slice(0, 3));
         await act(async () => {
             render(
                 <Formik initialValues={{book: null}}>
@@ -59,7 +57,7 @@ describe('BookField', () => {
     });
 
     test('should display "Add x" option for search terms that aren\'t found that opens the add book dialog', async () => {
-        getBooks.mockResolvedValue(TEST_BOOKS._embedded.books.slice(0, 3));
+        getBooks.mockResolvedValue(GET_API_BOOKS_RES._embedded.books.slice(0, 3));
         await act(async () => {
             render(
                 <Formik initialValues={{book: null}}>

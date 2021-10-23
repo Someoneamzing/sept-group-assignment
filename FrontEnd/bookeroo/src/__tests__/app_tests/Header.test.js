@@ -1,8 +1,7 @@
-import App from '../App';
+import App from '../../App';
 import {fireEvent, render, screen} from '@testing-library/react';
-import {BrowserRouter} from 'react-router-dom';
 import {createMemoryHistory} from 'history';
-import MockRoot from '../testing_utils/MockRoot';
+import MockRoot from '../../testing_utils/MockRoot';
 
 const renderApp = () => {
     const history = createMemoryHistory();
