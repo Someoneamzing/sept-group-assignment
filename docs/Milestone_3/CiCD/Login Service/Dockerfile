@@ -1,0 +1,11 @@
+FROM adoptopenjdk/openjdk11:alpine
+ENV APP_FILE loginmicroservices-2.5.4.jar
+ENV APP_HOME /usr/apps
+ARG CIRCLE_BRANCH
+ARG CIRCLE_SHA1
+ENV CIRCLE_BRANCH_SHA1=${CIRCLE_BRANCH}_${CIRCLE_SHA1}
+EXPOSE $SERVER_PORT
+COPY target/$APP_FILE $APP_HOME/
+WORKDIR $APP_HOME
+ENTRYPOINT ["sh", "-c"]
+CMD ["echo $CIRCLE_BRANCH && exec java -jar $APP_FILE"]
