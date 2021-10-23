@@ -3,11 +3,9 @@ package com.rmit.sept.bk_loginservices.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.validator.constraints.UniqueElements;
-import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
@@ -19,12 +17,9 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static org.springframework.security.core.authority.AuthorityUtils.authorityListToSet;
-
 
 @Entity
 public class User implements UserDetails {
-    private static final long serialVersionUID = 6529685098267757690L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -49,11 +44,7 @@ public class User implements UserDetails {
     @ElementCollection
     @UniqueElements
     private Collection<String> authorities = new HashSet<>();
-    private Boolean AccountNonLocked = true;
-    private Boolean enabled = true;
 
-    public User() {
-    }
 
     public BusinessInfo getBusinessInfo() {
         return businessInfo;
@@ -61,6 +52,9 @@ public class User implements UserDetails {
 
     public void setBusinessInfo(BusinessInfo businessInfo) {
         this.businessInfo = businessInfo;
+    }
+
+    public User() {
     }
 
     public Long getId() {
@@ -122,22 +116,14 @@ public class User implements UserDetails {
     }
 
     @PrePersist
-    protected void onCreate() {
+    protected void onCreate(){
         this.create_At = new Date();
     }
 
     @PreUpdate
-    protected void onUpdate() {
+    protected void onUpdate(){
         this.update_At = new Date();
     }
-
-//    public boolean isActive() {
-//        return active;
-//    }
-//
-//    public void setActive(boolean active) {
-//        this.active = active;
-//    }
 
     /*
     UserDetails interface methods
@@ -149,17 +135,8 @@ public class User implements UserDetails {
         return this.authorities.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toSet());
     }
 
-    @JsonIgnore
-    public Set<String> getAuthoritiesSet() {
-        return this.authorities.stream().map(String::new).collect(Collectors.toSet());
-    }
-
     public void setAuthorities(Set<String> authorities) {
         this.authorities = authorities;
-    }
-
-    public void setAuthoritiesByCollection(Collection<? extends GrantedAuthority> authorities) {
-        this.authorities = authorityListToSet(authorities);
     }
 
     @Override
@@ -168,18 +145,10 @@ public class User implements UserDetails {
         return true;
     }
 
-    @JsonIgnore
-    public Boolean isAccountNonLockedBool() {
-        return this.AccountNonLocked;
-    }
-
-    public void setAccountNonLocked(boolean AccountNonLocked) {
-        this.AccountNonLocked = AccountNonLocked;
-    }
-
     @Override
+    @JsonIgnore
     public boolean isAccountNonLocked() {
-        return this.AccountNonLocked;
+        return true;
     }
 
     @Override
@@ -189,14 +158,8 @@ public class User implements UserDetails {
     }
 
     @Override
-    public boolean isEnabled() {
-        return this.enabled;
-    }
-
     @JsonIgnore
-    public Boolean isEnabledBool() {
-        return this.enabled;
+    public boolean isEnabled() {
+        return true;
     }
-
-    public void setEnabled(boolean enabled) { this.enabled = enabled; }
 }

@@ -36,7 +36,7 @@ const useStyles = makeStyles((theme) => ({
     },
     menuButton: {
         marginRight: theme.spacing(2),
-        [theme.breakpoints.up('md')]: {
+        [theme.breakpoints.up('sm')]: {
             display: 'none',
         },
     },
@@ -63,13 +63,12 @@ const defaultLinks = {
 };
 
 const authedLinks = {
-    Profile: '/users/profile',
     Logout: '/logout',
 };
 
 const businessLinks = {Store: '/store'};
 
-const adminLinks = {Admin: '/users'};
+const adminLinks = {Admin: '/admin'};
 
 const unauthedLinks = {
     Register: '/register',
@@ -113,10 +112,7 @@ function Header() {
                         onClick={handleDrawerToggle}
                     >
                         <ListItem key={menuTitle} button>
-                            <ListItemText
-                                primary={menuTitle}
-                                className={classes.menuLink}
-                            />
+                            <ListItemText primary={menuTitle} />
                         </ListItem>
                     </Link>
                 ))}
@@ -148,14 +144,10 @@ function Header() {
                     </Link>
 
                     {/* Menu for Desktop*/}
-                    <Hidden smDown implementation="css">
+                    <Hidden xsDown implementation="css">
                         {Object.entries(menuItems).map(
                             ([menuTitle, pageURL]) => (
-                                <Link
-                                    to={pageURL}
-                                    key={menuTitle}
-                                    style={{textDecoration: 'none'}}
-                                >
+                                <Link to={pageURL} key={menuTitle}>
                                     <Button className={classes.menuItemDesktop}>
                                         {menuTitle}
                                     </Button>

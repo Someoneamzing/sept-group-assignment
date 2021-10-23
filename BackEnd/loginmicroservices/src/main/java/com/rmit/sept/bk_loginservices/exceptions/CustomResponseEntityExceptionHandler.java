@@ -14,8 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import static com.rmit.sept.bk_loginservices.MsLogin.LOGGER;
-
 @ControllerAdvice
 @RestController
 public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
@@ -41,7 +39,6 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     @ExceptionHandler(javax.validation.ConstraintViolationException.class)
     public ResponseEntity<APIError> handleConstraintViolationException(javax.validation.ConstraintViolationException exception) {
-        LOGGER.debug("Caught API Error. Responding with BAD REQUEST.");
         APIError apiError = new APIError(exception.getConstraintViolations());
         return ResponseEntity.badRequest().body(apiError);
     }
@@ -50,7 +47,6 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     @ExceptionHandler(ConstraintViolationException.class)
     public final ResponseEntity<Object> handleCustomConstraintViolationException(ConstraintViolationException ex){
-        LOGGER.debug("Caught API Error. Responding with BAD REQUEST.");
         ConstraintViolationExceptionResponse exceptionResponse = new ConstraintViolationExceptionResponse(ex.getMessage());
         return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
     }

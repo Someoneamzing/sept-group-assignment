@@ -11,13 +11,9 @@ import AddBookForSaleForm from './components/BookManagement/AddBookForSaleForm';
 import NoMatch from './components/Layout/NoMatch';
 import ViewBookForSalePage from './components/BookManagement/ViewBookForSale';
 import ViewAllBooksPage from './components/BookManagement/ViewAllBooks';
-import ViewAllUsers from './components/UserManagement/ViewAllUsers';
-import ViewUser from './components/UserManagement/ViewUser.js';
 import Login from './components/UserManagement/Login';
-import Profile from './components/UserManagement/Profile'
 import { useResetRecoilState } from 'recoil';
 import { userAtom } from './state/user/authentication';
-import FilterBooksPage from './components/BookManagement/FilterBooks';
 
 function Logout({ history }) {
     const resetUser = useResetRecoilState(userAtom);
@@ -46,22 +42,13 @@ function App() {
                         path="/book/new"
                         component={AddBookForSaleForm}
                     />
-                    <Route
-                        exact
-                        path="/books/filter"
-                        component={FilterBooksPage}
-                    />
                     <Route exact path="/books" component={ViewAllBooksPage} />
                     <Route path="/book/:bookId" component={ViewBook} />
                     <Route
                         path="/account/:sellerId/book/:bookId"
                         component={ViewBookForSalePage}
                     />
-                    <Route exact path="/users" component={ViewAllUsers} />
-                    <Route path="/user/:userId" component={ViewUser} />
-                    <Route exact path="/users/Profile" component={Profile} />
-
-                    {/*!!!!!!!!!!!!! THIS MUST GO AFTER EVERYTHING ELSE !!!!!!!!!!!!!!*/}
+                    {/* THIS MUST GO AFTER EVERYTHING ELSE */}
                     <Route
                         path="/:sellerId/book/:bookId"
                         component={ViewBookForSalePage}

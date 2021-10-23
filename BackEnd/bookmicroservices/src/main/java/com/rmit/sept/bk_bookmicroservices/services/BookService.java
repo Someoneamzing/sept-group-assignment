@@ -5,9 +5,6 @@ import com.rmit.sept.bk_bookmicroservices.repositories.BookForSaleRepository;
 import com.rmit.sept.bk_bookmicroservices.repositories.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import static com.rmit.sept.bk_bookmicroservices.MsBooks.LOGGER;
-
-import java.util.List;
 
 @Service
 /**
@@ -25,16 +22,5 @@ public class BookService {
         this.bookForSaleRepository = bookForSaleRepository;
     }
 
-    public List<Book> getAllBooks(){
-        return bookRepository.findAll();
-    }
-
-    public List<String> getAllCategories(){
-        return bookRepository.findAllCategories();
-    }
-
-    public List<Book> getBookByGenre(String genre){
-        return bookRepository.findAllByGenre(genre);
-    }
 
 }

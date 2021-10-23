@@ -1,22 +1,11 @@
 package com.rmit.sept.bk_bookmicroservices.web;
 
-import com.rmit.sept.bk_bookmicroservices.repositories.BookRepository;
-import com.rmit.sept.bk_bookmicroservices.services.BookService;
-import net.minidev.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import static com.rmit.sept.bk_bookmicroservices.MsBooks.LOGGER;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
-
-/**
- * Unused controller used as a placeholder for future behaviour.
- */
-@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/books")
 public class BookController {

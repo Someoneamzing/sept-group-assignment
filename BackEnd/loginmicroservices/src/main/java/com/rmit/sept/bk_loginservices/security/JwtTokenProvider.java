@@ -9,15 +9,12 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.rmit.sept.bk_loginservices.MsLogin.LOGGER;
-
 @Component
 public class JwtTokenProvider {
 
     //Generate the token
 
     public String generateToken(Authentication authentication){
-        LOGGER.debug(String.format("Generating new user token for %s", ((User)authentication.getPrincipal()).getUsername()));
         User user = (User)authentication.getPrincipal();
         Date now = new Date(System.currentTimeMillis());
 
@@ -45,15 +42,15 @@ public class JwtTokenProvider {
             Jwts.parser().setSigningKey(SecurityConstant.SECRET).parseClaimsJws(token);
             return true;
         }catch (SignatureException ex){
-            LOGGER.error("Invalid JWT Signature");
+            System.out.println("Invalid JWT Signature");
         }catch (MalformedJwtException ex){
-            LOGGER.error("Invalid JWT Token");
+            System.out.println("Invalid JWT Token");
         }catch (ExpiredJwtException ex){
-            LOGGER.error("Expired JWT token");
+            System.out.println("Expired JWT token");
         }catch (UnsupportedJwtException ex){
-            LOGGER.error("Unsupported JWT token");
+            System.out.println("Unsupported JWT token");
         }catch (IllegalArgumentException ex){
-            LOGGER.error("JWT claims string is empty");
+            System.out.println("JWT claims string is empty");
         }
         return false;
     }
