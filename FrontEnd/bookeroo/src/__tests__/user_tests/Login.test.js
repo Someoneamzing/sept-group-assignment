@@ -5,14 +5,14 @@ import {
     screen,
     waitFor,
     waitForElementToBeRemoved,
+    act,
 } from '@testing-library/react';
 import Root from '../../Root';
 import MockRoot from '../../testing_utils/MockRoot';
 // mock api server for loginmicroservices endpoint
 import '../../testing_utils/login_microservice/mockServer';
 import {createMemoryHistory} from 'history';
-import App from '../App';
-import Login from '../components/UserManagement/Login';
+import Login from '../../components/UserManagement/Login';
 
 /**
 GIVEN I am on the bookeroo website,
@@ -57,23 +57,24 @@ THEN The system logs me in.
 */
 test('Scenario 2: I want to log in as a business owner with my credentials', async () => {
     const history = createMemoryHistory();
-    history.push('/login/');
-    render(
-        <MockRoot history={history}>
-            <App />
-        </MockRoot>
-    );
-    const username = screen.getByLabelText('User Name');
+    history.push('/login');
+    await act(async () => {
+        render(
+            <MockRoot history={history}>
+                <Login />
+            </MockRoot>
+        );
+        await Promise.resolve();
+    });
+    const username = await waitFor(() => screen.getByLabelText('User Name'));
     const password = screen.getByLabelText('Password');
     const signIn = screen.getByText('Sign In');
     fireEvent.change(username, {target: {value: 'business@b.c'}});
     fireEvent.change(password, {target: {value: 'abc123'}});
     fireEvent.click(signIn);
-    await waitForElementToBeRemoved(signIn);
-    expect(screen.queryAllByText('Admin').length).toEqual(0);
-    expect(screen.queryAllByText('Logout').length).toBeGreaterThan(0);
-    expect(screen.queryAllByText('Store').length).toBeGreaterThan(0);
-    expect(screen.queryAllByText('Books').length).toBeGreaterThan(0);
+    await waitFor(() => {
+        expect(history.location.pathname).toBe('/')
+    });
 });
 
 /**
@@ -83,23 +84,24 @@ THEN The system logs me in.
 */
 test('Scenario 3: I want to log in as an admin with my credentials', async () => {
     const history = createMemoryHistory();
-    history.push('/login/');
-    render(
-        <MockRoot history={history}>
-            <App />
-        </MockRoot>
-    );
-    const username = screen.getByLabelText('User Name');
+    history.push('/login');
+    await act(async () => {
+        render(
+            <MockRoot history={history}>
+                <Login />
+            </MockRoot>
+        );
+        await Promise.resolve();
+    });
+    const username = await waitFor(() => screen.getByLabelText('User Name'));
     const password = screen.getByLabelText('Password');
     const signIn = screen.getByText('Sign In');
     fireEvent.change(username, {target: {value: 'admin@b.c'}});
     fireEvent.change(password, {target: {value: 'abc123'}});
     fireEvent.click(signIn);
-    await waitForElementToBeRemoved(signIn);
-    expect(screen.queryAllByText('Admin').length).toBeGreaterThan(0);
-    expect(screen.queryAllByText('Logout').length).toBeGreaterThan(0);
-    expect(screen.queryAllByText('Store').length).toBeGreaterThan(0);
-    expect(screen.queryAllByText('Books').length).toBeGreaterThan(0);
+    await waitFor(() => {
+        expect(history.location.pathname).toBe('/')
+    });
 });
 
 /**

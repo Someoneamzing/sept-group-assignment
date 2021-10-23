@@ -11,12 +11,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+import static com.rmit.sept.bk_loginservices.MsLogin.LOGGER;
+
 @Component
 public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
     @Override
     public void commence(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
                          AuthenticationException e) throws IOException, ServletException {
+        LOGGER.debug("Caught Unauthorised request. Responding with UNAUTHORISED");
 
         ConstraintViolationExceptionResponse response = new ConstraintViolationExceptionResponse(e.getMessage());
         String jsonResponse = new Gson().toJson(response);
