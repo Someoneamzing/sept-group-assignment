@@ -7,7 +7,7 @@ import {
     Switch,
 } from '@material-ui/core';
 import React, {Suspense} from 'react';
-import {atom, useRecoilState, useRecoilValue} from 'recoil';
+import {atom, useRecoilState} from 'recoil';
 import searchParamsEffect from '../../state/atom_effects/searchParamsEffect';
 import {useAllBooksQuery} from '../../state/books/books';
 import BookListItem from './BookListItem';
@@ -26,14 +26,13 @@ const listOffsetAtom = atom({
     effects_UNSTABLE: [searchParamsEffect('offset', 0)],
 });
 
-function ViewAllBooksLayout() {
-    const {allBooks, loadBooks} = useAllBooksQuery(false);
-    const [expandAll, setExpandAll] = useRecoilState(expandAllAtom);
-    const listOffset = useRecoilValue(listOffsetAtom);
+export function ViewAllBooksLayout({useAllBooks, useExpandAll, useListOffset}) {
+    const {allBooks, loadBooks} = useAllBooks();
+    const [expandAll, setExpandAll] = useExpandAll();
+    const [listOffset] = useListOffset();
     return (
-        <Container maxWidth="sm">
+        <>
             <div style={{width: '100%', position: 'relative'}}>
-                <h1 style={{width: '50%', textAlign: 'left'}}>All Books</h1>
                 <h3 style={{width: '100%', textAlign: 'left'}}>
                     <span data-testid="bookcount">{allBooks.length} Books</span>{' '}
                     •{' '}
@@ -41,12 +40,6 @@ function ViewAllBooksLayout() {
                         Page {listOffset / PAGE_SIZE + 1} of{' '}
                         {Math.ceil(allBooks.length / PAGE_SIZE)}
                     </span>{' '}
-                    •{' '}
-                    <Link to="/books/filter">
-                        <Button color="primary" variant="outlined" size="small">
-                            Show Books By Categories
-                        </Button>
-                    </Link>
                 </h3>
                 <div style={{position: 'absolute', right: 0, top: 0}}>
                     <Box display="flex" flexDirection="row">
@@ -73,10 +66,13 @@ function ViewAllBooksLayout() {
                         <BookListItem bookId={n} expandAll={expandAll} />
                     </Suspense>
                 ))}
-                <PageControls totalLength={allBooks.length} />
+                <PageControls
+                    totalLength={allBooks.length}
+                    useListOffset={useListOffset}
+                />
             </Box>
             <CreateBook reload={() => loadBooks()} />
-        </Container>
+        </>
     );
 }
 
@@ -86,9 +82,9 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-function PageControls({totalLength}) {
+function PageControls({totalLength, useListOffset}) {
     const classes = useStyles();
-    const [listOffset, setListLength] = useRecoilState(listOffsetAtom);
+    const [listOffset, setListLength] = useListOffset();
 
     return (
         <Box>
@@ -121,5 +117,22 @@ function PageControls({totalLength}) {
 }
 
 export default function ViewAllBooksPage() {
-    return <ViewAllBooksLayout />;
+    const useAllBooks = () => useAllBooksQuery(false);
+    const useExpandAll = () => useRecoilState(expandAllAtom);
+    const useListOffset = () => useRecoilState(listOffsetAtom);
+    return (
+        <Container maxWidth="sm">
+            <h1 style={{width: '50%', textAlign: 'left'}}>All Books</h1>
+            <Link to="/books/filter">
+                <Button color="primary" variant="outlined" size="small">
+                    Show Books By Categories
+                </Button>
+            </Link>
+            <ViewAllBooksLayout
+                useAllBooks={useAllBooks}
+                useExpandAll={useExpandAll}
+                useListOffset={useListOffset}
+            />
+        </Container>
+    );
 }

@@ -8,7 +8,6 @@ import {
     useRecoilValue,
 } from 'recoil';
 import {getBookForSalesSearchBookId} from '../../api';
-import {atom, selectorFamily, useRecoilValue} from 'recoil';
 import BOOK_AXIOS_INSTANCE from './BookAxiosInstance';
 
 const fetchBookForSale = async (bookId) => {

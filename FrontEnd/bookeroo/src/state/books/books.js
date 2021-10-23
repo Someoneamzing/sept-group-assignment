@@ -31,15 +31,15 @@ export const bookAtomFamily = atomFamily({
     }),
 });
 
-const fetchAllBooks = async () => {
-    try {
-        const res = await BOOK_AXIOS_INSTANCE.get('/api/books/');
-        return res.data._embedded.books;
-    } catch (e) {
-        console.log(e);
-        return null;
-    }
-};
+// const fetchAllBooks = async () => {
+//     try {
+//         const res = await BOOK_AXIOS_INSTANCE.get('/api/books/');
+//         return res.data._embedded.books;
+//     } catch (e) {
+//         console.log(e);
+//         return null;
+//     }
+// };
 
 const fetchFilteredBooks = async (genre) => {
     try {
@@ -91,7 +91,7 @@ export const useAllBooksQuery = (onLoad = true) => {
 
 /**
  * @typedef {{string}} Date a date string in ISO format i.e new Date(str)
- * @typedef {{createAt: Date, updateAt: Date, id: number, deleted: boolean, bookTitle: string, author: string, publisher: string, publishDate: Date, coverArtURL: URL, tableOfContents: string, isbn: string}} Book
+ * @typedef {{createAt: Date, updateAt: Date, id: number, deleted: boolean, bookTitle: string, author: string, publisher: string, publishDate: Date, coverArtURL: URL, tableOfContents: string, isbn: string, genre: string}} Book
  * @param {number} bookId
  * @returns {Book}
  * @returns {null}
@@ -103,7 +103,7 @@ export function useBookAtomFamily(bookId) {
     return data;
 }
 
-export function FilterPageQuery(genre) {
+export function useFilterPageQuery(genre) {
     const allBooks = useRecoilValue(allBookIdsAtom);
     const [genres, setGenres] = useState([]);
     const loadBooks = useRecoilCallback(

@@ -67,6 +67,7 @@ const expandBookItemAtom = atom({
     key: 'expandLocalAtom',
     default: -1,
 });
+
 export default function BookListItem({bookId, expandAll}) {
     useSearchBookForSalesQuery(bookId, false);
     const [expandLocal, setExpand] = useRecoilState(expandBookItemAtom);
@@ -116,6 +117,14 @@ export default function BookListItem({bookId, expandAll}) {
                                     data-testid="bookauthor"
                                 >
                                     {bookData.author}
+                                </Typography>
+                                <span style={{margin: '0 5px'}}>•</span>
+                                <Typography
+                                    variant="body2"
+                                    color="textPrimary"
+                                    data-testid="bookgenre"
+                                >
+                                    {bookData.genre}
                                 </Typography>
                                 <span style={{margin: '0 5px'}}>•</span>
                                 <Typography
