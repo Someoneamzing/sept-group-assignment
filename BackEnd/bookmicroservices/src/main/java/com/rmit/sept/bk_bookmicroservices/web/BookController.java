@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import static com.rmit.sept.bk_bookmicroservices.MsBooks.LOGGER;
 
 import java.util.List;
 
@@ -37,6 +38,7 @@ public class BookController {
     @RequestMapping("/filter")
     public ResponseEntity<?> filteredBooks(@RequestParam(name="genre") String genre){
         JSONObject jsonObject = new JSONObject();
+        LOGGER.trace(String.format("Filtering all books by genre '%s'.", genre));
         if (genre.equals("all")){
             jsonObject.put("Books", bookService.getAllBooks());
         } else {
@@ -48,6 +50,7 @@ public class BookController {
 
     @RequestMapping("/deleteAll")
     public void deleteAll(){
+        LOGGER.trace("Deleting all books.");
         bookRepository.deleteAll();
     }
 }

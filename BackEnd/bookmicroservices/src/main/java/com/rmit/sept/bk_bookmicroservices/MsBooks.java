@@ -1,5 +1,7 @@
 package com.rmit.sept.bk_bookmicroservices;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -22,6 +24,8 @@ import java.util.Set;
 
 @SpringBootApplication
 public class MsBooks {
+
+    public static final Logger LOGGER = LogManager.getLogger(MsBooks.class);
 
     public static void main(String[] args) {
         SpringApplication.run(MsBooks.class, args);
@@ -76,6 +80,7 @@ public class MsBooks {
          */
         public ResponseEntity<APIError> handleConstraintViolationException(ConstraintViolationException exception,
                 ServletWebRequest webRequest) {
+            LOGGER.debug(String.format("Caught API Error to %s. Responding with BAD REQUEST.", webRequest.getRequest().getRequestURI()));
             APIError apiError = new APIError(exception.getConstraintViolations());
             return ResponseEntity.badRequest().body(apiError);
         }
@@ -91,6 +96,7 @@ public class MsBooks {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
+                LOGGER.info("Allowing CORS on all endpoints.");
                 registry.addMapping("/**");
             }
         };
